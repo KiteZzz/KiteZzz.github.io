@@ -6,18 +6,25 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2019/5 | 风筝</title>
+  <title>Json Web Token | 风筝</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="风筝">
-<meta property="og:type" content="website">
-<meta property="og:title" content="风筝">
-<meta property="og:url" content="http://yoursite.com/archives/2019/05/index.html">
+  <meta name="description" content="JSON Web Token一些Web应用程序使用JSON Web令牌即JWT而不是传统的会话cookie。由于其无状态和签名实施，因此存在一些特定于JWT的安全问题。本文介绍了一些可以验证JWT实现是否安全的方法。 0x01 认识JWT基于token（令牌）的用户认证 JSON Web Token (jwt) 就是其中一个 过程如下：  用户输入其登录信息  服务器验证信息是否正确，并返回已签名">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Json Web Token">
+<meta property="og:url" content="http://yoursite.com/2019/05/17/jwt/index.html">
 <meta property="og:site_name" content="风筝">
-<meta property="og:description" content="风筝">
+<meta property="og:description" content="JSON Web Token一些Web应用程序使用JSON Web令牌即JWT而不是传统的会话cookie。由于其无状态和签名实施，因此存在一些特定于JWT的安全问题。本文介绍了一些可以验证JWT实现是否安全的方法。 0x01 认识JWT基于token（令牌）的用户认证 JSON Web Token (jwt) 就是其中一个 过程如下：  用户输入其登录信息  服务器验证信息是否正确，并返回已签名">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="https://s2.ax1x.com/2019/05/18/EObOoV.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/05/18/EXAWGQ.jpg">
+<meta property="og:image" content="https://s2.ax1x.com/2019/05/18/EXE0FU.jpg">
+<meta property="og:image" content="https://s2.ax1x.com/2019/05/18/EXEcO1.jpg">
+<meta property="og:image" content="https://s2.ax1x.com/2019/05/18/EXV0Bt.jpg">
+<meta property="og:updated_time" content="2019-05-18T12:57:27.436Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="风筝">
-<meta name="twitter:description" content="风筝">
+<meta name="twitter:title" content="Json Web Token">
+<meta name="twitter:description" content="JSON Web Token一些Web应用程序使用JSON Web令牌即JWT而不是传统的会话cookie。由于其无状态和签名实施，因此存在一些特定于JWT的安全问题。本文介绍了一些可以验证JWT实现是否安全的方法。 0x01 认识JWT基于token（令牌）的用户认证 JSON Web Token (jwt) 就是其中一个 过程如下：  用户输入其登录信息  服务器验证信息是否正确，并返回已签名">
+<meta name="twitter:image" content="https://s2.ax1x.com/2019/05/18/EObOoV.png">
   
     <link rel="alternative" href="/atom.xml" title="风筝" type="application/atom+xml">
   
@@ -153,184 +160,201 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-jwt" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      Json Web Token
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/05/17/jwt/" class="archive-article-date">
+
+        
+        <a href="/2019/05/17/jwt/" class="archive-article-date">
   	<time datetime="2019-05-17T03:06:57.290Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-17</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/05/17/jwt/">Json Web Token</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="JSON-Web-Token"><a href="#JSON-Web-Token" class="headerlink" title="JSON Web Token"></a>JSON Web Token</h2><p>一些Web应用程序使用JSON Web令牌即JWT而不是传统的会话cookie。由于其无状态和签名实施，因此存在一些特定于JWT的安全问题。本文介绍了一些可以验证JWT实现是否安全的方法。</p>
+<h3 id="0x01-认识JWT"><a href="#0x01-认识JWT" class="headerlink" title="0x01 认识JWT"></a>0x01 认识JWT</h3><p>基于token（令牌）的用户认证</p>
+<p>JSON Web Token (jwt) 就是其中一个</p>
+<p><img src="https://s2.ax1x.com/2019/05/18/EObOoV.png" alt="image"><br>过程如下：</p>
+<ol>
+<li><p>用户输入其登录信息</p>
+</li>
+<li><p>服务器验证信息是否正确，并返回已签名的token</p>
+</li>
+<li><p>token储在客户端，例如存在local storage或cookie中</p>
+</li>
+<li><p>之后的HTTP请求都将token添加到请求头里</p>
+</li>
+<li><p>服务器解码JWT，并且如果令牌有效，则接受请求</p>
+</li>
+<li><p>一旦用户注销，令牌将在客户端被销毁，不需要与服务器进行交互一个关键是，令牌是无状态的。后端服务器不需要保存令牌或当前session的记录。</p>
+</li>
+</ol>
+<p>服务器不必记住有关令牌或用户的任何信息，因为所有信息都包含在令牌中。</p>
+<p>jwt通常在授权header中。header的内容应该如下所示：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Authorization: Bearer &lt;token&gt;</span><br></pre></td></tr></table></figure></p>
+<h3 id="0x02-JWT结构"><a href="#0x02-JWT结构" class="headerlink" title="0x02 JWT结构"></a>0x02 JWT结构</h3><p>任意一个jwt格式都像这样:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYWRtaW5za3kiLCJwcml2Ijoib3RoZXIifQ.AoTc1q2NAErgqk6EeTK4MGH7cANVVF9XTy0wLv8HpgUfNcdM-etmv0Y9XmOuygF_ymV1rF6XQZzLrtkFqdMdP0NaZnTOYH35Yevaudx9bVpu9JHG4qeXo-0TXBcpaPmBaM0V0GxyZRNIS2KwRkNaxAQDQnyTN-Yi3w8OVpJYBiI</span><br></pre></td></tr></table></figure></p>
+<p>可见有两个点号，分为三个部分，也就是头部、载荷与签名(Header<br>Payload,Signature)，这三个部分都是json格式。</p>
+<h4 id="Header"><a href="#Header" class="headerlink" title="Header"></a>Header</h4><p>头部用于描述关于该JWT的最基本的信息，例如其类型以及签名所用的算法等。该部分由base64编码。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;alg&quot;:&quot;RS256&quot;,</span><br><span class="line">    &quot;typ&quot;:&quot;JWT&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="Payload"><a href="#Payload" class="headerlink" title="Payload"></a>Payload</h4><p>包含声明的有效负载。声明是关于实体（通常是用户）和其他元数据的声明。<br>这里是用户随意定义的数据，一般用来放一些不敏感的信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;name&quot;:&quot;adminxxx&quot;,</span><br><span class="line">    &quot;priv&quot;:&quot;other&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>该部分也被base64编码</p>
+<p>在线jwt解密网站: <a href="https://jwt.io" target="_blank" rel="noopener">https://jwt.io</a></p>
+<h4 id="Signature"><a href="#Signature" class="headerlink" title="Signature"></a>Signature</h4><p>签名部分，是由前面两部分header与payload和密钥(secret)组成，采用header里面的算法，前面的一个例子就是RS256算法，最后再对得到的字符串进行一次base64编码，构成令牌token的第三部分</p>
+<h3 id="0x03-JWT攻击技巧"><a href="#0x03-JWT攻击技巧" class="headerlink" title="0x03 JWT攻击技巧"></a>0x03 JWT攻击技巧</h3><p>jwt作为一种身份认证的手段，攻击者可以构造伪造身份进行恶意攻击</p>
+<p>就上部分header中算法alg，签名算法为RS256，那么会选择用私钥进行签名，用公钥进行解密验证</p>
+<p>公钥pubkey一般因为网站的不正当操作容易泄露，但没有私钥仍然无法在第三部分篡改签名信息</p>
+<p>这里就要换个思路了，可以通过修改算法，比如把RS256改为HS256，这样就从非对称密码转到对称密码了</p>
+<p>对称密码只需要一种公钥，此时篡改就贼容易了，后端的验证只根据header的算法类型的话，就会达到攻击者的目的了。</p>
+<h3 id="0x04-实战"><a href="#0x04-实战" class="headerlink" title="0x04 实战"></a>0x04 实战</h3><p>就拿iscc一道题来说，在源码js处可以发现pubkey泄露<br><img src="https://s2.ax1x.com/2019/05/18/EXAWGQ.jpg" alt="image"></p>
+<p>我这里注册的账号是adminkite,构造exp<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo md5(adminkiteadmin);</span><br></pre></td></tr></table></figure></p>
+<p>再去访问得到pubkey（存储为key.pem）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">-----BEGIN PUBLIC KEY-----</span><br><span class="line">MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDMRTzM9ujkHmh42aXG0aHZk/PK</span><br><span class="line">omh6laVF+c3+D+klIjXglj7+/wxnztnhyOZpYxdtk7FfpHa3Xh4Pkpd5VivwOu1h</span><br><span class="line">Kk3XQYZeMHov4kW0yuS+5RpFV1Q2gm/NWGY52EaQmpCNFQbGNigZhu95R2OoMtuc</span><br><span class="line">IC+LX+9V/mpyKe9R3wIDAQAB</span><br><span class="line">-----END PUBLIC KEY-----</span><br></pre></td></tr></table></figure></p>
+<p>然后抓包在list处得到token<br><img src="https://s2.ax1x.com/2019/05/18/EXE0FU.jpg" alt="image"></p>
+<p>解密后为<br><img src="https://s2.ax1x.com/2019/05/18/EXEcO1.jpg" alt="image"></p>
+<p>接下来我们手上只有公钥，那么就把RS256改成HS256，页面开头也说只有admin才能看到flag，那么把priv里的other改成admin，然后保存前面两个部分(header+payload)</p>
+<p>具体后面步骤在国外文章讲的很具体如下</p>
+<p><a href="https://www.nccgroup.trust/uk/about-us/newsroom-and-events/blogs/2019/january/jwt-attack-walk-through/" target="_blank" rel="noopener">https://www.nccgroup.trust/uk/about-us/newsroom-and-events/blogs/2019/january/jwt-attack-walk-through/</a></p>
+<p>ascii转十六进制<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat key.pem | xxd -p | tr -d &quot;\\n&quot;</span><br></pre></td></tr></table></figure></p>
+<p>输出签名<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo -n &quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYWRtaW5raXRlIiwicHJpdiI6ImFkbWluIn0&quot; | openssl dgst -sha256 -mac HMAC -macopt hexkey:2d2d2d2d2d424547494e205055424c4943204b45592d2d2d2d2d0a4d4947664d413047435371475349623344514542415155414134474e4144434269514b426751444d52547a4d39756a6b486d6834326158473061485a6b2f504b0a6f6d68366c6156462b63332b442b6b6c496a58676c6a372b2f77786e7a746e68794f5a70597864746b37466670486133586834506b706435566976774f7531680a4b6b335851595a654d486f76346b57307975532b3552704656315132676d2f4e57475935324561516d70434e465162474e69675a6875393552324f6f4d7475630a49432b4c582b39562f6d70794b65395233774944415141420a2d2d2d2d2d454e44205055424c4943204b45592d2d2d2d2d</span><br></pre></td></tr></table></figure></p>
+<p>得到签名的十六进制<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cdb7ea430a5c4f8db09917a5dc7e30ced83f80b735a2d228a8a507bf7295f55a</span><br></pre></td></tr></table></figure></p>
+<p>再将十六进制转jwt格式<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -c &quot;exec(\&quot;import base64, binascii\nprint base64.urlsafe_b64encode(binascii.a2b_hex(&apos;cdb7ea430a5c4f8db09917a5dc7e30ced83f80b735a2d228a8a507bf7295f55a&apos;)).replace(&apos;=&apos;,&apos;&apos;)\&quot;)&quot;</span><br></pre></td></tr></table></figure></p>
+<p>与前面两部分拼接成完整的jwt<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYWRtaW5raXRlIiwicHJpdiI6ImFkbWluIn0.zbfqQwpcT42wmRel3H4wztg_gLc1otIoqKUHv3KV9Vo</span><br></pre></td></tr></table></figure></p>
+<p>然后抓包传入，成功得到路径<br><img src="https://s2.ax1x.com/2019/05/18/EXV0Bt.jpg" alt="image"></p>
 
-        <div class="article-info info-on-right">
-          
-          
+      
 
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/05/17/jwt/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/05/14/typecho/" class="archive-article-date">
-  	<time datetime="2019-05-14T11:42:00.766Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-14</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2019/05/14/typecho/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">typecho V1.1代码审计-反序列化漏洞</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/05/14/typecho/">typecho V1.1代码审计-反序列化漏洞</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/05/11/flask session/" class="archive-article-date">
-  	<time datetime="2019-05-11T05:40:36.601Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/05/11/flask session/">Python Web之flask session漏洞</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/05/10/phpbottom/" class="archive-article-date">
-  	<time datetime="2019-05-10T06:58:51.471Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-10</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/05/10/phpbottom/">PHP底层的运行机制与原理</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/05/09/mac pro/" class="archive-article-date">
-  	<time datetime="2019-05-09T07:15:11.238Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-09</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/05/09/mac pro/">记一次mac pro 拆机经历</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/05/08/maccms8x/" class="archive-article-date">
-  	<time datetime="2019-05-08T12:00:07.664Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-08</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/05/08/maccms8x/">Maccms8.x命令执行漏洞</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
-    
 
 
           </div>
@@ -353,8 +377,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

@@ -155,6 +155,77 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-flask" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/04/18/flask/">flask之搭建及入门</a>
+    </h1>
+  
+
+        
+        <a href="/2019/04/18/flask/" class="archive-article-date">
+  	<time datetime="2019-04-18T08:30:44.047Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-18</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>这里讲mac搭建flask</p>
+<h3 id="首先得第一步搭建virtualenv"><a href="#首先得第一步搭建virtualenv" class="headerlink" title="首先得第一步搭建virtualenv"></a>首先得第一步搭建virtualenv</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install virtualenv</span><br></pre></td></tr></table></figure>
+<h4 id="0x01-创建项目"><a href="#0x01-创建项目" class="headerlink" title="0x01 创建项目"></a>0x01 创建项目</h4><p>virtualenv安装完成后，在本地创建项目</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd ~</span><br><span class="line">mkdir demo</span><br><span class="line">cd demo </span><br><span class="line">virtualenv venv</span><br></pre></td></tr></table></figure>
+<h4 id="0x02-运行venv命令-进入venv环境"><a href="#0x02-运行venv命令-进入venv环境" class="headerlink" title="0x02 运行venv命令:(进入venv环境)"></a>0x02 运行venv命令:(进入venv环境)</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">. venv/bin/activate</span><br></pre></td></tr></table></figure>
+<h4 id="0x03-安装flask以及查看"><a href="#0x03-安装flask以及查看" class="headerlink" title="0x03 安装flask以及查看"></a>0x03 安装flask以及查看</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pip install flask</span><br><span class="line">flask</span><br><span class="line">pip list</span><br></pre></td></tr></table></figure>
+<h4 id="一个简单例子入门"><a href="#一个简单例子入门" class="headerlink" title="一个简单例子入门"></a>一个简单例子入门</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">from flask import Flask  //导入了flask类</span><br><span class="line"> </span><br><span class="line"> app = Flask(__name__) //创建了Flask类的实例</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"> @app.route(&apos;/&apos;)  // /表示当地址是根路径时，就调用下面的函数</span><br><span class="line"> def index():</span><br><span class="line">     return &apos;Hello Flask&apos;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"> if __name__ == &quot;__main__&quot;:</span><br><span class="line">     app.run(debug=True)</span><br></pre></td></tr></table></figure>
+<p><a href="http://www.bjhee.com/flask-1.html" target="_blank" rel="noopener">http://www.bjhee.com/flask-1.html</a><br><a href="http://docs.jinkan.org/docs/flask/quickstart.html" target="_blank" rel="noopener">http://docs.jinkan.org/docs/flask/quickstart.html</a></p>
+<p>这几个讲的很具体,后面就不具体讲了</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/04/18/flask/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-ddctf" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     

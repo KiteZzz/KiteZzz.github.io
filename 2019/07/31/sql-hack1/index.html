@@ -22,7 +22,9 @@
 <meta property="og:image" content="https://s2.ax1x.com/2019/08/01/eUEVCd.jpg">
 <meta property="og:image" content="https://s2.ax1x.com/2019/08/01/eUE0VU.jpg">
 <meta property="og:image" content="https://s2.ax1x.com/2019/08/01/eUmtFU.jpg">
-<meta property="og:updated_time" content="2019-08-01T02:23:32.858Z">
+<meta property="og:image" content="https://s2.ax1x.com/2019/08/01/eUwpY4.jpg">
+<meta property="og:image" content="https://s2.ax1x.com/2019/08/01/eUwufH.jpg">
+<meta property="og:updated_time" content="2019-08-01T04:12:17.132Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="记一次过waf注入">
 <meta name="twitter:description" content="前言闲来无事，就去搜搜了一下网站，遇到带有waf的一个站，便尝试绕了一下(全程打码) 绕waf注入1http://xxxx.com/xxx.php?id=10 and 1=1  被waf拦截了，尝试fuzz了一下，发现这个waf只针对拼接起来的sql语句，对单个字符不过滤，比如and,or,=都没过滤，尝试用加号代替空格 1http://www.xxx.com/php?id=10+and+1=1">
@@ -198,8 +200,12 @@
 <p>可见成功爆出库名，接下来的就简单多了，这里不用concat是因为该字符被拦截了，由于表名太多，尝试写个脚本爆破</p>
 <p><img src="https://s2.ax1x.com/2019/08/01/eUE0VU.jpg" alt="image"></p>
 <p>这里脚本用了time.sleep,毕竟太快容易导致崩，此次只是学习测试而已</p>
-<p>可见有admin，尝试爆了一下该表内容，发现存在管理员账号密码，这里就到这里吧～</p>
+<p>可见有admin，尝试爆了一下该表内容，发现存在管理员账号密码</p>
 <p><img src="https://s2.ax1x.com/2019/08/01/eUmtFU.jpg" alt="image"></p>
+<p>想想能不能找到后台输入密码，google搜了一下后台未果，尝试用dirsearch扫了一下发现有个login，但页面却没有输入点，突然找到一个后台上传</p>
+<p><img src="https://s2.ax1x.com/2019/08/01/eUwpY4.jpg" alt="image"></p>
+<p><img src="https://s2.ax1x.com/2019/08/01/eUwufH.jpg" alt="image"></p>
+<p>根据搜集到的信息可知是个iis7.5+php，上网搜了一下iis7.5解析漏洞，尝试了一下未果，应该是cgi.fix_pathinfo未开放，渗透到此结束～</p>
 
       
 

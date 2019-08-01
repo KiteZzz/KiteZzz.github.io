@@ -191,8 +191,12 @@
 <p>可见成功爆出库名，接下来的就简单多了，这里不用concat是因为该字符被拦截了，由于表名太多，尝试写个脚本爆破</p>
 <p><img src="https://s2.ax1x.com/2019/08/01/eUE0VU.jpg" alt="image"></p>
 <p>这里脚本用了time.sleep,毕竟太快容易导致崩，此次只是学习测试而已</p>
-<p>可见有admin，尝试爆了一下该表内容，发现存在管理员账号密码，这里就到这里吧～</p>
+<p>可见有admin，尝试爆了一下该表内容，发现存在管理员账号密码</p>
 <p><img src="https://s2.ax1x.com/2019/08/01/eUmtFU.jpg" alt="image"></p>
+<p>想想能不能找到后台输入密码，google搜了一下后台未果，尝试用dirsearch扫了一下发现有个login，但页面却没有输入点，突然找到一个后台上传</p>
+<p><img src="https://s2.ax1x.com/2019/08/01/eUwpY4.jpg" alt="image"></p>
+<p><img src="https://s2.ax1x.com/2019/08/01/eUwufH.jpg" alt="image"></p>
+<p>根据搜集到的信息可知是个iis7.5+php，上网搜了一下iis7.5解析漏洞，尝试了一下未果，应该是cgi.fix_pathinfo未开放，渗透到此结束～</p>
 
       
 

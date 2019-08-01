@@ -155,6 +155,98 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-minicms" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/04/25/minicms/">代码审计之minicms</a>
+    </h1>
+  
+
+        
+        <a href="/2019/04/25/minicms/" class="archive-article-date">
+  	<time datetime="2019-04-25T07:05:36.118Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-25</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>学习一下代码审计方面。先审计一些小型cms</p>
+<p><a href="https://www.jianshu.com/p/7c4cec4ee658" target="_blank" rel="noopener">https://www.jianshu.com/p/7c4cec4ee658</a></p>
+<h3 id="minicms"><a href="#minicms" class="headerlink" title="minicms"></a>minicms</h3><p>Mini CMS v1.1</p>
+<p><a href="http://1234n.com/?projects/minicms/" target="_blank" rel="noopener">http://1234n.com/?projects/minicms/</a></p>
+<p>MiniCMS是一个针对个人网站设计的微型内容管理系统。它的特点是：</p>
+<ul>
+<li>不需要数据库在支持，只需要一个可以运行PHP的Web环境</li>
+<li>只针对个人网站设计，没有复杂的成员管理和权限设置</li>
+<li>没有分类只有标签，免除发布文章时到底该怎么分类的纠结</li>
+<li>只有“文章”和“页面”两该个系统，没有“评论”、“插件”、“主题”，让你更专注于创造内容</li>
+</ul>
+<h3 id="漏洞发现"><a href="#漏洞发现" class="headerlink" title="漏洞发现"></a>漏洞发现</h3><h4 id="0x01-任意文件读取"><a href="#0x01-任意文件读取" class="headerlink" title="0x01 任意文件读取"></a>0x01 任意文件读取</h4><p>随便发一篇文章，会在/mc-files/posts/data/路径下生成了一个文件，文件后缀为.dat</p>
+<p>访问<br><a href="http://xxxxxx/mc-files/posts/data/aaaaaa.dat" target="_blank" rel="noopener">http://xxxxxx/mc-files/posts/data/aaaaaa.dat</a></p>
+<p><img src="https://s2.ax1x.com/2019/04/25/EeANod.jpg" alt="image"></p>
+<p>算是一个任意文件读取漏洞    </p>
+<h4 id="0x02-垂直越权漏洞"><a href="#0x02-垂直越权漏洞" class="headerlink" title="0x02 垂直越权漏洞"></a>0x02 垂直越权漏洞</h4><p>mc-admin/index.php 代码如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">require_once dirname(dirname(__FILE__)).&apos;/mc-files/mc-conf.php&apos;;</span><br><span class="line"></span><br><span class="line">if (isset($_COOKIE[&apos;mc_token&apos;])) &#123;</span><br><span class="line">  $token = $_COOKIE[&apos;mc_token&apos;];</span><br><span class="line"></span><br><span class="line">  if ($token == md5($mc_config[&apos;user_name&apos;].&apos;_&apos;.$mc_config[&apos;user_pass&apos;])) &#123;</span><br><span class="line">    Header(&quot;Location:&#123;$mc_config[&apos;site_link&apos;]&#125;/mc-admin/post.php&quot;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">if (isset($_POST[&apos;login&apos;])) &#123;</span><br><span class="line">  if ($_POST[&apos;user&apos;] == $mc_config[&apos;user_name&apos;] </span><br><span class="line">  &amp;&amp; $_POST[&apos;pass&apos;] == $mc_config[&apos;user_pass&apos;]) &#123;</span><br><span class="line">    setcookie(&apos;mc_token&apos;, md5($mc_config[&apos;user_name&apos;].&apos;_&apos;.$mc_config[&apos;user_pass&apos;]));</span><br><span class="line">    Header(&quot;Location:&#123;$mc_config[&apos;site_link&apos;]&#125;/mc-admin/post.php&quot;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure></p>
+<p>也就是说，登陆成功的话会进入当前post.php</p>
+<p>ac-admin/head.php 权限判断:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">ini_set(&quot;display_errors&quot;, &quot;On&quot;); error_reporting(E_ALL);</span><br><span class="line">require_once &apos;../mc-files/mc-conf.php&apos;;</span><br><span class="line"></span><br><span class="line">if (isset($_COOKIE[&apos;mc_token&apos;])) &#123;</span><br><span class="line">  $token = $_COOKIE[&apos;mc_token&apos;];</span><br><span class="line"></span><br><span class="line">  if ($token != md5($mc_config[&apos;user_name&apos;].&apos;_&apos;.$mc_config[&apos;user_pass&apos;])) &#123;</span><br><span class="line">    Header(&quot;Location:index.php&quot;);</span><br><span class="line">    exit;</span><br><span class="line">  &#125;</span><br><span class="line">&#125; else &#123;</span><br><span class="line">  Header(&quot;Location:index.php&quot;);</span><br><span class="line">  exit;</span><br><span class="line">&#125;</span><br><span class="line">...代码省略</span><br></pre></td></tr></table></figure></p>
+<p>在ac-admin/post.php中，第188行才会用权限判断，前面的函数已经执行了,所以这里存在越权行为:</p>
+<p><img src="https://s2.ax1x.com/2019/04/25/Ee1sX9.jpg" alt="image"></p>
+<p>188行前面的函数有:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">function delete_post($id) &#123;</span><br><span class="line">  global $state, $index_file, $mc_posts;</span><br><span class="line">  </span><br><span class="line">  $post = $mc_posts[$id];</span><br><span class="line">  </span><br><span class="line">  $post[&apos;prev_state&apos;] = $state;</span><br><span class="line">  </span><br><span class="line">  unset($mc_posts[$id]);</span><br><span class="line">  </span><br><span class="line">  file_put_contents($index_file, &quot;&lt;?php\n\$mc_posts=&quot;.var_export($mc_posts, true).&quot;\n?&gt;&quot;);</span><br><span class="line">  </span><br><span class="line">  if ($state != &apos;delete&apos;) &#123;</span><br><span class="line">    $index_file2 = &apos;../mc-files/posts/index/delete.php&apos;;</span><br><span class="line">    </span><br><span class="line">    require $index_file2;</span><br><span class="line">  </span><br><span class="line">    $mc_posts[$id] = $post;</span><br><span class="line">  </span><br><span class="line">    file_put_contents($index_file2, &quot;&lt;?php\n\$mc_posts=&quot;.var_export($mc_posts, true).&quot;\n?&gt;&quot;);</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    unlink(&apos;../mc-files/posts/data/&apos;.$id.&apos;.dat&apos;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">if (isset($_GET[&apos;delete&apos;]) || (isset($_GET[&apos;apply&apos;]) &amp;&amp; $_GET[&apos;apply&apos;] == &apos;delete&apos;)) &#123;</span><br><span class="line">  if (isset($_GET[&apos;apply&apos;]) &amp;&amp; $_GET[&apos;apply&apos;] == &apos;delete&apos;) &#123;</span><br><span class="line">    $ids = explode(&apos;,&apos;, $_GET[&apos;ids&apos;]);</span><br><span class="line">    foreach ($ids as $id) &#123;</span><br><span class="line">      if (trim($id) == &apos;&apos;)</span><br><span class="line">        continue;</span><br><span class="line">      delete_post($id);</span><br><span class="line">      load_posts();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    delete_post($_GET[&apos;delete&apos;]);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>这里测试一下无admin删掉文章,构造payload：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://xxxxxxxx/mc-admin/post.php?state=delete&amp;delete=aaaaaa</span><br></pre></td></tr></table></figure></p>
+<p><img src="https://s2.ax1x.com/2019/04/25/EeGXh6.jpg" alt="image"></p>
+<p>删掉成功，这就是垂直越权漏洞了</p>
+<h4 id="0x03-后台getshell"><a href="#0x03-后台getshell" class="headerlink" title="0x03 后台getshell"></a>0x03 后台getshell</h4><p>前提是能进入后台，在conf.php设置</p>
+<p>ac-admin/conf.php 代码如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php require &apos;head.php&apos; ?&gt;</span><br><span class="line">&lt;?php</span><br><span class="line">$display_info = false;</span><br><span class="line">  </span><br><span class="line">if (isset($_POST[&apos;save&apos;])) &#123;</span><br><span class="line">  $user_name_changed = $_POST[&apos;user_name&apos;] != $mc_config[&apos;user_name&apos;];</span><br><span class="line">  </span><br><span class="line">  $mc_config[&apos;site_name&apos;] = $_POST[&apos;site_name&apos;];</span><br><span class="line">  $mc_config[&apos;site_desc&apos;] = $_POST[&apos;site_desc&apos;];</span><br><span class="line">  $mc_config[&apos;site_link&apos;] = $_POST[&apos;site_link&apos;];</span><br><span class="line">  $mc_config[&apos;user_nick&apos;] = $_POST[&apos;user_nick&apos;];</span><br><span class="line">  $mc_config[&apos;user_name&apos;] = $_POST[&apos;user_name&apos;];</span><br><span class="line">  $mc_config[&apos;comment_code&apos;] = get_magic_quotes_gpc() ? stripslashes(trim($_POST[&apos;comment_code&apos;])) : trim($_POST[&apos;comment_code&apos;]);</span><br><span class="line">  </span><br><span class="line">  if ($_POST[&apos;user_pass&apos;] != &apos;&apos;)</span><br><span class="line">    $mc_config[&apos;user_pass&apos;] = $_POST[&apos;user_pass&apos;];</span><br><span class="line"></span><br><span class="line">  $code = &quot;&lt;?php\n\$mc_config = &quot;.var_export($mc_config, true).&quot;\n?&gt;&quot;;</span><br><span class="line">  </span><br><span class="line">  file_put_contents(&apos;../mc-files/mc-conf.php&apos;, $code);</span><br><span class="line">  </span><br><span class="line">  if ($_POST[&apos;user_pass&apos;] != &apos;&apos; || $user_name_changed) &#123;</span><br><span class="line">    setcookie(&apos;mc_token&apos;, md5($mc_config[&apos;user_name&apos;].&apos;_&apos;.$mc_config[&apos;user_pass&apos;]));</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  $display_info = true;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>开头是先权限判断的，所以要先进后台，构造payload：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">神秘人&apos;);assert($_GET[x]);/*</span><br></pre></td></tr></table></figure></p>
+<p><img src="https://s2.ax1x.com/2019/04/25/EeNkNR.jpg" alt="image"></p>
+<p>查看代码发现单引号被加了斜杆过滤了.var_export()这个函数会给单引号加上斜杆</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/04/25/minicms/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-flask" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     

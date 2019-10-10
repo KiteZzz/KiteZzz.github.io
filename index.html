@@ -155,6 +155,79 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-ctf夺旗赛" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="CTF夺旗赛-WEB部分writeup"><a href="#CTF夺旗赛-WEB部分writeup" class="headerlink" title="CTF夺旗赛 WEB部分writeup"></a>CTF夺旗赛 WEB部分writeup</h1><h2 id="将近中秋节，看到i春秋一场比赛，便做了几道web题"><a href="#将近中秋节，看到i春秋一场比赛，便做了几道web题" class="headerlink" title="将近中秋节，看到i春秋一场比赛，便做了几道web题"></a>将近中秋节，看到i春秋一场比赛，便做了几道web题</h2><h2 id="0x01-easyphp-200"><a href="#0x01-easyphp-200" class="headerlink" title="0x01 easyphp 200"></a>0x01 easyphp 200</h2><p><img src="https://s2.ax1x.com/2019/09/12/n08NE6.png" alt="image"><br>首先看到about的信息，可以猜想存在源码泄露</p>
+<p>扫描一下发现index.php.bak，内容如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">error_reporting(0);</span><br><span class="line">include &quot;waf.php&quot;;</span><br><span class="line">if (isset($_GET[&apos;file&apos;])) &#123;</span><br><span class="line">	$file = $_GET[&apos;file&apos;];</span><br><span class="line">&#125; else &#123;</span><br><span class="line">	$file = &quot;home&quot;;</span><br><span class="line">&#125;</span><br><span class="line">$file=str_replace(&quot;./&quot;,&quot;&quot;,$file);</span><br><span class="line">$file=str_replace(&quot;.\\&quot;,&quot;&quot;,$file);</span><br><span class="line">$para = &quot;templates/&quot; . $file . &quot;.php&quot;;</span><br><span class="line">assert(&quot;file_exists(&apos;$para&apos;)&quot;);</span><br><span class="line">?&gt;</span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">	&lt;head&gt;</span><br><span class="line">		&lt;meta charset=&quot;utf-8&quot;&gt;</span><br><span class="line">		&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;</span><br><span class="line">		&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;</span><br><span class="line"></span><br><span class="line">		&lt;title&gt;My PHP Website&lt;/title&gt;</span><br><span class="line"></span><br><span class="line">		&lt;link rel=&quot;stylesheet&quot; href=&quot;http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css&quot; /&gt;</span><br><span class="line">	&lt;/head&gt;</span><br><span class="line">	&lt;body&gt;</span><br><span class="line">		&lt;nav class=&quot;navbar navbar-inverse navbar-fixed-top&quot;&gt;</span><br><span class="line">			&lt;div class=&quot;container&quot;&gt;</span><br><span class="line">		    	&lt;div class=&quot;navbar-header&quot;&gt;</span><br><span class="line">		    		&lt;button type=&quot;button&quot; class=&quot;navbar-toggle collapsed&quot; data-toggle=&quot;collapse&quot; data-target=&quot;#navbar&quot; aria-expanded=&quot;false&quot; aria-controls=&quot;navbar&quot;&gt;</span><br><span class="line">		            	&lt;span class=&quot;sr-only&quot;&gt;Toggle navigation&lt;/span&gt;</span><br><span class="line">		            	&lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;</span><br><span class="line">		            	&lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;</span><br><span class="line">		            	&lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;</span><br><span class="line">		          	&lt;/button&gt;</span><br><span class="line">		          	&lt;a class=&quot;navbar-brand&quot; href=&quot;#&quot;&gt;Project name&lt;/a&gt;</span><br><span class="line">		        &lt;/div&gt;</span><br><span class="line">		        &lt;div id=&quot;navbar&quot; class=&quot;collapse navbar-collapse&quot;&gt;</span><br><span class="line">		          	&lt;ul class=&quot;nav navbar-nav&quot;&gt;</span><br><span class="line">		            	&lt;li &lt;?php if ($file == &quot;home&quot;) &#123; ?&gt;class=&quot;active&quot;&lt;?php &#125; ?&gt;&gt;&lt;a href=&quot;?file=home&quot;&gt;Home&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">		            	&lt;li &lt;?php if ($file == &quot;about&quot;) &#123; ?&gt;class=&quot;active&quot;&lt;?php &#125; ?&gt;&gt;&lt;a href=&quot;?file=about&quot;&gt;About&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">		            	&lt;li &lt;?php if ($file == &quot;tips&quot;) &#123; ?&gt;class=&quot;active&quot;&lt;?php &#125; ?&gt;&gt;&lt;a href=&quot;?file=tips&quot;&gt;Tips&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">						&lt;li &lt;?php if ($file == &quot;flag&quot;) &#123; ?&gt;class=&quot;active&quot;&lt;?php &#125; ?&gt;&gt;&lt;a href=&quot;?file=flag&quot;&gt;Flag&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">		          	&lt;/ul&gt;</span><br><span class="line">		        &lt;/div&gt;</span><br><span class="line">		    &lt;/div&gt;</span><br><span class="line">		&lt;/nav&gt;</span><br><span class="line"></span><br><span class="line">		&lt;div class=&quot;container&quot; style=&quot;margin-top: 50px&quot;&gt;</span><br><span class="line">			&lt;?php</span><br><span class="line">				require_once $para;</span><br><span class="line">			?&gt;</span><br><span class="line">		&lt;/div&gt;</span><br><span class="line">		&lt;script src=&quot;http://code.jquery.com/jquery-latest.js&quot; /&gt;</span><br><span class="line">		&lt;script src=&quot;http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js&quot; /&gt;</span><br><span class="line">	&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure></p>
+<p>刚开始看到str_replace，便尝试php伪协议读取，构造php://filter/read=convert.base64-encode/recource=ind./ex,但什么也读不到，其它文件也一样，感觉可能是waf.php针对了php伪协议，便换了思路</p>
+<p>源码中，还有assert(“file_exists(‘$para’)”);，可以想到命令执行<br><img src="https://s2.ax1x.com/2019/09/12/n0N29K.png" alt="image"></p>
+<p>题目中受waf.php的影响，过滤了不少的命令，但可以用./或者.\绕过</p>
+<p>payload: ?file=11’)%20or%20system(‘ca./t%20w./af.php’);%23</p>
+<p><img src="https://s2.ax1x.com/2019/09/12/n0wuUs.png" alt="image"></p>
+<p>/?file=11’)%20or%20system(‘ca./t%20/flag’);%23 得到flag</p>
+<h2 id="0x02-redis-100"><a href="#0x02-redis-100" class="headerlink" title="0x02 redis 100"></a>0x02 redis 100</h2><p>是个redis未授权访问漏洞</p>
+<p><a href="https://www.cnblogs.com/co10rway/p/7995727.html" target="_blank" rel="noopener">https://www.cnblogs.com/co10rway/p/7995727.html</a></p>
+<p><img src="https://s2.ax1x.com/2019/09/12/nBKCGj.png" alt="image"></p>
+<p><img src="https://s2.ax1x.com/2019/09/12/nBKAs0.png" alt="image"></p>
+<h2 id="0x03-SQL-300"><a href="#0x03-SQL-300" class="headerlink" title="0x03 SQL 300"></a>0x03 SQL 300</h2><p><img src="https://s2.ax1x.com/2019/09/12/nBKIO0.png" alt="image"></p>
+<p>可见是个带完整sql语句的回显注入，不过过滤了贼多，是个黑名单检测，经过一番fuzz可知<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">空格用%09代替</span><br><span class="line">or用 ||代替</span><br><span class="line">单引号用反斜杠\转义</span><br><span class="line">#用%00截断</span><br></pre></td></tr></table></figure></p>
+<p><img src="https://s2.ax1x.com/2019/09/12/nDw6ZF.png" alt="image"></p>
+<p>可见要admin登录才行，于是换个思路爆admin的密码，首先报错注入感觉是不行的，因为select被黑名单检测了,本地测试一下:<br><img src="https://s2.ax1x.com/2019/09/13/nsP0uF.png" alt="image"></p>
+<p>思路有了，写个盲注脚本可爆破到admin的密码，登录进去后</p>
+<p><img src="https://s2.ax1x.com/2019/09/13/nsPWjO.png" alt="image"></p>
+<p>经过一番fuzz，发现把sql函数基本上过滤了，命令执行都没回显，感觉是个dnslog注入，但没反应，扫描了一番发现flag.php</p>
+<p><img src="https://s2.ax1x.com/2019/09/13/nsPjKS.png" alt="image"></p>
+<p>感觉仍然没头绪。</p>
+<h2 id="0x04-ssrf-200"><a href="#0x04-ssrf-200" class="headerlink" title="0x04 ssrf 200"></a>0x04 ssrf 200</h2><p><img src="https://s2.ax1x.com/2019/09/13/nra4PA.png" alt="image"></p>
+<p>可以看到请求get参数是url，尝试请求ssrf内网</p>
+<p>payload: ?url=<a href="http://localhost/" target="_blank" rel="noopener">http://localhost/</a></p>
+<p><img src="https://s2.ax1x.com/2019/09/13/nrdczq.png" alt="image"></p>
+<p>然后跟着提示一步一步去读取./git源码<br><img src="https://s2.ax1x.com/2019/09/13/nrqPO0.png" alt="image"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/10/10/ctf夺旗赛/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-zzcms8.2" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -934,79 +1007,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2019/05/10/phpbottom/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-mac pro" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/05/09/mac pro/">记一次mac pro 拆机经历</a>
-    </h1>
-  
-
-        
-        <a href="/2019/05/09/mac pro/" class="archive-article-date">
-  	<time datetime="2019-05-09T07:15:11.238Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-09</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>在下的电脑是<br>MacBook Pro (Retina, 13-inch, Late 2012)的</p>
-<p><img src="https://s2.ax1x.com/2019/05/09/Egl99U.jpg" alt="image"></p>
-<p>确实是有点老了，而且感觉内存不够用，看看一哈能不能加个内存条<br>，上网搜了一下</p>
-<p><img src="https://s2.ax1x.com/2019/05/09/Egla8S.png" alt="image"></p>
-<p>发现没有匹配2012末的，而且也说retina是属于把内存条和主盘牢牢焊死的，无法拆开，到这里仍有些不相信，决定拆开机盘看一下:</p>
-<p><img src="https://s2.ax1x.com/2019/05/09/Eg1CIP.jpg" alt="image"></p>
-<p>刚打开时全是灰，清理了一下灰后</p>
-<p>仔细看了下确实基本都是焊死的，无从下手，好吧就这样，等以后自己赚钱了再买一台更大的内存mac pro好吧。</p>
-<p>然后有学长问这是不是固态磁盘，我查了下磁盘还分普通磁盘和固态磁盘，查看了一下本机</p>
-<p><img src="https://s2.ax1x.com/2019/05/09/Eg3xAI.jpg" alt="image"></p>
-<p>还好还是个ssd固态磁盘，暂时继续用2012mac了~</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/05/09/mac pro/">展开全文 >></a>
         </p>
       
 

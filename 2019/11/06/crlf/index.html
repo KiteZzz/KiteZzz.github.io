@@ -6,18 +6,21 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives | 风筝</title>
+  <title>crlf &amp; soap | 风筝</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="风筝">
-<meta property="og:type" content="website">
-<meta property="og:title" content="风筝">
-<meta property="og:url" content="http://yoursite.com/archives/page/2/index.html">
+  <meta name="description" content="前言最近遇到了个题，然后由此引发了php原生类，最后引发了一道老题许多知识点的深思。。有些文章图床挂了，知识点很多有点乱，便总结一下 CRLF介绍CRLF是”回车 + 换行”（\r\n）的简称。在HTTP协议中，HTTP Header与HTTP Body是用两个CRLF分隔的，浏览器就是根据这两个CRLF来取出HTTP 内容并显示出来。所以，一旦我们能够控制HTTP 消息头中的字符，注入一些恶意的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="crlf &amp; soap">
+<meta property="og:url" content="http://yoursite.com/2019/11/06/crlf/index.html">
 <meta property="og:site_name" content="风筝">
-<meta property="og:description" content="风筝">
+<meta property="og:description" content="前言最近遇到了个题，然后由此引发了php原生类，最后引发了一道老题许多知识点的深思。。有些文章图床挂了，知识点很多有点乱，便总结一下 CRLF介绍CRLF是”回车 + 换行”（\r\n）的简称。在HTTP协议中，HTTP Header与HTTP Body是用两个CRLF分隔的，浏览器就是根据这两个CRLF来取出HTTP 内容并显示出来。所以，一旦我们能够控制HTTP 消息头中的字符，注入一些恶意的">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="https://s2.ax1x.com/2019/11/06/MPHPoR.png">
+<meta property="og:updated_time" content="2019-11-06T15:58:04.533Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="风筝">
-<meta name="twitter:description" content="风筝">
+<meta name="twitter:title" content="crlf &amp; soap">
+<meta name="twitter:description" content="前言最近遇到了个题，然后由此引发了php原生类，最后引发了一道老题许多知识点的深思。。有些文章图床挂了，知识点很多有点乱，便总结一下 CRLF介绍CRLF是”回车 + 换行”（\r\n）的简称。在HTTP协议中，HTTP Header与HTTP Body是用两个CRLF分隔的，浏览器就是根据这两个CRLF来取出HTTP 内容并显示出来。所以，一旦我们能够控制HTTP 消息头中的字符，注入一些恶意的">
+<meta name="twitter:image" content="https://s2.ax1x.com/2019/11/06/MPHPoR.png">
   
     <link rel="alternative" href="/atom.xml" title="风筝" type="application/atom+xml">
   
@@ -153,295 +156,176 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-crlf" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      crlf &amp; soap
+    </h1>
+  
+
+        
+        <a href="/2019/11/06/crlf/" class="archive-article-date">
+  	<time datetime="2019-11-06T15:58:04.532Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-06</time>
+</a>
+        
+      </header>
     
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近遇到了个题，然后由此引发了php原生类，最后引发了一道老题许多知识点的深思。。有些文章图床挂了，知识点很多有点乱，便总结一下</p>
+<h2 id="CRLF介绍"><a href="#CRLF介绍" class="headerlink" title="CRLF介绍"></a>CRLF介绍</h2><p>CRLF是”回车 + 换行”（\r\n）的简称。在HTTP协议中，HTTP Header与HTTP Body是用两个CRLF分隔的，浏览器就是根据这两个CRLF来取出HTTP 内容并显示出来。所以，一旦我们能够控制HTTP 消息头中的字符，注入一些恶意的换行，这样我们就能注入一些会话Cookie或者HTML代码，所以CRLF Injection又叫HTTP Response Splitting，简称HRS。</p>
+<h2 id="SoapClient触发反序列化导致ssrf"><a href="#SoapClient触发反序列化导致ssrf" class="headerlink" title="SoapClient触发反序列化导致ssrf"></a>SoapClient触发反序列化导致ssrf</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$classes = get_declared_classes();</span><br><span class="line"><span class="keyword">foreach</span> ($classes <span class="keyword">as</span> $class) &#123;</span><br><span class="line">    $methods = get_class_methods($class);</span><br><span class="line">    <span class="keyword">foreach</span> ($methods <span class="keyword">as</span> $method) &#123;</span><br><span class="line">        <span class="keyword">if</span> (in_array($method, <span class="keyword">array</span>(</span><br><span class="line">            <span class="string">'__destruct'</span>,</span><br><span class="line">            <span class="string">'__toString'</span>,</span><br><span class="line">            <span class="string">'__wakeup'</span>,</span><br><span class="line">            <span class="string">'__call'</span>,</span><br><span class="line">            <span class="string">'__callStatic'</span>,</span><br><span class="line">            <span class="string">'__get'</span>,</span><br><span class="line">            <span class="string">'__set'</span>,</span><br><span class="line">            <span class="string">'__isset'</span>,</span><br><span class="line">            <span class="string">'__unset'</span>,</span><br><span class="line">            <span class="string">'__invoke'</span>,</span><br><span class="line">            <span class="string">'__set_state'</span></span><br><span class="line">        ))) &#123;</span><br><span class="line">            <span class="keyword">print</span> $class . <span class="string">'::'</span> . $method . <span class="string">"\n"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过此php脚本可了解魔术方法对应的类</p>
+<p>soap的具体参考<a href="https://www.anquanke.com/post/id/153065#h2-1" target="_blank" rel="noopener">soap安全问题</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SOAP（简单对象访问协议）是连接或Web服务或客户端和Web服务之间的接口。</span><br><span class="line">其采用HTTP作为底层通讯协议，XML作为数据传送的格式</span><br><span class="line">SOAP消息基本上是从发送端到接收端的单向传输，但它们常常结合起来执行类似于请求 / 应答的模式。</span><br></pre></td></tr></table></figure>
+<p>php原生类具体参考<a href="https://www.cnblogs.com/iamstudy/articles/unserialize_in_php_inner_class.html#_label1_0" target="_blank" rel="noopener">php原生类-反序列化</a></p>
+<p>php反序列化没有可利用的类时，可以调用php原生类,SoapClient就是其中一个</p>
+<p>同时，__call也是SoapClient类其中的一个方法,举一个例子更好理解   </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$a = <span class="keyword">new</span> SoapClient(<span class="keyword">null</span>,<span class="keyword">array</span>(<span class="string">'uri'</span>=&gt;<span class="string">'http://127.0.0.1:5555'</span>, <span class="string">'location'</span>=&gt;<span class="string">'http://127.0.0.1:5555'</span>));</span><br><span class="line">$b = serialize($a);</span><br><span class="line"><span class="keyword">echo</span> $b;</span><br><span class="line">$c = unserialize($b);</span><br><span class="line">$c-&gt;a();</span><br></pre></td></tr></table></figure>
+<p>nc监听本地5555端口</p>
+<p><img src="https://s2.ax1x.com/2019/11/06/MPHPoR.png" alt="image"></p>
+<p>这个只对http/https协议有效，同时这里存在http头部存在crlf漏洞，也就是\r\n</p>
+<h2 id="一道题的深思"><a href="#一道题的深思" class="headerlink" title="一道题的深思"></a>一道题的深思</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//index.php</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line">$b = <span class="string">'implode'</span>;</span><br><span class="line">call_user_func($_GET[f],$_POST);</span><br><span class="line">session_start();</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[name]))&#123;</span><br><span class="line">    $_SESSION[name] = $_GET[name];</span><br><span class="line">&#125;</span><br><span class="line">var_dump($_SESSION);</span><br><span class="line">$a = <span class="keyword">array</span>(reset($_SESSION),<span class="string">'welcome_to_the_lctf2018'</span>);</span><br><span class="line">call_user_func($b,$a);</span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//flag.php</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">session_start();</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'only localhost can get flag!'</span>;</span><br><span class="line">$flag = <span class="string">'LCTF&#123;*************************&#125;'</span>;</span><br><span class="line"><span class="keyword">if</span>($_SERVER[<span class="string">"REMOTE_ADDR"</span>]===<span class="string">"127.0.0.1"</span>)&#123;</span><br><span class="line">       $_SESSION[<span class="string">'flag'</span>] = $flag;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>这题很多思路相连</p>
+<p>session反序列化-&gt;soap(ssrf+crlf)-&gt;call_user_func激活soap类</p>
+<p>复现失败了，就学到这里吧,这里有几篇可以参考</p>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="https://www.cnblogs.com/iamstudy/articles/unserialize_in_php_inner_class.html#_label1_0" target="_blank" rel="noopener">https://www.cnblogs.com/iamstudy/articles/unserialize_in_php_inner_class.html#_label1_0</a></p>
+<p><a href="https://www.anquanke.com/post/id/153065#h2-1" target="_blank" rel="noopener">https://www.anquanke.com/post/id/153065#h2-1</a></p>
+<p><a href="https://www.jianshu.com/p/d4c304dbd0af" target="_blank" rel="noopener">https://www.jianshu.com/p/d4c304dbd0af</a></p>
+<p><a href="https://www.cnblogs.com/20175211lyz/p/11515519.html" target="_blank" rel="noopener">https://www.cnblogs.com/20175211lyz/p/11515519.html</a></p>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/06/01/rsa/" class="archive-article-date">
-  	<time datetime="2019-06-01T06:19:14.761Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-01</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/06/01/rsa/">RSA</a>
-    </h1>
-  
+      
 
-        <div class="article-info info-on-right">
-          
-          
+      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/11/06/crlf/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/05/17/jwt/" class="archive-article-date">
-  	<time datetime="2019-05-17T03:06:57.290Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-17</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2019/11/06/xuliehua/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">PHP反序列化由浅入深</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/05/17/jwt/">Json Web Token</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/05/14/typecho/" class="archive-article-date">
-  	<time datetime="2019-05-14T11:42:00.766Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-14</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/05/14/typecho/">typecho V1.1代码审计-反序列化漏洞</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/05/11/flask session/" class="archive-article-date">
-  	<time datetime="2019-05-11T05:40:36.601Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/05/11/flask session/">Python Web之flask session漏洞</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/05/10/phpbottom/" class="archive-article-date">
-  	<time datetime="2019-05-10T06:58:51.471Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-10</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/05/10/phpbottom/">PHP底层的运行机制与原理</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/05/09/mac pro/" class="archive-article-date">
-  	<time datetime="2019-05-09T07:15:11.238Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-09</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/05/09/mac pro/">记一次mac pro 拆机经历</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/05/08/maccms8x/" class="archive-article-date">
-  	<time datetime="2019-05-08T12:00:07.664Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-08</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/05/08/maccms8x/">Maccms8.x命令执行漏洞</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/05/01/iscc 2019/" class="archive-article-date">
-  	<time datetime="2019-05-01T03:09:17.216Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-01</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/05/01/iscc 2019/">ISCC 2019 Write wp</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/04/25/minicms/" class="archive-article-date">
-  	<time datetime="2019-04-25T07:05:36.118Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-25</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/04/25/minicms/">代码审计之minicms</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/04/18/flask/" class="archive-article-date">
-  	<time datetime="2019-04-18T08:30:44.047Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-04-18</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/04/18/flask/">flask之搭建及入门</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
-    
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/archives/">&laquo; Prev</a><a class="page-number" href="/archives/">1</a><span class="page-number current">2</span><a class="page-number" href="/archives/page/3/">3</a><a class="extend next" rel="next" href="/archives/page/3/">Next &raquo;</a>
-    </nav>
   
 
 
@@ -465,8 +349,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

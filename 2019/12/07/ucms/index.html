@@ -6,18 +6,23 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives | 风筝</title>
+  <title>风筝</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="风筝">
-<meta property="og:type" content="website">
+  <meta name="description" content="title:ucms代码注入漏洞分析前言最近在漏洞平台看到ucms后台漏洞，便寻找了一下开源源码分析一下 漏洞复现首先漏洞发生在后台，也就是需要先登录后台可利用，有点鸡肋，但还是要学习一下 后台管理中心-&amp;gt;文件管理-&amp;gt;任意选一个编辑-&amp;gt;保存-&amp;gt;抓包  然后访问该文件名 漏洞分析uncms/index.php 44行123456789101112131415161718&amp;l">
+<meta property="og:type" content="article">
 <meta property="og:title" content="风筝">
-<meta property="og:url" content="http://yoursite.com/archives/index.html">
+<meta property="og:url" content="http://yoursite.com/2019/12/07/ucms/index.html">
 <meta property="og:site_name" content="风筝">
-<meta property="og:description" content="风筝">
+<meta property="og:description" content="title:ucms代码注入漏洞分析前言最近在漏洞平台看到ucms后台漏洞，便寻找了一下开源源码分析一下 漏洞复现首先漏洞发生在后台，也就是需要先登录后台可利用，有点鸡肋，但还是要学习一下 后台管理中心-&amp;gt;文件管理-&amp;gt;任意选一个编辑-&amp;gt;保存-&amp;gt;抓包  然后访问该文件名 漏洞分析uncms/index.php 44行123456789101112131415161718&amp;l">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="https://s2.ax1x.com/2019/12/08/QaSiMF.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/12/08/QaSURf.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/12/08/QaSgJ0.png">
+<meta property="og:updated_time" content="2019-12-08T06:11:22.949Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="风筝">
-<meta name="twitter:description" content="风筝">
+<meta name="twitter:description" content="title:ucms代码注入漏洞分析前言最近在漏洞平台看到ucms后台漏洞，便寻找了一下开源源码分析一下 漏洞复现首先漏洞发生在后台，也就是需要先登录后台可利用，有点鸡肋，但还是要学习一下 后台管理中心-&amp;gt;文件管理-&amp;gt;任意选一个编辑-&amp;gt;保存-&amp;gt;抓包  然后访问该文件名 漏洞分析uncms/index.php 44行123456789101112131415161718&amp;l">
+<meta name="twitter:image" content="https://s2.ax1x.com/2019/12/08/QaSiMF.png">
   
     <link rel="alternative" href="/atom.xml" title="风筝" type="application/atom+xml">
   
@@ -153,289 +158,152 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-ucms" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <hr>
+<h2 id="title-ucms代码注入漏洞分析"><a href="#title-ucms代码注入漏洞分析" class="headerlink" title="title:ucms代码注入漏洞分析"></a>title:ucms代码注入漏洞分析</h2><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在漏洞平台看到ucms后台漏洞，便寻找了一下开源源码分析一下</p>
+<h2 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h2><p>首先漏洞发生在后台，也就是需要先登录后台可利用，有点鸡肋，但还是要学习一下</p>
+<p>后台管理中心-&gt;文件管理-&gt;任意选一个编辑-&gt;保存-&gt;抓包<br><img src="https://s2.ax1x.com/2019/12/08/QaSiMF.png" alt="image"></p>
+<p><img src="https://s2.ax1x.com/2019/12/08/QaSURf.png" alt="image"></p>
+<p>然后访问该文件名<br><img src="https://s2.ax1x.com/2019/12/08/QaSgJ0.png" alt="image"></p>
+<h2 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h2><p>uncms/index.php 44行<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">'do'</span>])) &#123;</span><br><span class="line">	$thisdo=explode(<span class="string">'_'</span>,$_GET[<span class="string">'do'</span>]);</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"><span class="meta">&lt;?php</span> <span class="keyword">require</span>(<span class="string">'top.php'</span>);<span class="meta">?&gt;</span></span><br><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line">	<span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">'do'</span>])) &#123;</span><br><span class="line">		<span class="keyword">if</span>(!<span class="keyword">isset</span>($thisdo[<span class="number">1</span>])) &#123;</span><br><span class="line">			$thisdo[<span class="number">1</span>]=<span class="string">'index'</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		check_admin_file($thisdo[<span class="number">0</span>],$thisdo[<span class="number">1</span>]);</span><br><span class="line">		<span class="keyword">require</span>($thisdo[<span class="number">0</span>].<span class="string">'/'</span>.$thisdo[<span class="number">1</span>].<span class="string">'.php'</span>);</span><br><span class="line">	&#125;<span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="keyword">if</span>(power(<span class="string">'s'</span>,<span class="number">0</span>,$power))&#123;</span><br><span class="line">				<span class="keyword">echo</span>(<span class="string">"&lt;meta http-equiv=refresh content='0; url=?do=str'&gt;"</span>);</span><br><span class="line">				<span class="keyword">exit</span>();</span><br><span class="line">            &#125;</span><br></pre></td></tr></table></figure></p>
+<p>也就是说获取get的do值为文件名，跟踪一下漏洞指的sadmin/fileedit.php文件</p>
+<p>sadmin/fileedit.php<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span> (!defined(<span class="string">'admin'</span>)) &#123;<span class="keyword">exit</span>();&#125;</span><br><span class="line"><span class="keyword">if</span>(power(<span class="string">'alevel'</span>)!=<span class="number">3</span>) &#123;<span class="keyword">die</span>(<span class="string">'error'</span>);&#125;</span><br><span class="line"><span class="keyword">if</span>(!AdminFileedit) &#123;</span><br><span class="line">	adminmsg(<span class="string">''</span>,<span class="string">'文件管理功能已关闭'</span>,<span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">'dir'</span>])) &#123;</span><br><span class="line">	<span class="keyword">if</span>(<span class="keyword">empty</span>($_GET[<span class="string">'dir'</span>])) &#123;</span><br><span class="line">		$_GET[<span class="string">'dir'</span>]=<span class="string">'/'</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	$getdir=$_GET[<span class="string">'dir'</span>];</span><br><span class="line">	<span class="keyword">if</span>($_GET[<span class="string">'dir'</span>]==<span class="string">'/'</span>) &#123;</span><br><span class="line">		$dir=$_GET[<span class="string">'dir'</span>];</span><br><span class="line">	&#125;<span class="keyword">else</span> &#123;</span><br><span class="line">		$dir=$_GET[<span class="string">'dir'</span>];</span><br><span class="line">	&#125;</span><br><span class="line">	$alldir=$_SERVER[<span class="string">'DOCUMENT_ROOT'</span>].$_GET[<span class="string">'dir'</span>].<span class="string">'/'</span>;</span><br><span class="line">	<span class="keyword">if</span>(stripos($_GET[<span class="string">'dir'</span>],<span class="string">'..'</span>)===<span class="keyword">false</span>) &#123;&#125;<span class="keyword">else</span> &#123;<span class="keyword">die</span>(<span class="string">'error dir'</span>);&#125;</span><br><span class="line">&#125;<span class="keyword">else</span> &#123;</span><br><span class="line">	<span class="keyword">die</span>(<span class="string">'no dir'</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">'file'</span>])) &#123;</span><br><span class="line">	$filename=$_GET[<span class="string">'file'</span>];</span><br><span class="line">	<span class="keyword">if</span>(stripos($_GET[<span class="string">'file'</span>],<span class="string">'..'</span>)===<span class="keyword">false</span>) &#123;&#125;<span class="keyword">else</span> &#123;<span class="keyword">die</span>(<span class="string">'error filename'</span>);&#125;</span><br><span class="line">	<span class="keyword">if</span>(!isedit($_GET[<span class="string">'file'</span>])) &#123;</span><br><span class="line">		<span class="keyword">die</span>(<span class="string">'error'</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;<span class="keyword">else</span> &#123;</span><br><span class="line">	<span class="keyword">die</span>(<span class="string">'no file'</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_POST[<span class="string">'co'</span>])) &#123;</span><br><span class="line">	checktoken();</span><br><span class="line">	$content=$_POST[<span class="string">'co'</span>];</span><br><span class="line">	$fp = @fopen($alldir.$filename,<span class="string">"w"</span>);</span><br><span class="line">	<span class="keyword">if</span>(!@fwrite($fp,$content) &amp;&amp; strlen($content)&lt;&gt;<span class="number">0</span>)&#123;</span><br><span class="line">		adminmsg(<span class="string">''</span>,<span class="string">'写入失败,请修改文件权限'</span>,<span class="number">1</span>);</span><br><span class="line">		<span class="keyword">exit</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	fclose($fp);</span><br><span class="line">	$refererurl=<span class="string">'?do=sadmin_fileedit&amp;dir='</span>.$_GET[<span class="string">'dir'</span>].<span class="string">'&amp;file='</span>.$_GET[<span class="string">'file'</span>].<span class="string">'&amp;pos='</span>.$_POST[<span class="string">'pos'</span>];</span><br><span class="line">	adminmsg($refererurl,<span class="string">'保存成功'</span>,<span class="number">1</span>,<span class="string">'编辑页'</span>);</span><br><span class="line">	<span class="keyword">exit</span>();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span>(!is_file($alldir.$filename)) &#123;</span><br><span class="line">	$content=<span class="string">''</span>;</span><br><span class="line">&#125;<span class="keyword">else</span> &#123;</span><br><span class="line">	$content=htmlspecialchars(file_get_contents($alldir.$filename));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">isedit</span><span class="params">($filename)</span> </span>&#123;</span><br><span class="line">	$array=<span class="keyword">array</span>(<span class="string">'php'</span>,<span class="string">'css'</span>,<span class="string">'js'</span>,<span class="string">'htm'</span>,<span class="string">'html'</span>,<span class="string">'txt'</span>);</span><br><span class="line">	<span class="keyword">foreach</span>($array <span class="keyword">as</span> $val) &#123;</span><br><span class="line">		<span class="keyword">if</span>(pathinfo($filename, PATHINFO_EXTENSION)==$val) &#123;</span><br><span class="line">			<span class="keyword">Return</span> <span class="keyword">true</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">Return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>可以看到该文件对传进来的路径与内容没有进行任何过滤与验证,引发了漏洞</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$fp = @fopen($alldir.$filename,<span class="string">"w"</span>);</span><br></pre></td></tr></table></figure>
+<p>在请求co参数的时候，这一行，w指当文件不存在的时候会自动创建，由此触发了文件写入漏洞</p>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="http://blog.topsec.com.cn/%e5%a4%a9%e8%9e%8d%e4%bf%a1%e5%85%b3%e4%ba%8eucms%e7%b3%bb%e7%bb%9f%e5%ad%98%e5%9c%a8%e4%bb%a3%e7%a0%81%e6%b3%a8%e5%85%a5%e6%bc%8f%e6%b4%9e%e7%9a%84%e5%88%86%e6%9e%90/" target="_blank" rel="noopener">http://blog.topsec.com.cn/%e5%a4%a9%e8%9e%8d%e4%bf%a1%e5%85%b3%e4%ba%8eucms%e7%b3%bb%e7%bb%9f%e5%ad%98%e5%9c%a8%e4%bb%a3%e7%a0%81%e6%b3%a8%e5%85%a5%e6%bc%8f%e6%b4%9e%e7%9a%84%e5%88%86%e6%9e%90/</a></p>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/12/07/ucms/" class="archive-article-date">
-  	<time datetime="2019-12-07T11:48:15.530Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-12-07</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/12/07/ucms/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/11/phar/" class="archive-article-date">
-  	<time datetime="2019-11-11T05:40:51.318Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2019/11/11/phar/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">phar反序列化总结</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/11/phar/">phar反序列化总结</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/06/crlf/" class="archive-article-date">
-  	<time datetime="2019-11-06T15:58:04.532Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-06</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/06/crlf/">crlf &amp; soap</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/06/xuliehua/" class="archive-article-date">
-  	<time datetime="2019-11-06T15:57:00.267Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-06</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/06/xuliehua/">PHP反序列化由浅入深</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/06/order by/" class="archive-article-date">
-  	<time datetime="2019-11-06T15:48:43.214Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-06</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/06/order by/">记一次order by盲注</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/10/17/eval与assert/" class="archive-article-date">
-  	<time datetime="2019-10-17T12:49:22.947Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-17</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/10/17/eval与assert/">eval and assert</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/10/14/dedecms5.7/" class="archive-article-date">
-  	<time datetime="2019-10-14T10:54:20.810Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-14</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/10/14/dedecms5.7/">dedecms最新版后台三处getshell</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/10/10/ctf夺旗赛/" class="archive-article-date">
-  	<time datetime="2019-10-10T13:54:25.267Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-10</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/10/10/ctf夺旗赛/">CTF夺旗赛</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/10/09/zzcms8.2/" class="archive-article-date">
-  	<time datetime="2019-10-09T02:54:27.176Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-10-09</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/10/09/zzcms8.2/">ZZCMS8.2 代码审计</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/08/08/whatweb/" class="archive-article-date">
-  	<time datetime="2019-08-08T06:47:30.145Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-08</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/08/08/whatweb/">网站指纹识别工具Whatweb</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
-    
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="page-number" href="/archives/page/3/">3</a><a class="extend next" rel="next" href="/archives/page/2/">Next &raquo;</a>
-    </nav>
   
 
 
@@ -459,8 +327,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

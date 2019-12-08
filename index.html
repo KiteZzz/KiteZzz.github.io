@@ -158,10 +158,24 @@
     <article id="post-ucms" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/12/07/ucms/">ucms代码注入漏洞分析</a>
+    </h1>
+  
+
+        
+        <a href="/2019/12/07/ucms/" class="archive-article-date">
+  	<time datetime="2019-12-07T11:48:15.530Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-12-07</time>
+</a>
+        
+      </header>
+    
     <div class="article-entry" itemprop="articleBody">
       
-        <hr>
-<h2 id="title-ucms代码注入漏洞分析"><a href="#title-ucms代码注入漏洞分析" class="headerlink" title="title:ucms代码注入漏洞分析"></a>title:ucms代码注入漏洞分析</h2><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在漏洞平台看到ucms后台漏洞，便寻找了一下开源源码分析一下</p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在漏洞平台看到ucms后台漏洞，便寻找了一下开源源码分析一下</p>
 <h2 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h2><p>首先漏洞发生在后台，也就是需要先登录后台可利用，有点鸡肋，但还是要学习一下</p>
 <p>后台管理中心-&gt;文件管理-&gt;任意选一个编辑-&gt;保存-&gt;抓包<br><img src="https://s2.ax1x.com/2019/12/08/QaSiMF.png" alt="image"></p>
 <p><img src="https://s2.ax1x.com/2019/12/08/QaSURf.png" alt="image"></p>

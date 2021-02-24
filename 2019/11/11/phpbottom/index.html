@@ -6,18 +6,22 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives | 风筝</title>
+  <title>PHP底层的运行机制与原理 | 风筝</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="风筝">
-<meta property="og:type" content="website">
-<meta property="og:title" content="风筝">
-<meta property="og:url" content="http://yoursite.com/archives/page/3/index.html">
+  <meta name="description" content="0x01 前言最近写PHP代码比较多，也算不上什么精通，感觉要使用php就得知道这门语言的底层原理，这里决定了解一下PHP底层的工作原理。 0x02 什么是PHPPHP是一种适用于Web开发的动态语言，是一个用C语言实现，包含大量组件的软件框架。狭义方面来说，可以说是个UI框架(用户界面,也可以说是UI模版(UI定义)) 0x03 PHP设计理念与特点 多进程模型：由于PHP是多进程模型，不同请求">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PHP底层的运行机制与原理">
+<meta property="og:url" content="http://yoursite.com/2019/11/11/phpbottom/index.html">
 <meta property="og:site_name" content="风筝">
-<meta property="og:description" content="风筝">
+<meta property="og:description" content="0x01 前言最近写PHP代码比较多，也算不上什么精通，感觉要使用php就得知道这门语言的底层原理，这里决定了解一下PHP底层的工作原理。 0x02 什么是PHPPHP是一种适用于Web开发的动态语言，是一个用C语言实现，包含大量组件的软件框架。狭义方面来说，可以说是个UI框架(用户界面,也可以说是UI模版(UI定义)) 0x03 PHP设计理念与特点 多进程模型：由于PHP是多进程模型，不同请求">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="https://s2.ax1x.com/2019/05/10/ERQZlD.jpg">
+<meta property="og:image" content="https://s2.ax1x.com/2019/05/10/ERGBSP.jpg">
+<meta property="og:updated_time" content="2019-05-10T07:55:31.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="风筝">
-<meta name="twitter:description" content="风筝">
+<meta name="twitter:title" content="PHP底层的运行机制与原理">
+<meta name="twitter:description" content="0x01 前言最近写PHP代码比较多，也算不上什么精通，感觉要使用php就得知道这门语言的底层原理，这里决定了解一下PHP底层的工作原理。 0x02 什么是PHPPHP是一种适用于Web开发的动态语言，是一个用C语言实现，包含大量组件的软件框架。狭义方面来说，可以说是个UI框架(用户界面,也可以说是UI模版(UI定义)) 0x03 PHP设计理念与特点 多进程模型：由于PHP是多进程模型，不同请求">
+<meta name="twitter:image" content="https://s2.ax1x.com/2019/05/10/ERQZlD.jpg">
   
     <link rel="alternative" href="/atom.xml" title="风筝" type="application/atom+xml">
   
@@ -153,268 +157,198 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-phpbottom" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      PHP底层的运行机制与原理
+    </h1>
+  
+
+        
+        <a href="/2019/11/11/phpbottom/" class="archive-article-date">
+  	<time datetime="2019-11-11T04:40:26.971Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
+</a>
+        
+      </header>
     
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="0x01-前言"><a href="#0x01-前言" class="headerlink" title="0x01 前言"></a>0x01 前言</h2><p>最近写PHP代码比较多，也算不上什么精通，感觉要使用php就得知道这门语言的底层原理，这里决定了解一下PHP底层的工作原理。</p>
+<h2 id="0x02-什么是PHP"><a href="#0x02-什么是PHP" class="headerlink" title="0x02 什么是PHP"></a>0x02 什么是PHP</h2><p>PHP是一种适用于Web开发的动态语言，是一个用C语言实现，包含大量组件的软件框架。狭义方面来说，可以说是个UI框架(用户界面,也可以说是UI模版<a href="https://www.eefocus.com/yitianzhaohai1/blog/17-03/409354_eaccc.html" target="_blank" rel="noopener">(UI定义)</a>)</p>
+<h2 id="0x03-PHP设计理念与特点"><a href="#0x03-PHP设计理念与特点" class="headerlink" title="0x03 PHP设计理念与特点"></a>0x03 PHP设计理念与特点</h2><ul>
+<li>多进程模型：由于PHP是多进程模型，不同请求间互不干涉，这样保证了一个请求挂掉不会对全盘服务造成影响，当然，随着时代发展，PHP也早已支持多线程模型。</li>
+<li>弱类型语言：和C/C++、Java、C#等语言不同，PHP是一门弱类型语言。一个变量的类型并不是一开始就确定不变，运行中才会确定并可能发生隐式或显式的类型转换，这种机制的灵活性在web开发中非常方便、高效.</li>
+<li>引擎(Zend)+组件(ext)的模式降低内部耦合。</li>
+<li>中间层(sapi)隔绝web server和PHP。</li>
+<li>语法简单灵活，没有太多规范。</li>
+</ul>
+<h2 id="0x04-PHP核心架构"><a href="#0x04-PHP核心架构" class="headerlink" title="0x04 PHP核心架构"></a>0x04 PHP核心架构</h2><p>php四层体系如下：<br><img src="https://s2.ax1x.com/2019/05/10/ERQZlD.jpg" alt="image"></p>
+<p>从下到上的四层体系:</p>
+<ul>
+<li>Zend引擎：Zend整体用C语言实现，是PHP的内核部分。它将PHP代码翻译，实现了基本的数据结构，内存分配机制及管理，提供了相应的api供外部调用，是一切的核心。</li>
+<li>Extensions：围绕Zend引擎，extensions通过组件式的方式提供各种基础服务，我们常见的各种内置函数、标准库等都是通过 extension来实现，用户也可以根据需要实现自己的extension。</li>
+<li>Sapi：Aerver Application Programming Interface，即服务端应用编程接口，是PHP和web server的中间层。Sapi通过钩子函数，使PHP能和外部交互数据，这也将PHP和上层应用解耦。</li>
+<li>上层应用：就是我们平时编写的PHP程序，通过不同的sapi方式得到各种各样的应用模式</li>
+</ul>
+<p>这里有个很好的通俗比喻:如果PHP是一辆车，那么车的框架就是PHP本身，Zend是车的引擎（发动机），Extensions下面的各种组件就是车的轮子，Sapi可以看做是公路，车可以跑在不同类型的公路上，而一次PHP程序的执行就是汽车跑在公路上。因此，我们需要：性能优异的引擎+合适的车轮+正确的跑道。</p>
+<h2 id="0x05-Sapi"><a href="#0x05-Sapi" class="headerlink" title="0x05 Sapi"></a>0x05 Sapi</h2><p>常见的Sapi有：</p>
+<ul>
+<li>apache2handler：以apache作为webserver，采用mod_PHP模式运行时候的处理方式，也是现在应用最广泛的一种。</li>
+<li>fast-cgi：这是webserver和PHP直接的另一种交互方式，也就是大名鼎鼎的fastcgi协议，在最近fastcgi+PHP得到越来越多的应用，也是异步webserver所唯一支持的方式。nginx就是通过php-fpm(fast-cgi)来解析php的。</li>
+<li>cli：命令行调用的应用模式</li>
+</ul>
+<h2 id="0x06-PHP执行流程"><a href="#0x06-PHP执行流程" class="headerlink" title="0x06 PHP执行流程"></a>0x06 PHP执行流程</h2><p><img src="https://s2.ax1x.com/2019/05/10/ERGBSP.jpg" alt="image"></p>
+<p>拿到一段代码后，经过词法解析、语法解析等阶段后，源程序会被翻译成一个个指令（opcodes）,然后ZEND虚拟机顺次执行这些指令完成操作。PHP本身是用C实现的，因此最终调用的也是C的函数，实际上，我们可以把PHP看做一个C开发的软件。</p>
+<p>PHP的执行的核心是翻译出来的一条一条指令，也即opcode。</p>
+<p>Opcode是PHP程序执行的最基本单位。一个opcode由两个参数(op1,op2)、返回值和处理函数组成。PHP程序最终被翻译为一组opcode处理函数的顺序执行。</p>
+<h2 id="0x07-PHP变量"><a href="#0x07-PHP变量" class="headerlink" title="0x07 PHP变量"></a>0x07 PHP变量</h2><p>PHP是一门弱类型语言，本身不严格区分变量的类型。PHP变量可以分为简单类型(int、string、boolean)、集合类型(array、resource、object)和常量(const)。所有变量在底层都是同一种结构zval。</p>
+<p>zval主要由三部分组成：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">type：指定变量的类型</span><br><span class="line">refcount&amp;is_ref：用来实现引用计数</span><br><span class="line">value：存储变量的实际数据(核心)。因为要存储多种类型，所以zvalue是一个union，也由此实现了弱类型。</span><br></pre></td></tr></table></figure>
+<h2 id="0x08-相关文章"><a href="#0x08-相关文章" class="headerlink" title="0x08 相关文章"></a>0x08 相关文章</h2><p><a href="https://sphenginx.github.io/2016/07/11/php-theory/" target="_blank" rel="noopener">https://sphenginx.github.io/2016/07/11/php-theory/</a></p>
+<p><a href="https://seminelee.github.io/2017/11/19/php/" target="_blank" rel="noopener">https://seminelee.github.io/2017/11/19/php/</a></p>
+<p><a href="http://www.nowamagic.net/librarys/veda/detail/102" target="_blank" rel="noopener">http://www.nowamagic.net/librarys/veda/detail/102</a></p>
+<p>具体内容可以参考上面几篇文章</p>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/11/sql-hack1/" class="archive-article-date">
-  	<time datetime="2019-11-11T04:40:26.711Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/11/sql-hack1/">记一次过waf注入</a>
-    </h1>
-  
+      
 
-        <div class="article-info info-on-right">
-          
-          
+      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/11/11/phpbottom/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/11/redis/" class="archive-article-date">
-  	<time datetime="2019-11-11T04:40:26.702Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
-</a>
+<nav id="article-nav">
+  
+    <a href="/2019/11/11/easy-function/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          Code-Breaking &amp; function
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/11/11/typecho/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">typecho V1.1代码审计-反序列化漏洞</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/11/redis/">redis 未授权访问漏洞 getshell</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/11/maccms8x/" class="archive-article-date">
-  	<time datetime="2019-11-11T04:40:26.687Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/11/maccms8x/">Maccms8.x命令执行漏洞</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/11/lun web/" class="archive-article-date">
-  	<time datetime="2019-11-11T04:40:26.652Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/11/lun web/">CTF - 论剑场</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/11/xuliehua/" class="archive-article-date">
-  	<time datetime="2019-11-11T04:40:26.591Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/11/xuliehua/">PHP反序列化由浅入深</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/11/ctf夺旗赛/" class="archive-article-date">
-  	<time datetime="2019-11-11T04:40:26.562Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/11/ctf夺旗赛/">CTF夺旗赛</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/11/google hack/" class="archive-article-date">
-  	<time datetime="2019-11-11T04:40:26.556Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/11/google hack/">Google Hack 语法</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/11/dedecms5.7/" class="archive-article-date">
-  	<time datetime="2019-11-11T04:40:26.552Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/11/dedecms5.7/">dedecms最新版后台三处getshell</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/11/风筝writewp/" class="archive-article-date">
-  	<time datetime="2019-11-11T04:40:26.531Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/11/风筝writewp/">2019上海嘉韦思杯线上赛writeup</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
-    
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/archives/page/2/">&laquo; Prev</a><a class="page-number" href="/archives/">1</a><a class="page-number" href="/archives/page/2/">2</a><span class="page-number current">3</span>
-    </nav>
   
 
 
@@ -438,8 +372,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

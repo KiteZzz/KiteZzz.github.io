@@ -6,18 +6,21 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives | 风筝</title>
+  <title>RSA | 风筝</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="风筝">
-<meta property="og:type" content="website">
-<meta property="og:title" content="风筝">
-<meta property="og:url" content="http://yoursite.com/archives/page/3/index.html">
+  <meta name="description" content="RSA简介及步骤rsa是非对称密码，即在加解密过程中，加密密钥(公钥)与解密密钥(私钥)不同123乙将公钥传给甲（公钥可公开)甲使用乙传给的公钥加密要发送的信息原文m，发送给乙密文c；乙使用自己的私钥解密密文c，得到信息原文m  首先选择两个互为质数p和q，计算模数N=p*q 计算N的欧拉函数φ=(p−1)*(q−1),然后随机选择一个整数e(1&amp;lt;e&amp;lt;φ),e和φ互质 取e的模反元数d">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RSA">
+<meta property="og:url" content="http://yoursite.com/2019/11/11/rsa/index.html">
 <meta property="og:site_name" content="风筝">
-<meta property="og:description" content="风筝">
+<meta property="og:description" content="RSA简介及步骤rsa是非对称密码，即在加解密过程中，加密密钥(公钥)与解密密钥(私钥)不同123乙将公钥传给甲（公钥可公开)甲使用乙传给的公钥加密要发送的信息原文m，发送给乙密文c；乙使用自己的私钥解密密文c，得到信息原文m  首先选择两个互为质数p和q，计算模数N=p*q 计算N的欧拉函数φ=(p−1)*(q−1),然后随机选择一个整数e(1&amp;lt;e&amp;lt;φ),e和φ互质 取e的模反元数d">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="https://s2.ax1x.com/2019/06/01/V3XGA1.jpg">
+<meta property="og:updated_time" content="2019-06-02T06:34:05.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="风筝">
-<meta name="twitter:description" content="风筝">
+<meta name="twitter:title" content="RSA">
+<meta name="twitter:description" content="RSA简介及步骤rsa是非对称密码，即在加解密过程中，加密密钥(公钥)与解密密钥(私钥)不同123乙将公钥传给甲（公钥可公开)甲使用乙传给的公钥加密要发送的信息原文m，发送给乙密文c；乙使用自己的私钥解密密文c，得到信息原文m  首先选择两个互为质数p和q，计算模数N=p*q 计算N的欧拉函数φ=(p−1)*(q−1),然后随机选择一个整数e(1&amp;lt;e&amp;lt;φ),e和φ互质 取e的模反元数d">
+<meta name="twitter:image" content="https://s2.ax1x.com/2019/06/01/V3XGA1.jpg">
   
     <link rel="alternative" href="/atom.xml" title="风筝" type="application/atom+xml">
   
@@ -153,268 +156,181 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-rsa" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      RSA
+    </h1>
+  
+
+        
+        <a href="/2019/11/11/rsa/" class="archive-article-date">
+  	<time datetime="2019-11-11T04:40:27.012Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
+</a>
+        
+      </header>
     
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="RSA简介及步骤"><a href="#RSA简介及步骤" class="headerlink" title="RSA简介及步骤"></a>RSA简介及步骤</h3><p>rsa是非对称密码，即在加解密过程中，加密密钥(公钥)与解密密钥(私钥)不同<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">乙将公钥传给甲（公钥可公开)</span><br><span class="line">甲使用乙传给的公钥加密要发送的信息原文m，发送给乙密文c；</span><br><span class="line">乙使用自己的私钥解密密文c，得到信息原文m</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>首先选择两个互为质数p和q，计算模数N=p*q</li>
+<li>计算N的欧拉函数φ=(p−1)*(q−1),然后随机选择一个整数e(1&lt;e&lt;φ),e和φ互质</li>
+<li>取e的模反元数d，公式为ed≡1(modφ(n))</li>
+<li>明文加密后的密文c = pow(m, e, N)</li>
+<li>密文解密后的明文m = pow(c, d, N)</li>
+</ul>
+<p>需要记的一些参数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">p,q:大整数N的两个因子（factor）</span><br><span class="line">N:大整数N，我们称之为模数（modulus)</span><br><span class="line">e,d:互为模反数的两个指数（exponent）</span><br><span class="line">c,m:密文和明文，这里一般指的是一个十进制的数  </span><br><span class="line">（N,e）：公钥</span><br><span class="line">（N,d）：私钥</span><br></pre></td></tr></table></figure></p>
+<p>上面几个具体的数学概念可参考此链接 <a href="https://www.cnblogs.com/hykun/p/RSA.html" target="_blank" rel="noopener">RSA数学基础</a></p>
+<h3 id="RSA题实战技巧"><a href="#RSA题实战技巧" class="headerlink" title="RSA题实战技巧"></a>RSA题实战技巧</h3><h4 id="0x01-实验吧rsarsa"><a href="#0x01-实验吧rsarsa" class="headerlink" title="0x01 实验吧rsarsa"></a>0x01 实验吧rsarsa</h4><p>题目:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">p =  9648423029010515676590551740010426534945737639235739800643989352039852507298491399561035009163427050370107570733633350911691280297777160200625281665378483</span><br><span class="line">q =  11874843837980297032092405848653656852760910154543380907650040190704283358909208578251063047732443992230647903887510065547947313543299303261986053486569407</span><br><span class="line">e =  65537</span><br><span class="line">c =  83208298995174604174773590298203639360540024871256126892889661345742403314929861939100492666605647316646576486526217457006376842280869728581726746401583705899941768214138742259689334840735633553053887641847651173776251820293087212885670180367406807406765923638973161375817392737747832762751690104423869019034</span><br><span class="line"></span><br><span class="line">Use RSA to find the secret message</span><br></pre></td></tr></table></figure></p>
+<p>解题脚本:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">import gmpy2</span><br><span class="line">p =  9648423029010515676590551740010426534945737639235739800643989352039852507298491399561035009163427050370107570733633350911691280297777160200625281665378483</span><br><span class="line">q =  11874843837980297032092405848653656852760910154543380907650040190704283358909208578251063047732443992230647903887510065547947313543299303261986053486569407</span><br><span class="line">e =  65537</span><br><span class="line">c =  83208298995174604174773590298203639360540024871256126892889661345742403314929861939100492666605647316646576486526217457006376842280869728581726746401583705899941768214138742259689334840735633553053887641847651173776251820293087212885670180367406807406765923638973161375817392737747832762751690104423869019034</span><br><span class="line"></span><br><span class="line">N = p*q</span><br><span class="line">n = (p-1)*(q-1)</span><br><span class="line"></span><br><span class="line">d = gmpy2.invert(e,n)</span><br><span class="line">flag = pow(c,d,N)</span><br><span class="line"></span><br><span class="line">print(flag)</span><br></pre></td></tr></table></figure></p>
+<p>这里用到gmpy2模块，可通过pip install gmpy2下载</p>
+<h4 id="0x02-rsaroll"><a href="#0x02-rsaroll" class="headerlink" title="0x02 rsaroll"></a>0x02 rsaroll</h4><p><img src="https://s2.ax1x.com/2019/06/01/V3XGA1.jpg" alt="image"></p>
+<p>N可用网上在线工具分解<a href="http://factordb.com/index.php" target="_blank" rel="noopener">http://factordb.com/index.php</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">import gmpy2</span><br><span class="line">N = 920139713</span><br><span class="line">e = 19</span><br><span class="line">p = 18443</span><br><span class="line">q = 49891</span><br><span class="line">n = (p-1)*(q-1)</span><br><span class="line">d = gmpy2.invert(e,n)</span><br><span class="line">print(d)</span><br><span class="line">print(N)</span><br><span class="line">c =&quot;&quot;&quot;</span><br><span class="line">704796792</span><br><span class="line">752211152</span><br><span class="line">274704164</span><br><span class="line">18414022</span><br><span class="line">368270835</span><br><span class="line">483295235</span><br><span class="line">263072905</span><br><span class="line">459788476</span><br><span class="line">483295235</span><br><span class="line">459788476</span><br><span class="line">663551792</span><br><span class="line">475206804</span><br><span class="line">459788476</span><br><span class="line">428313374</span><br><span class="line">475206804</span><br><span class="line">459788476</span><br><span class="line">425392137</span><br><span class="line">704796792</span><br><span class="line">458265677</span><br><span class="line">341524652</span><br><span class="line">483295235</span><br><span class="line">534149509</span><br><span class="line">425392137</span><br><span class="line">428313374</span><br><span class="line">425392137</span><br><span class="line">341524652</span><br><span class="line">458265677</span><br><span class="line">263072905</span><br><span class="line">483295235</span><br><span class="line">828509797</span><br><span class="line">341524652</span><br><span class="line">425392137</span><br><span class="line">475206804</span><br><span class="line">428313374</span><br><span class="line">483295235</span><br><span class="line">475206804</span><br><span class="line">459788476</span><br><span class="line">306220148</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">c = c.split()</span><br><span class="line"># for i in c:</span><br><span class="line">#     i = int(i)</span><br><span class="line">#     print(pow(i,d,N),end=&apos; &apos;)</span><br><span class="line">#</span><br><span class="line"></span><br><span class="line">get = &apos;102 108 97 103 123 49 51 50 49 50 106 101 50 117 101 50 56 102 121 55 49 119 56 117 56 55 121 51 49 114 55 56 101 117 49 101 50 125&apos;</span><br><span class="line">flag1 = get.split()</span><br><span class="line">for i in flag1:</span><br><span class="line">    i = int(i)</span><br><span class="line">    print(chr(i),end=&apos;&apos;)</span><br></pre></td></tr></table></figure></p>
+<h4 id="0x03-强网杯辅助"><a href="#0x03-强网杯辅助" class="headerlink" title="0x03 强网杯辅助"></a>0x03 强网杯辅助</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">flag=open(&quot;flag&quot;,&quot;rb&quot;).read()</span><br><span class="line"></span><br><span class="line">from Crypto.Util.number import getPrime,bytes_to_long</span><br><span class="line">p=getPrime(1024)</span><br><span class="line">q=getPrime(1024)</span><br><span class="line">e=65537</span><br><span class="line">n=p*q</span><br><span class="line">m=bytes_to_long(flag)</span><br><span class="line">c=pow(m,e,n)</span><br><span class="line">print c,e,n</span><br><span class="line"></span><br><span class="line">p=getPrime(1024)</span><br><span class="line">e=65537</span><br><span class="line">n=p*q</span><br><span class="line">m=bytes_to_long(&quot;1&quot;*32)</span><br><span class="line">c=pow(m,e,n)</span><br><span class="line">print c,e,n</span><br><span class="line"></span><br><span class="line">&apos;&apos;&apos;</span><br><span class="line">output:</span><br><span class="line">2482083893746618248544426737023750400124543452082436334398504986023501710639402060949106693279462896968839029712099336235976221571564642900240827774719199533124053953157919850838214021934907480633441577316263853011232518392904983028052155862154264401108124968404098823946691811798952747194237290581323868666637357604693015079007555594974245559555518819140844020498487432684946922741232053249894575417796067090655122702306134848220257943297645461477488086804856018323986796999103385565540496534422406390355987976815450744535949785073009043007159496929187184338592859040917546122343981520508220332785862546608841127597 65537 14967030059975114950295399874185047053736587880127990542035765201425779342430662517765063258784685868107066789475747180244711352646469776732938544641583842313791872986357504462184924075227433498631423289187988351475666785190854210389587594975456064984611990461126684301086241532915267311675164190213474245311019623654865937851653532870965423474555348239858021551589650169602439423841160698793338115204238140085738680883313433574060243600028500600824624358473403059597593891412179399165813622512901263380299561019624741488779367019389775786547292065352885007224239581776975892385364446446185642939137287519945974807727</span><br><span class="line">3829060039572042737496679186881067950328956133163629908872348108160129550437697677150599483923925798224328175594483217938833520220087230303470138525970468915511111320396185482564783975435346354440035776909781158407636044986403819840648379609630039348895415045723208843631191252142600667607807479954194447237061080618370787672720344741413537975922184859333432197766580150534457001196765621678659952108010596273244230812327182786329760844037149719587269632133595149294067490955644893402708720284179715002149224068928828656515326446881791228638008572889331511945042911372915003805505412099102954073299010951896955362470 65537 14624662628725820618622370803948630854094687814338334827462870357582795291844925274690253604919535785934208081825425541536057550227048399837243392490762167733083030368221240764693694321150104306044125934201699430146970466657410999261630825931178731857267599750324918610790098952520113593130245010530961350592735239454337631927669542026935873535964487595433984902529960726655481696404006628917922241666148082741874033756970724357470539589848548704573091633917869387239324447730587545472564561496724882799495186768858324490838169123077051890332313671220385830444331578674338014080959653201802476516237464651809255679979</span><br><span class="line">&apos;&apos;&apos;</span><br></pre></td></tr></table></figure>
+<p>import gmpy2<br>import libnum<br>c1 = 2482083893746618248544426737023750400124543452082436334398504986023501710639402060949106693279462896968839029712099336235976221571564642900240827774719199533124053953157919850838214021934907480633441577316263853011232518392904983028052155862154264401108124968404098823946691811798952747194237290581323868666637357604693015079007555594974245559555518819140844020498487432684946922741232053249894575417796067090655122702306134848220257943297645461477488086804856018323986796999103385565540496534422406390355987976815450744535949785073009043007159496929187184338592859040917546122343981520508220332785862546608841127597<br>e = 65537<br>c2 = 3829060039572042737496679186881067950328956133163629908872348108160129550437697677150599483923925798224328175594483217938833520220087230303470138525970468915511111320396185482564783975435346354440035776909781158407636044986403819840648379609630039348895415045723208843631191252142600667607807479954194447237061080618370787672720344741413537975922184859333432197766580150534457001196765621678659952108010596273244230812327182786329760844037149719587269632133595149294067490955644893402708720284179715002149224068928828656515326446881791228638008572889331511945042911372915003805505412099102954073299010951896955362470<br>n1 = 14967030059975114950295399874185047053736587880127990542035765201425779342430662517765063258784685868107066789475747180244711352646469776732938544641583842313791872986357504462184924075227433498631423289187988351475666785190854210389587594975456064984611990461126684301086241532915267311675164190213474245311019623654865937851653532870965423474555348239858021551589650169602439423841160698793338115204238140085738680883313433574060243600028500600824624358473403059597593891412179399165813622512901263380299561019624741488779367019389775786547292065352885007224239581776975892385364446446185642939137287519945974807727<br>n2 = 14624662628725820618622370803948630854094687814338334827462870357582795291844925274690253604919535785934208081825425541536057550227048399837243392490762167733083030368221240764693694321150104306044125934201699430146970466657410999261630825931178731857267599750324918610790098952520113593130245010530961350592735239454337631927669542026935873535964487595433984902529960726655481696404006628917922241666148082741874033756970724357470539589848548704573091633917869387239324447730587545472564561496724882799495186768858324490838169123077051890332313671220385830444331578674338014080959653201802476516237464651809255679979</p>
+<p>p = gmpy2.gcd(n1,n2)<br>q1 = n1/p<br>q2 = n2/p<br>n = int((p-1)<em>(q1-1))<br>N = int(p</em>q1)<br>d = gmpy2.invert(e,n)<br>m = pow(c1,d,N)<br>print(libnum.n2s(m))<br><code>`</code></p>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/11/sql-hack1/" class="archive-article-date">
-  	<time datetime="2019-11-11T04:40:26.711Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/11/sql-hack1/">记一次过waf注入</a>
-    </h1>
-  
+      
 
-        <div class="article-info info-on-right">
-          
-          
+      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/11/11/rsa/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/11/redis/" class="archive-article-date">
-  	<time datetime="2019-11-11T04:40:26.702Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
-</a>
+<nav id="article-nav">
+  
+    <a href="/2019/11/11/phar/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          phar反序列化总结
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/11/11/flask/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">flask之搭建及入门</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/11/redis/">redis 未授权访问漏洞 getshell</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/11/maccms8x/" class="archive-article-date">
-  	<time datetime="2019-11-11T04:40:26.687Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/11/maccms8x/">Maccms8.x命令执行漏洞</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/11/lun web/" class="archive-article-date">
-  	<time datetime="2019-11-11T04:40:26.652Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/11/lun web/">CTF - 论剑场</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/11/xuliehua/" class="archive-article-date">
-  	<time datetime="2019-11-11T04:40:26.591Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/11/xuliehua/">PHP反序列化由浅入深</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/11/ctf夺旗赛/" class="archive-article-date">
-  	<time datetime="2019-11-11T04:40:26.562Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/11/ctf夺旗赛/">CTF夺旗赛</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/11/google hack/" class="archive-article-date">
-  	<time datetime="2019-11-11T04:40:26.556Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/11/google hack/">Google Hack 语法</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/11/dedecms5.7/" class="archive-article-date">
-  	<time datetime="2019-11-11T04:40:26.552Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/11/dedecms5.7/">dedecms最新版后台三处getshell</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/11/风筝writewp/" class="archive-article-date">
-  	<time datetime="2019-11-11T04:40:26.531Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/11/风筝writewp/">2019上海嘉韦思杯线上赛writeup</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
-    
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/archives/page/2/">&laquo; Prev</a><a class="page-number" href="/archives/">1</a><a class="page-number" href="/archives/page/2/">2</a><span class="page-number current">3</span>
-    </nav>
   
 
 
@@ -438,8 +354,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

